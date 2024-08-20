@@ -13,7 +13,8 @@ const linkSocial = [
     {
         icon: <BsInstagram />,
         href: 'https://www.instagram.com/junior_dev175/',
-    }
+    },
+    // add social media here....
 ]
 
 const Footer = () => {

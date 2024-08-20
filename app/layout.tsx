@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { JetBrains_Mono } from "next/font/google";
 import "./globals.css";
+import Footer from "@/components/Footer";
 
 // import components
 import Navbar from "@/components/Navbar";
@@ -22,6 +23,7 @@ export default function RootLayout({
       <body className={`${inter.className} max-w-5xl mx-auto min-h-screen`}>
         <Navbar />
         {children}
+        <Footer />
       </body>
     </html>
   );

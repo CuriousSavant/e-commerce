@@ -111,10 +111,10 @@ const MobileDropDown = ({ closeDropdown }: { closeDropdown: () => void }) => {
         onClick={() => {
           window.location.href =
             '/'; // your email or more..
-          closeDropdown(); // Close dropdown after clicking link
+          closeDropdown(); // Close dgropdown after clicking link
         }}
       >
-        <p className="text-epic-black">contact@loom4k.me</p>
+        <p className="text-epic-black">addyouemail@here.com</p>
       </motion.div>
     </motion.div>
   );
