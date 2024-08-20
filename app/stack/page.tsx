@@ -25,8 +25,8 @@ const StackPage = () => {
                 <Image
                   src={icon.icon}
                   alt={icon.title}
-                  layout='fill' // ใช้ layout 'fill' เพื่อให้รูปภาพเต็มกรอบ
-                  objectFit='contain' // ปรับขนาดรูปให้เต็มกรอบโดยไม่เสียสัดส่วน
+                  layout='fill'
+                  objectFit='contain'
                 />
               </a>
               <h1 className='text-white mt-2 text-sm'>{icon.title}</h1>

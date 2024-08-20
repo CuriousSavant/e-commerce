@@ -53,7 +53,7 @@ const CodeComponent = ({ lang, level, logo }: ICodeComponent) => {
 
 	return (
 		<motion.div
-			className="w-full md:w-[460px] h-20 rounded-lg p-2 mt-4 bg-gray-800 flex flex-row relative overflow-hidden"
+			className="w-full md:w-[460px] h-24 rounded-lg p-2 mt-4 bg-gray-800 flex flex-row relative overflow-hidden"
 			whileHover={{ scale: 1.05 }}
 		>
 			<img

@@ -1,6 +1,6 @@
 export const stackProps = [
     {
-        icon: '/asset/langs/typescript.svg',
+        icon: '/asset/langs/typescript.png',
         title: 'Typescript',
         href: 'https://www.typescriptlang.org/',
     },
