@@ -7,7 +7,7 @@ import { FC } from "react";
 
 export const About: FC = () => {
 	return (
-		<div className="w-full mx-auto flex flex-col md:flex-row text-center md:text-left" id="about">
+		<div className="w-full mx-auto flex flex-col md:flex-row text-center md:text-left">
 			<div className="w-full md:w-1/2 pr-10 pt-28 flex flex-col">
 				<p className="text-md tracking-tightest font-bold">
 					<Highlight>Being a&nbsp;{CONFIG.TITLE}...</Highlight>
@@ -26,7 +26,7 @@ export const About: FC = () => {
 				</div>
 			</div>
 			<h1 className="pt-20 text-3xl font-semibold md:hidden">Language Skill</h1>
-			<div className="flex flex-col items-center justify-center md:mx-auto pt-10 md:pt-0">
+			<div className="flex flex-col items-center justify-center md:mx-auto pt-10 md:pt-0 px-2.5 md:px-0">
 				{codeData.map((code, index) => (
 					<CodeComponent key={index} {...code} />
 				))}
@@ -58,7 +58,7 @@ const CodeComponent = ({ lang, level, logo }: ICodeComponent) => {
 		>
 			<img
 				src={`/asset/langs/${logo}.png`}
-				className={`rounded-md h-auto w-20 ml-r my-auto`}
+				className={`rounded-lg h-auto w-20 ml-r my-auto`}
 			/>
 			<p className={`text-white mt-[21px] ml-4 flex flex-row ${logo === "java" || logo === "cpp" ? "ml-6" : ""}`}>
 				{lang.charAt(0).toUpperCase() + lang.substring(1)}

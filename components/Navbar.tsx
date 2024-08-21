@@ -1,7 +1,7 @@
 'use client';
 
 import Link from 'next/link';
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { MdEmail, MdMenu } from 'react-icons/md';
 import { CONFIG } from '@/lib';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -21,6 +21,17 @@ const NavLinks = [
 ];
 
 const Navbar = () => {
+  const [currentPage, setCurrentPage] = useState<string>('/');
+
+  useEffect(() => {
+    // ตั้งค่า state เป็นหน้าแรกที่โหลดขึ้นมา
+    setCurrentPage(window.location.pathname);
+  }, []);
+
+  const handleLinkClick = (href: string) => {
+    setCurrentPage(href);
+  };
+
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
   const toggleDropdown = () => {
@@ -28,7 +39,7 @@ const Navbar = () => {
   };
 
   return (
-    <div className='w-full'>
+    <div className='w-full px-2.5 md:p-2 lg:p-0'>
       <nav className='h-24 flex justify-between items-center'>
         <div className='flex items-center'>
           <h1
@@ -44,19 +55,28 @@ const Navbar = () => {
           <ul className='md:flex space-x-4 ml-12 hidden'>
             {NavLinks.map((link, index) => (
               <li key={index}>
-                <Link href={link.href}>
-                  <span className='text-teal-500'>/</span>
-                  {link.name}
+                <Link
+                  href={link.href}
+                  onClick={() => handleLinkClick(link.href)}
+                  className={`${currentPage === link.href ? 'font-bold text-teal-500 text-lg' : ''}`}
+                >
+                  /{link.name}
                 </Link>
               </li>
             ))}
           </ul>
         </div>
         <div className='text-black'>
-          <button className='bg-teal-500 text-lg p-2 smooth rounded-md font-semibold hidden md:flex items-center hover:bg-teal-600'>
+          <motion.button
+            className='bg-teal-500 text-lg p-2 smooth rounded-md font-semibold hidden md:flex items-center hover:bg-teal-600'
+            whileHover={{
+              y: -5
+            }}
+            onClick={toggleDropdown}
+          >
             <MdEmail className='mr-2' />
-            contact
-          </button>
+            Contact Me
+          </motion.button>
           <button
             className='block md:hidden bg-teal-500 p-2.5 rounded-md smooth hover:bg-teal-600'
             onClick={toggleDropdown}
@@ -66,13 +86,13 @@ const Navbar = () => {
         </div>
       </nav>
       <AnimatePresence>
-        {isDropdownOpen && <MobileDropDown closeDropdown={toggleDropdown} />}
+        {isDropdownOpen && <MobileDropDown currentPage={currentPage} onLinkClick={handleLinkClick} closeDropdown={toggleDropdown} />}
       </AnimatePresence>
     </div>
   );
 };
 
-const MobileDropDown = ({ closeDropdown }: { closeDropdown: () => void }) => {
+const MobileDropDown = ({ currentPage, onLinkClick, closeDropdown }: { currentPage: string, onLinkClick: (href: string) => void, closeDropdown: () => void }) => {
   return (
     <motion.div
       className="fixed top-20 w-screen px-10
@@ -87,8 +107,9 @@ const MobileDropDown = ({ closeDropdown }: { closeDropdown: () => void }) => {
         if (!link.open) return null;
         return (
           <div
-            className="hover:cursor-pointer hover:bg-epic-black-light text-center py-2.5 rounded-md"
+            className={`hover:cursor-pointer hover:bg-epic-black-light text-center py-2.5 rounded-md ${currentPage === link.href ? 'bg-teal-600' : ''}`}
             onClick={() => {
+              onLinkClick(link.href);
               window.location.href = link.href;
               closeDropdown(); // Close dropdown after clicking link
             }}
@@ -109,9 +130,8 @@ const MobileDropDown = ({ closeDropdown }: { closeDropdown: () => void }) => {
           y: -5,
         }}
         onClick={() => {
-          window.location.href =
-            '/'; // your email or more..
-          closeDropdown(); // Close dgropdown after clicking link
+          window.location.href = '/';
+          closeDropdown(); // Close dropdown after clicking link
         }}
       >
         <p className="text-epic-black">addyouemail@here.com</p>
@@ -121,3 +141,4 @@ const MobileDropDown = ({ closeDropdown }: { closeDropdown: () => void }) => {
 };
 
 export default Navbar;
+
