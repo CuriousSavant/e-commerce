@@ -1,0 +1,14 @@
+[
+  {
+    "name": "อาร์ม",
+    "email": "arm.fullstack@gmail.com",
+    "password": "admin123",
+    "confirmPassword": "admin123"
+  },
+  {
+    "name": "lnw123",
+    "email": "fkdjajk@gmail.com",
+    "password": "123",
+    "confirmPassword": "123"
+  }
+]
