@@ -9,7 +9,7 @@ import { Button, TextField, Select, MenuItem, InputLabel, FormControl, FormGroup
 import { useRouter } from 'next/navigation';
 
 interface SlugProps {
-    slug?: string;
+    slug?: string | string[];
 }
 
 const ProductForm: React.FC<SlugProps> = ({ slug }) => {

@@ -3,7 +3,7 @@ import { Metadata } from 'next';
 import SessionProvider from '@/components/sessionProvider';
 import { getServerSession } from 'next-auth';
 import LayoutProduct from '@/components/layout/layout-product';
-import { authOptions } from '../api/auth/[...nextauth]/route';
+import { authOptions } from '@/lib/auth';
 
 export const metadata: Metadata = {
     title: "Client Page",

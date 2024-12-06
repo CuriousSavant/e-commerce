@@ -5,7 +5,7 @@ import { getServerSession } from "next-auth";
 import LayoutSetting from "./layoutSetting";
 import { ToastContainer } from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
-import { authOptions } from "./api/auth/[...nextauth]/route";
+import { authOptions } from "@/lib/auth";
 
 export const metadata: Metadata = {
   title: "Ecommerce-website",
