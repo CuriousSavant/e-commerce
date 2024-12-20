@@ -1,13 +1,13 @@
 'use client';
-
 import React from 'react';
 import { MenuItem, Select, IconButton } from '@mui/material';
 import { PiGridNineFill } from 'react-icons/pi';
 import { MdViewList } from 'react-icons/md';
 import { useSearchContext } from '@/app/context/ProductSearchContext';
+<MenuItem value="createdAt">ค่าเริ่มต้น</MenuItem>
 
 const SearchLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-    const { sortOption, viewMode, setViewMode, setSortOption } = useSearchContext();
+    const { sortOption, viewMode, setViewMode, setSortOption, categorys, filteredProducts } = useSearchContext();
 
     return (
         <>
@@ -22,7 +22,9 @@ const SearchLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => 
                         onChange={(e) => setSortOption(e.target.value)}
                         displayEmpty
                     >
-                        <MenuItem value="createdAt">ค่าเริ่มต้น</MenuItem>
+                        {categorys.map((item) => {
+                            return <MenuItem key={item.id} value={item.id}>{item.name}</MenuItem>
+                        })}
                     </Select>
                 </div>
 

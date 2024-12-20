@@ -348,7 +348,6 @@ const CategorysPage = () => {
             {categories.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((category) => {
               const parentCategory = categories.find((cat) => cat.id === category.parentId);
               const isItemSelected = isSelected(category.id);
-
               return (
                 <TableRow
                   key={category.id}

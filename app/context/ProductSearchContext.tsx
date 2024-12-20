@@ -1,5 +1,5 @@
-import React, { createContext, useContext, useEffect, useState } from 'react';
-import { Product } from '@/types/product';
+import React, { createContext, useContext, useEffect, useMemo, useState } from 'react';
+import { Categories, Product } from '@/types/product';
 import { useSearchParams } from 'next/navigation';
 import axios from 'axios';
 
@@ -15,6 +15,10 @@ interface SearchContextType {
     query: string | null;
     loading: boolean;
     setLoading: React.Dispatch<React.SetStateAction<boolean>>;
+    categorys: Categories[];
+    selectedCategory: string | null;
+    setSelectedCategory: React.Dispatch<React.SetStateAction<string | null>>;
+    filteredProducts: Product[];
 }
 
 // สร้าง Context และตั้งค่า default เป็น undefined
@@ -26,6 +30,8 @@ export const SearchProvider: React.FC<{ children: React.ReactNode }> = ({ childr
     const [sortOption, setSortOption] = useState<string>('createdAt');
     const [originalProducts, setOriginalProducts] = useState<Product[]>([]);
     const [searchQuery, setSearchQuery] = useState('');
+    const [categorys, setCategorys] = useState<Categories[]>([]);
+    const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
     const [loading, setLoading] = useState<boolean>(false)
 
     // use hooks
@@ -44,8 +50,20 @@ export const SearchProvider: React.FC<{ children: React.ReactNode }> = ({ childr
                 .then((res) => setOriginalProducts(res.data))
                 .catch((err) => console.error(err))
                 .finally(() => setLoading(false))
+
+            axios.get('/api/categories').then((res) => setCategorys(res.data))
         }
     }, [query, sortOption]);
+
+    const filteredProducts = useMemo(() => {
+        if (!selectedCategory) return originalProducts;
+
+        const selectedCategoryId = Number(selectedCategory)
+
+        return originalProducts.filter(
+            (product) => product.categoryId === selectedCategoryId
+        );
+    }, [originalProducts, selectedCategory]);
 
     return (
         <SearchContext.Provider
@@ -61,6 +79,10 @@ export const SearchProvider: React.FC<{ children: React.ReactNode }> = ({ childr
                 query,
                 loading,
                 setLoading,
+                categorys,
+                selectedCategory,
+                setSelectedCategory,
+                filteredProducts,
             }}
         >
             {children}

@@ -81,20 +81,20 @@ const OrderSummary: React.FC<OrderSummaryProps> = ({
                 {/* ยอดรวม */}
                 <Box display="flex" justifyContent="space-between">
                     <Typography variant="body2" color='gray'>ยอดรวมสินค้า ({cartItems.length} ชิ้น)</Typography>
-                    <Typography variant="body2" color='gray'>
+                    <Typography variant="body2">
                         ฿{cartTotalPrice.toLocaleString()}
                     </Typography>
                 </Box>
                 {/* ส่วนลดคูปอง */}
                 <Box display="flex" justifyContent="space-between" mt={1}>
                     <Typography variant="body2" color='gray'>ส่วนลดคูปอง</Typography>
-                    <Typography variant="body2" color='gray'>฿0</Typography>
+                    <Typography variant="body2">฿0</Typography>
                 </Box>
                 {/* ค่าจัดส่ง */}
                 <Box display="flex" justifyContent="space-between" mt={1}>
                     <Typography variant="body2" color='gray'>ค่าจัดส่ง</Typography>
                     <Tooltip title="รายละเอียดค่าจัดส่ง">
-                        <Typography variant="body2" color='gray'>
+                        <Typography variant="body2">
                             ฿ฟรี
                         </Typography>
                     </Tooltip>

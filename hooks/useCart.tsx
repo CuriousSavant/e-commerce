@@ -17,10 +17,12 @@ const useCart = () => {
     const [selectedItems, setSelectedItems] = useState<number[]>([]);
     const [loading, setLoading] = useState<boolean>(false)
 
-    console.log(itemQuantities)
-
     const { data: session } = useSession()
     const router = useRouter()
+
+    useEffect(() => {
+        localStorage.setItem("cartItemQuantities", JSON.stringify(itemQuantities));
+    }, [itemQuantities]);
 
     useEffect(() => {
         setLoading(true);
@@ -40,8 +42,9 @@ const useCart = () => {
                 }, []);
                 setCartItems(combinedItems);
 
+                const savedQuantities = JSON.parse(localStorage.getItem("cartItemQuantities") || "{}");
                 const initialQuantities = combinedItems.reduce((acc: CartQuantities, cart: Cart) => {
-                    acc[cart.productId] = cart.quantity;
+                    acc[cart.productId] = savedQuantities[cart.productId] || cart.quantity;
                     return acc;
                 }, {});
                 setItemQuantities(initialQuantities);
@@ -130,6 +133,12 @@ const useCart = () => {
     };
 
     const handleOrder = async () => {
+        /*
+            NOTE FOR DEVELOPER
+            สำหรับการใช้งานจริงอาจต้องทำการเช็คสต็อคสินค้าก่อนทำการสั่งซื้อ
+            และ เรื่องของที่อยู่อาจต้องเพิ่มเติมเช่น การเลือกที่อยู่จัดส่ง การเลือกวิธีการจัดส่ง และอื่นๆ
+            ในที่นี้ผมจะขอแค่ส่วนของการสั่งซื้อสินค้าเท่านั้น เพื่อความปลอดภัยของข้อมูลนะครับ
+        */
         try {
             const selectedOrderItems = cartItems.filter(item => selectedItems.includes(item.productId));
 

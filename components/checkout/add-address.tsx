@@ -26,7 +26,7 @@ const AddAddress = () => {
         defaultAddress
     } = useAddress();
 
-  const router = useRouter()
+    const router = useRouter()
 
     return (
         <Box flex={2} display="flex" flexDirection="column" gap={2}>

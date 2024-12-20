@@ -137,15 +137,15 @@ const CartPage = () => {
                                     <Box sx={{ display: "flex", flexDirection: "column", gap: 1 }}>
                                         <Box display="flex" justifyContent="space-between">
                                             <Typography color='gray' variant='body2'>จำนวนสินค้า</Typography>
-                                            <Typography color='gray' variant='body2'>{selectedItems.length > 0 ? selectedItems.length + " ชิ้น" : "-"}</Typography>
+                                            <Typography variant='body2'>{selectedItems.length > 0 ? selectedItems.length + " ชิ้น" : "-"}</Typography>
                                         </Box>
                                         <Box display="flex" justifyContent="space-between">
                                             <Typography color='gray' variant='body2'>ค่าจัดส่ง</Typography>
-                                            <Typography color='gray' variant='body2'>ฟรี</Typography>
+                                            <Typography variant='body2'>ฟรี</Typography>
                                         </Box>
                                         <Box display="flex" justifyContent="space-between" fontWeight="bold">
                                             <Typography color='gray' variant='body2'>ส่วนลด</Typography>
-                                            <Typography color='gray' variant='body2'>ไม่มี</Typography>
+                                            <Typography variant='body2'>ไม่มี</Typography>
                                         </Box>
                                         <Divider sx={{ my: 1 }} />
                                         <Box display="flex" justifyContent="space-between" fontWeight="bold">
