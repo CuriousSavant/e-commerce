@@ -1,11 +1,29 @@
 import prisma from "@/lib/prisma";
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 
-export async function GET() {
-  const cartItems = await prisma.cartItem.findMany({
-    include: { product: true },
-  });
-  return NextResponse.json(cartItems);
+export async function GET(req: NextRequest) {
+  const { searchParams } = new URL(req.url);
+  const userId = searchParams.get("userId");
+
+  if (!userId) {
+    return NextResponse.json({ msg: "UserId is required" }, { status: 400 });
+  }
+  try {
+    const cartItem = await prisma.cartItem.findMany({
+      where: {
+        cart: {
+          userId: Number(userId),
+        },
+      },
+      include: {
+        product: true,
+      },
+    });
+
+    return NextResponse.json(cartItem);
+  } catch (err) {
+    return NextResponse.json({ msg: err }, { status: 500 });
+  }
 }
 
 export async function POST(req: Request) {

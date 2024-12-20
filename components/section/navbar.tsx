@@ -1,5 +1,5 @@
 'use client';
-import React, { SetStateAction, useState } from 'react';
+import React, { SetStateAction, useEffect, useState } from 'react';
 import { AppBar, Toolbar, Typography, IconButton, Box, Button, Link as MuiLink, Dialog, DialogContent, Drawer, List, ListItem, ListItemButton, ListItemText, Avatar, Divider, ListItemIcon, TextField, InputAdornment, useMediaQuery, Backdrop, FormControl, Tooltip, Badge } from '@mui/material';
 import { FaCartShopping } from 'react-icons/fa6';
 import { BiLogOut } from 'react-icons/bi';
@@ -11,7 +11,7 @@ import NextLink from 'next/link';
 import AuthModel from '@/components/auth-form';
 import useDialog from '@/hooks/useDialog';
 import { signOut, useSession } from 'next-auth/react';
-import { BsCart, BsGrid3X3Gap } from 'react-icons/bs';
+import { BsGrid3X3Gap } from 'react-icons/bs';
 import { RiContactsLine, RiFileList3Line } from 'react-icons/ri';
 import { CiLogin } from 'react-icons/ci';
 import { useSearchContext } from '@/app/context/ProductSearchContext';
@@ -139,7 +139,7 @@ const Navbar = () => {
                         </Box>
 
                         {/* ปุ่ม cart สำหรับขนาดเล็ก */}
-                        {!isMd && <ShoppingCart size={16} />}
+                        {!isMd && status === 'authenticated' && <ShoppingCart size={16} />}
 
                         {/* ปุ่ม menu สำหรัลขนาดเล็ก */}
                         <IconButton
@@ -206,7 +206,7 @@ const Navbar = () => {
 
                         {LinkInfo
                             .filter((link) => {
-                                if (link.title === 'รถเข็น' || link.title === 'ออกจากระบบ') {
+                                if (link.title === 'รถเข็น' || link.title === 'ออกจากระบบ' || link.title === 'คำสั่งซื้อ') {
                                     return status === 'authenticated'
                                 }
                                 return true;
@@ -241,22 +241,18 @@ const Navbar = () => {
                                     </ListItem>
                                 )
                             )}
+                        {/* Login Button if user not login */}
+                        {status === 'unauthenticated' && <BtnLoginRegister handleDialogToggle={handleDialogToggle} />}
                     </List>
-                    {/* btn login for mobile */}
-                    {status === 'unauthenticated' && <BtnLoginRegister handleDialogToggle={handleDialogToggle} />}
                 </Box>
-            </Drawer >
-
-            {/* Login Button if user not login */}
-            {
-                status === 'unauthenticated' && (
-                    <Dialog open={isDialogOpen} onClose={handleDialogToggle} maxWidth="sm" fullWidth>
-                        <DialogContent>
-                            <AuthModel onClose={() => setIsDialogOpen(!isDialogOpen)} />
-                        </DialogContent>
-                    </Dialog>
-                )
-            }
+            </Drawer>
+            {status === 'unauthenticated' && (
+                <Dialog open={isDialogOpen} onClose={handleDialogToggle} maxWidth="sm" fullWidth>
+                    <DialogContent>
+                        <AuthModel onClose={() => setIsDialogOpen(!isDialogOpen)} />
+                    </DialogContent>
+                </Dialog>
+            )}
         </>
     );
 };
@@ -283,7 +279,7 @@ const BtnLoginRegister = ({ handleDialogToggle }: { handleDialogToggle: () => vo
         <Tooltip title="Login/Register">
             <Button
                 onClick={handleDialogToggle}
-                sx={{ color: "black" }}
+                sx={{ color: "black", width: { xs: "100%", md: "auto" }, py: { xs: 2, md: 1 }, border: { xs: "1px solid #ddd", md: "0px" } }}
             >
                 <CiLogin size={22} />
             </Button>

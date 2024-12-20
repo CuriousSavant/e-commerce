@@ -2,8 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import Swal from 'sweetalert2';
-import { Categories, Propertie } from '@/types/product';
-import { BiEdit } from 'react-icons/bi';
+import { Category, Propertie } from '@/types/product';
 
 import {
   Box,
@@ -11,37 +10,29 @@ import {
   TextField,
   Select,
   MenuItem,
-  Table,
-  TableBody,
-  TableCell,
-  TableContainer,
-  TableHead,
-  TableRow,
-  Paper,
   Typography,
   Grid,
   TablePagination,
-  Tooltip,
-  alpha,
-  Toolbar,
-  Checkbox,
-  IconButton
 } from '@mui/material';
-import { MdDelete } from 'react-icons/md';
+import CategoriesTable from '@/components/admin-page/categories/category-table';
 
 const CategorysPage = () => {
-  const [categories, setCategories] = useState<Categories[]>([]);
+  const [categories, setCategories] = useState<Category[]>([]);
   const [categoryName, setCategoryName] = useState<string>('');
   const [editId, setEditId] = useState<number | null>(null);
   const [parentId, setParentId] = useState<number | null>(null);
   const [properties, setProperties] = useState<Propertie[]>([]);
   const [selected, setSelected] = useState<number[]>([]);
+  const [loading, setLoading] = useState<boolean>(false)
 
   const [page, setPage] = useState<number>(0)
   const [rowsPerPage, setRowsPerPage] = useState<number>(10)
 
   const fetchCategories = () => {
-    axios.get('/api/categories').then((res) => setCategories(res.data));
+    setLoading(true);
+    axios.get('/api/categories')
+      .then((res) => setCategories(res.data))
+      .finally(() => setLoading(false));
   };
 
   useEffect(() => {
@@ -74,13 +65,13 @@ const CategorysPage = () => {
           setParentId(null);
           setCategories([res.data, ...categories]);
           setProperties([]);
-        });
+        })
     } catch (err) {
       console.log('Error during save:', err);
     }
   };
 
-  const handleEditCategory = (category: Categories) => {
+  const handleEditCategory = (category: Category) => {
     setEditId(category.id);
     setCategoryName(category.name);
     setParentId(category.parentId);
@@ -277,109 +268,19 @@ const CategorysPage = () => {
         </Box>
       </form>
 
-      {/* Categories Table */}
-      <TableContainer component={Paper} sx={{
-        mt: 4,
-        overflowX: "auto",
-        width: "100%",
-        display: "block",
-        tableLayout: "fixed",
-        maxWidth: "100%",
-        border: "1px solid #ddd",
-        borderRadius: "10px",
-      }}>
-        <Toolbar
-          sx={{
-            pl: { sm: 2 },
-            pr: { xs: 1, sm: 1 },
-            bgcolor: selected.length > 0 ? (theme) => alpha(theme.palette.primary.main, theme.palette.action.activatedOpacity) : "transparent",
-            display: "flex",
-            justifyContent: "space-between",
-            alignItems: "center"
-          }}
-        >
-          <Box sx={{ display: "flex", alignItems: "center" }}>
-            {selected.length > 0 ? (
-              <Typography sx={{ flex: 1 }} color="inherit" variant="subtitle1">
-                {selected.length} selected
-              </Typography>
-            ) : (
-              <Typography sx={{ flex: 1 }} variant="h6" id="tableTitle">
-                Categories <Box component={"span"} sx={{ fontSize: "12px", color: "gray" }}>({categories.length})</Box>
-              </Typography>
-            )}
-          </Box>
-          {selected.length > 0 && (
-            <Tooltip title="Delete">
-              <Button
-                variant="contained"
-                color="error"
-                startIcon={<MdDelete />}
-                size='small'
-                sx={{
-                  boxShadow: 3,
-                  ":hover": { bgcolor: "red.700" },
-                  fontWeight: 500
-                }}
-              >
-                Delete
-              </Button>
-            </Tooltip>
-          )}
-        </Toolbar>
-        <Table>
-          <TableHead>
-            <TableRow>
-              <TableCell padding="checkbox" size='small'>
-                <Checkbox
-                  color="primary"
-                  indeterminate={selected.length > 0 && selected.length < categories.length}
-                  checked={categories.length > 0 && selected.length === categories.length}
-                  onChange={handleSelectAllClick}
-                />
-              </TableCell>
-              <TableCell size='small'>Category Id</TableCell>
-              <TableCell size='small'>Category Name</TableCell>
-              <TableCell size='small'>Parent Category</TableCell>
-              <TableCell size='small'>Actions</TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {categories.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((category) => {
-              const parentCategory = categories.find((cat) => cat.id === category.parentId);
-              const isItemSelected = isSelected(category.id);
-              return (
-                <TableRow
-                  key={category.id}
-                  hover
-                  role="checkbox"
-                  onClick={(event) => handleClick(event, category.id)}
-                  aria-checked={isItemSelected}
-                  tabIndex={-1}
-                  selected={isItemSelected}
-                >
-                  <TableCell padding="checkbox" size='small'>
-                    <Checkbox color="primary" checked={isItemSelected} />
-                  </TableCell>
-                  <TableCell sx={{ minWidth: { xs: "150px" } }} size='small'>{category.id}</TableCell>
-                  <TableCell sx={{ minWidth: { xs: "150px" } }} size='small'>{category.name}</TableCell>
-                  <TableCell sx={{ minWidth: { xs: "150px" } }} size='small'>{parentCategory?.name || '-'}</TableCell>
-                  <TableCell sx={{ minWidth: { xs: "150px" } }} size='small'>
-                    <Box sx={{ display: "flex", gap: 1 }}>
-                      <IconButton color='primary' onClick={(e) => { handleEditCategory(category), e.stopPropagation() }}>
-                        <BiEdit />
-                      </IconButton>
-                      <IconButton color='error' onClick={(e) => { handleDeleteCategory(category.id, category.name), e.stopPropagation() }}>
-                        <MdDelete />
-                      </IconButton>
-                    </Box>
-                  </TableCell>
-                </TableRow>
-              );
-            })}
-          </TableBody>
-        </Table>
-      </TableContainer>
+      <CategoriesTable
+        categories={categories}
+        handleClick={handleClick}
+        handleDeleteCategory={handleDeleteCategory}
+        handleEditCategory={handleEditCategory}
+        handleSelectAllClick={handleSelectAllClick}
+        page={page}
+        rowsPerPage={rowsPerPage}
+        selected={selected}
+        isSelected={isSelected}
+        loading={loading}
+      />
+
       <TablePagination
         rowsPerPageOptions={[5, 10, 25]}
         component="div"

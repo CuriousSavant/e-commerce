@@ -1,10 +1,9 @@
 import React from 'react';
-import { CircularProgress, Box, Typography } from '@mui/material';
+import { CircularProgress, Box } from '@mui/material';
 
 const Loading = () => (
-  <Box display="flex" justifyContent="center" alignItems="center" height="100%">
+  <Box display="flex" justifyContent="center" alignItems="center" my={10}>
     <CircularProgress />
-    <Typography ml={2}>Loading...</Typography>
   </Box>
 );
 

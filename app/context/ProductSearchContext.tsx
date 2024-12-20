@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useEffect, useMemo, useState } from 'react';
-import { Categories, Product } from '@/types/product';
+import { Category, Product } from '@/types/product';
 import { useSearchParams } from 'next/navigation';
 import axios from 'axios';
 
@@ -15,7 +15,7 @@ interface SearchContextType {
     query: string | null;
     loading: boolean;
     setLoading: React.Dispatch<React.SetStateAction<boolean>>;
-    categorys: Categories[];
+    categorys: Category[];
     selectedCategory: string | null;
     setSelectedCategory: React.Dispatch<React.SetStateAction<string | null>>;
     filteredProducts: Product[];
@@ -30,8 +30,8 @@ export const SearchProvider: React.FC<{ children: React.ReactNode }> = ({ childr
     const [sortOption, setSortOption] = useState<string>('createdAt');
     const [originalProducts, setOriginalProducts] = useState<Product[]>([]);
     const [searchQuery, setSearchQuery] = useState('');
-    const [categorys, setCategorys] = useState<Categories[]>([]);
-    const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
+    const [categorys, setCategorys] = useState<Category[]>([]);
+    const [selectedCategory, setSelectedCategory] = useState<string | null>('ค่าเริ่มต้น');
     const [loading, setLoading] = useState<boolean>(false)
 
     // use hooks
@@ -56,12 +56,18 @@ export const SearchProvider: React.FC<{ children: React.ReactNode }> = ({ childr
     }, [query, sortOption]);
 
     const filteredProducts = useMemo(() => {
-        if (!selectedCategory) return originalProducts;
+        if (selectedCategory === 'ค่าเริ่มต้น') return originalProducts;
 
         const selectedCategoryId = Number(selectedCategory)
 
-        return originalProducts.filter(
-            (product) => product.categoryId === selectedCategoryId
+        return originalProducts.filter((product) => {
+            if (product.categoryId) {
+                return product.categoryId === selectedCategoryId
+            }
+            else {
+                return originalProducts;
+            }
+        }
         );
     }, [originalProducts, selectedCategory]);
 

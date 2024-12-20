@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react';
 import axios from 'axios';
 import { toast } from 'react-toastify';
-import { Cart } from '@/types/cart';
+import { Cart, CartItem } from '@/types/cart';
 import Swal from 'sweetalert2'
 import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
@@ -11,7 +11,7 @@ import { useRouter } from 'next/navigation';
 type CartQuantities = Record<number, number>;
 
 const useCart = () => {
-    const [cartItems, setCartItems] = useState<Cart[]>([]);
+    const [cartItems, setCartItems] = useState<CartItem[]>([]);
     const [itemQuantities, setItemQuantities] = useState<CartQuantities>({});
     const [cartTotalPrice, setCartTotalPrice] = useState<number>(0);
     const [selectedItems, setSelectedItems] = useState<number[]>([]);
@@ -28,10 +28,11 @@ const useCart = () => {
         setLoading(true);
         const fetchCartItems = async () => {
             try {
-                const res = await axios.get(`/api/cart`);
+                const res = await axios.get(`/api/cart?userId=${session?.user.id}`);
+                console.log(res.data)
                 setCartItems(res.data);
 
-                const combinedItems = res.data.reduce((acc: Cart[], cart: Cart) => {
+                const combinedItems = res.data.reduce((acc: CartItem[], cart: CartItem) => {
                     const existingItem = acc.find(item => item.productId === cart.productId);
                     if (existingItem) {
                         existingItem.quantity += cart.quantity;
@@ -43,13 +44,13 @@ const useCart = () => {
                 setCartItems(combinedItems);
 
                 const savedQuantities = JSON.parse(localStorage.getItem("cartItemQuantities") || "{}");
-                const initialQuantities = combinedItems.reduce((acc: CartQuantities, cart: Cart) => {
+                const initialQuantities = combinedItems.reduce((acc: CartQuantities, cart: CartItem) => {
                     acc[cart.productId] = savedQuantities[cart.productId] || cart.quantity;
                     return acc;
                 }, {});
                 setItemQuantities(initialQuantities);
 
-                const total = combinedItems.reduce((sum: number, cart: Cart) => {
+                const total = combinedItems.reduce((sum: number, cart: CartItem) => {
                     return sum + cart.product.price * cart.quantity;
                 }, 0);
                 setCartTotalPrice(total);

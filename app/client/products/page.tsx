@@ -5,7 +5,7 @@ import { useSearchContext } from '@/app/context/ProductSearchContext';
 import { CircularProgress } from '@mui/material';
 
 const Products = () => {
-    const { originalProducts, viewMode, loading } = useSearchContext();
+    const { viewMode, loading, filteredProducts } = useSearchContext();
 
     const getContainerClass = (viewMode: string) => (
         viewMode === 'grid'
@@ -19,14 +19,14 @@ const Products = () => {
                 <div className="flex justify-center py-6">
                     <CircularProgress />
                 </div>
-            ) : originalProducts.length > 0 ? (
+            ) : filteredProducts.length > 0 ? (
                 <div className={getContainerClass(viewMode)}>
-                    {originalProducts.map((product) => (
+                    {filteredProducts.map((product) => (
                         <CartProduct product={product} viewMode={viewMode} key={product.id} />
                     ))}
                 </div>
             ) : (
-                <div className="text-center text-gray-500 py-4">ไม่พบสินค้าที่ตรงกับคำค้นหา</div>
+                <div className="text-center text-gray-500 py-4 min-h-screen flex justify-center items-center">ไม่พบสินค้าที่ตรงกับคำค้นหา</div>
             )
         )
     }

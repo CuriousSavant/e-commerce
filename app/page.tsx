@@ -166,4 +166,6 @@ export default async function Home() {
 ิ
         ติดปัณหาเรื่อง wishlist อีกละ pin สินค้าหลายอันไม่ได้
         ติดหน้า checkout ตรง list product และ หน้า admin order สำหรับ check และ test function ต่างๆเช่น
+
+        รอแก้หน้าตาปุ่ม login register
 */}

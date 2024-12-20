@@ -16,15 +16,6 @@ export interface Product {
   updatedAt?: Date;
 }
 
-export interface Categories {
-  id: number;
-  name: string;
-  parentId: number | null;
-  properties: Propertie[];
-  createdAt: Date;
-  updatedAt: Date;
-}
-
 export interface Propertie {
   id?: number;
   name: string;
