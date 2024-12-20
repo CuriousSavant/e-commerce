@@ -1,18 +1,25 @@
 import React from "react";
 import HeroSection from "@/components/section/hero";
 import LatestProduct from "@/components/section/latest-product";
-import AllProduct from "@/components/section/allProduct";
 import LayoutProduct from "@/components/layout/layout-product";
+import { BsCartX } from "react-icons/bs";
+import prisma from "@/lib/prisma";
 
-export default function Home() {
+export default async function Home() {
+  const products = await prisma.product.findMany()
+
   return (
-    <>
-      <LayoutProduct>
-        <HeroSection />
+    <LayoutProduct>
+      <HeroSection />
+      {products.length > 0 ? (
         <LatestProduct />
-        <AllProduct />
-      </LayoutProduct>
-    </>
+      ) : (
+        <div className='flex flex-col justify-center items-center min-h-[600px]'>
+          <BsCartX fontSize="10rem" color="#f1f2f3" />
+          <h1 className='text-3xl font-semibold text-gray-400 mt-6'>ไม่มีสินค้า</h1>
+        </div>
+      )}
+    </LayoutProduct >
   );
 }
 
@@ -156,4 +163,7 @@ export default function Home() {
         พักสักสองวัน เดะมาทำต่อ
 
         ว่าจะเปลี่น design ของ cart อ่ะ ไปดูรูปเอาละกัน
+ิ
+        ติดปัณหาเรื่อง wishlist อีกละ pin สินค้าหลายอันไม่ได้
+        ติดหน้า checkout ตรง list product และ หน้า admin order สำหรับ check และ test function ต่างๆเช่น
 */}

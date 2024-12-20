@@ -1,4 +1,5 @@
 import { Product } from "./product";
+import { User } from "./user";
 
 // Enum for order status
 export enum StatusOrder {
@@ -8,18 +9,19 @@ export enum StatusOrder {
 }
 
 export interface Order {
-  id: number;
+  id: string;
   userId: number;
   status: StatusOrder;
   totalAmount: number;
   orderDate: string;
   orderItems: OrderItem[];
+  user: User;
   createdAt: string;
   updatedAt: string;
 }
 
 export interface OrderItem {
-  id: number;
+  id: string;
   orderId: number;
   productId: number;
   quantity: number;
@@ -27,9 +29,7 @@ export interface OrderItem {
   totalPrice: number;
   image: string;
   description: string;
-  product: Product[],
+  product: Product;
   createdAt: string;
   updatedAt: string;
 }
-
-

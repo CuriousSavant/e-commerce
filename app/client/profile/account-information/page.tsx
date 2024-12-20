@@ -1,16 +1,17 @@
 'use client'
 import React, { useEffect, useState } from 'react';
-import { Box, Typography, Paper, Button, Grid, TextField, Dialog, DialogActions, DialogContent, DialogTitle, Snackbar, IconButton } from '@mui/material';
+import { Box, Typography, Paper, Button, Grid, TextField, Dialog, DialogActions, DialogContent, DialogTitle, Snackbar, IconButton, InputAdornment } from '@mui/material';
 import axios from 'axios';
 import { User } from '@/types/user';
 import { Alert } from '@mui/material';
 import { useSession } from 'next-auth/react';
 import { BiArrowBack } from 'react-icons/bi';
 import { useRouter } from 'next/navigation';
+import { MdOutlineRemoveRedEye } from 'react-icons/md';
+import { LuEyeClosed } from 'react-icons/lu'
 
 const AccountInformation = () => {
   const [users, setUsers] = useState<User | null>(null);
-
   const [newName, setNewName] = useState('');
   const [newLastName, setNewLastName] = useState('');
   const [newEmail, setNewEmail] = useState('');
@@ -22,6 +23,7 @@ const AccountInformation = () => {
   const [currentPassword, setCurrentPassword] = useState('');
   const [snackMessage, setSnackMessage] = useState('');
   const [snackOpen, setSnackOpen] = useState(false);
+  const [visibilityOpen, setVisibilityOpen] = useState(false);
 
   const { data: session } = useSession();
 
@@ -175,12 +177,12 @@ const AccountInformation = () => {
       </Paper>
 
       <Dialog open={openDialog} onClose={handleDialogClose}>
-        <DialogTitle sx={{ width: "400px" }}>ยืนยันรหัสผ่าน</DialogTitle>
+        <DialogTitle>ยืนยันรหัสผ่าน</DialogTitle>
         <DialogContent>
           <TextField
             fullWidth
-            label="กรอกรหัสผ่านปัจจุบันของคุณ"
-            type="password"
+            label="รหัสผ่านปัจจุบันของคุณ"
+            type={visibilityOpen ? 'text' : 'password'}
             value={currentPassword}
             variant="standard"
             onChange={(e) => {
@@ -189,6 +191,16 @@ const AccountInformation = () => {
             }}
             error={!!errors.currentPassword}
             helperText={errors.currentPassword}
+            InputProps={{
+              endAdornment: (
+                <InputAdornment position='end'>
+                  <IconButton size='small' onClick={() => setVisibilityOpen(!visibilityOpen)} sx={{ color: "gray" }}>
+                    {visibilityOpen ? <MdOutlineRemoveRedEye /> : <LuEyeClosed />}
+                  </IconButton>
+                </InputAdornment>
+              )
+            }}
+            autoFocus
           />
         </DialogContent>
         <DialogActions>

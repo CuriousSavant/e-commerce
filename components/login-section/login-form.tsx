@@ -1,20 +1,21 @@
-import { Button, TextField, Box, IconButton, InputAdornment } from '@mui/material';
+import { Button, TextField, Box, IconButton, InputAdornment, Typography } from '@mui/material';
 import { FiEye, FiEyeOff } from 'react-icons/fi';
-import { useState } from 'react';
+import React, { SetStateAction, useState } from 'react';
 import { signIn } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 import writeFileSyncLib from '@/lib/read-file';
+import { FormDataProps, FormErrorProps } from '../auth-form';
 
 interface LoginFormProps {
-    email: string;
-    password: string;
-    setEmail: (value: string) => void;
-    setPassword: (value: string) => void;
+    formData: FormDataProps;
+    setFormError: React.Dispatch<SetStateAction<FormErrorProps>>;
+    formError: FormErrorProps;
+    setErrorMsg: React.Dispatch<SetStateAction<string>>;
+    handleChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
     onClose: () => void;
-    setErrorMsg: (Value: string) => void;
 }
 
-const LoginForm: React.FC<LoginFormProps> = ({ email, setEmail, password, setPassword, onClose, setErrorMsg }) => {
+const LoginForm: React.FC<LoginFormProps> = ({ formData, handleChange, onClose, setFormError, setErrorMsg, formError }) => {
     const [passwordVisible, setPasswordVisible] = useState(false);
 
     const togglePasswordVisibility = () => {
@@ -25,20 +26,47 @@ const LoginForm: React.FC<LoginFormProps> = ({ email, setEmail, password, setPas
 
     const handleLogin = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault()
-        const res = await signIn('credentials', {
-            redirect: false,
-            email,
-            password,
-        })
-        if (res?.status === 401) {
-            setErrorMsg(res.error as any)
+
+        const errors: FormErrorProps = {
+            userName: false,
+            lastName: false,
+            email: false,
+            password: false,
+            confirmPassword: false,
+        };
+
+        if (!formData.email) {
+            errors.email = true;
+        }
+        if (!formData.password) {
+            errors.password = true;
+        }
+
+        setFormError(errors);
+
+        if (errors.email || errors.password) {
+            setErrorMsg("กรุณากรอกข้อมูลให้ครบถ้วน");
             return;
         }
-        writeFileSyncLib('json/login.json', [email, password])
-        router.push('/client/profile/overview')
-        window.location.reload()
-        onClose()
 
+        try {
+            const res = await signIn('credentials', {
+                redirect: false,
+                email: formData.email,
+                password: formData.password,
+            })
+            if (res?.error) {
+                setErrorMsg(res.error)
+                return;
+            }
+            setErrorMsg('')
+            writeFileSyncLib('json/login.json', [formData.email, formData.password])
+            router.push('/client/profile/overview')
+            window.location.reload()
+            onClose()
+        } catch (err) {
+            console.log(err)
+        }
     }
 
     return (
@@ -50,9 +78,12 @@ const LoginForm: React.FC<LoginFormProps> = ({ email, setEmail, password, setPas
                 fullWidth
                 variant="outlined"
                 margin="normal"
+                name='email'
                 size="small"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
+                value={formData.email}
+                onChange={handleChange}
+                error={formError.email}
+                helperText={formError.email && "กรุณากรอกอีเมล"}
             />
             <TextField
                 label="รหัสผ่าน"
@@ -62,8 +93,11 @@ const LoginForm: React.FC<LoginFormProps> = ({ email, setEmail, password, setPas
                 variant="outlined"
                 margin="normal"
                 size="small"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
+                name='password'
+                value={formData.password}
+                onChange={handleChange}
+                error={formError.password}
+                helperText={formError.password && "รหัสผ่านต้องมีความยาวอย่างน้อย 8 ตัวอักษร"}
                 InputProps={{
                     endAdornment: (
                         <InputAdornment position="end">
@@ -78,8 +112,7 @@ const LoginForm: React.FC<LoginFormProps> = ({ email, setEmail, password, setPas
                 type="submit"
                 fullWidth
                 variant="contained"
-                color="primary"
-                sx={{ mt: 2 }}
+                sx={{ mt: 2, bgcolor: "primary.500" }}
             >
                 เข้าสู่ระบบ
             </Button>

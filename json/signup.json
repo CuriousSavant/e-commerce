@@ -10,5 +10,48 @@
     "email": "fkdjajk@gmail.com",
     "password": "123",
     "confirmPassword": "123"
+  },
+  {
+    "name": "lnw123",
+    "email": "lnw123@gmail.com",
+    "password": "lnw123",
+    "confirmPassword": "lnw123"
+  },
+  {
+    "name": "admin",
+    "email": "admin@gmail.com",
+    "password": "admin",
+    "confirmPassword": "admin"
+  },
+  {
+    "name": "อาร์ม",
+    "email": "admin@gmail.com",
+    "password": "admin",
+    "confirmPassword": "admin"
+  },
+  {
+    "name": "",
+    "email": "",
+    "password": "",
+    "confirmPassword": ""
+  },
+  {
+    "name": "",
+    "email": "",
+    "password": "",
+    "confirmPassword": ""
+  },
+  {
+    "userName": "vczvcx",
+    "email": "",
+    "password": "",
+    "confirmPassword": ""
+  },
+  {
+    "userName": "admin",
+    "lastName": "admin",
+    "email": "admin@gmail.com",
+    "password": "admin123",
+    "confirmPassword": "admin123"
   }
 ]

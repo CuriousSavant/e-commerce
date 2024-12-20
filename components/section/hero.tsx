@@ -1,9 +1,8 @@
-import { Button, Typography } from '@mui/material';
 import React from 'react'
 
 const HeroSection = () => {
     return (
-        <div className="relative h-[60vh] bg-cover bg-center transition-all mt-24 px-0 md:px-2 lg:px-0">
+        <div className="relative h-[60vh] bg-cover bg-center transition-all mt-10 md:mt-24 px-0 md:px-2 lg:px-0">
             <div className="group overflow-hidden w-full h-full relative md:rounded-lg">
                 <img
                     src={'/imgs/bg/young-content-creator-girl-is-her-laptop-creating-new-vlog-sitting-sofa-working-with-video-from-home.jpg'}

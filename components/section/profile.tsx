@@ -30,7 +30,7 @@ const ProfileMenu = () => {
     const menuItems = [
         { label: "บัญชีของฉัน", icon: <MdPersonOutline className="text-lg mr-1.5" />, action: () => handleMenuClick('/client/profile/overview') },
         { label: "รายการโปรด", icon: <BiHeart className="text-lg mr-1.5" />, action: () => handleMenuClick('/client/profile/wishlist') },
-        { label: "คำสั่งชื้อของฉัน", icon: <RiFileList3Line className="text-lg mr-1.5" />, action: () => handleMenuClick("/client/profile/order-history") },
+        { label: "คำสั่งชื้อของฉัน", icon: <RiFileList3Line className="text-lg mr-1.5" />, action: () => handleMenuClick("/client/profile/order-summary") },
         { label: "ออกจากระบบ", icon: <MdLogout className="text-lg mr-1.5 text-red-500" />, action: () => signOut({ callbackUrl: "/" }), color: "error" },
     ];
 
@@ -38,7 +38,7 @@ const ProfileMenu = () => {
 
     return (
         <>
-            <IconButton onClick={handleOpenMenu}>
+            <IconButton onClick={handleOpenMenu} size='small' sx={{ height: 40 }}>
                 <Avatar sx={{ bgcolor: '#4B5563' }}>{profileName ? profileName : '?'}</Avatar>
             </IconButton>
             <Menu

@@ -1,9 +1,12 @@
+// commit นี้เจอปัฯหาที่เราต้องการให้ จำนวณของ product มันยังอยู่เหมือนเดิมเมื่อไปหน้าอื่น ใน case นี้คือเราทำการเพิ่มจำนวณสิรค้าที่เราต้องการแล้้ว และ เมื่อเรากดชำระเงินที่มันจะเป็นหน้า checkout แล้วจำนวณ item มันจะหาย(นี้คือ ตอนที่ยังไม่มีการ save ลง localStorage ไว้)
 'use client'
 import { useEffect, useState } from 'react';
 import axios from 'axios';
 import { toast } from 'react-toastify';
 import { Cart } from '@/types/cart';
 import Swal from 'sweetalert2'
+import { useSession } from 'next-auth/react';
+import { useRouter } from 'next/navigation';
 
 type CartQuantities = Record<number, number>;
 
@@ -13,6 +16,11 @@ const useCart = () => {
     const [cartTotalPrice, setCartTotalPrice] = useState<number>(0);
     const [selectedItems, setSelectedItems] = useState<number[]>([]);
     const [loading, setLoading] = useState<boolean>(false)
+
+    console.log(itemQuantities)
+
+    const { data: session } = useSession()
+    const router = useRouter()
 
     useEffect(() => {
         setLoading(true);
@@ -68,7 +76,13 @@ const useCart = () => {
     // เพิ่ม, ลบ จำนวณสินค้า
     const updateItemQuantity = (productId: number, increment: boolean) => {
         setItemQuantities((prev) => {
-            const newQuantity = Math.max((prev[productId] || 1) + (increment ? 1 : -1), 1);
+            const currentQuantity = prev[productId] || 1;
+            const stock = cartItems.find(item => item.productId === productId)?.product.stock || 0;
+
+            const newQuantity = increment
+                ? Math.min(currentQuantity + 1, stock)
+                : Math.max(currentQuantity - 1, 1);
+
             return { ...prev, [productId]: newQuantity };
         });
     };
@@ -115,7 +129,7 @@ const useCart = () => {
         }
     };
 
-    const handleOrder = () => {
+    const handleOrder = async () => {
         try {
             const selectedOrderItems = cartItems.filter(item => selectedItems.includes(item.productId));
 
@@ -132,16 +146,24 @@ const useCart = () => {
                 quantity: itemQuantities[item.productId],
             }));
 
-            Swal.fire({
-                icon: "success",
-                title: "ทำการสั่งซื้อเรียบร้อยแล้ว🥳",
-            });
-
-            setCartItems((prev) => prev.filter(item => !selectedItems.includes(item.productId)));
-            setSelectedItems([]);
+            axios.post('/api/order', { userId: session?.user.id, orderItems, totalAmount: cartTotalPrice, }).then(() => {
+                Swal.fire({
+                    icon: "success",
+                    title: "ทำการสั่งซื้อเรียบร้อยแล้ว🥳",
+                }).then(() => {
+                    router.push('/client/profile/order-summary')
+                    setCartItems(prev => prev.filter(item => !selectedItems.includes(item.productId)));
+                    setSelectedItems([]);
+                })
+            }).catch((err) => {
+                Swal.fire({
+                    icon: "error",
+                    title: "เกิดข้อผิดพลาด",
+                    text: err.msg || "ไม่สามารถทำการสั่งซื้อได้ กรุณาลองใหม่อีกครั้ง",
+                });
+            })
         } catch (err) {
             console.error(err);
-
             Swal.fire({
                 icon: "error",
                 title: "เกิดข้อผิดพลาด",

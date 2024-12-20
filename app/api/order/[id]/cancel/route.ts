@@ -8,17 +8,12 @@ export async function DELETE(
   const orderId = params.id;
 
   try {
-    const id = Number(orderId);
-    if (isNaN(id)) {
-      return NextResponse.json({ error: "Invalid order ID" }, { status: 400 });
-    }
-
     await prisma.orderItem.deleteMany({
-      where: { orderId: id },
+      where: { orderId: orderId },
     });
 
     const deletedOrder = await prisma.order.delete({
-      where: { id },
+      where: { id: orderId },
     });
 
     return NextResponse.json(deletedOrder, { status: 200 });

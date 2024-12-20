@@ -2,12 +2,12 @@
 import React, { useState } from 'react';
 import { usePathname } from 'next/navigation';
 import { Box, Drawer, List, ListItem, ListItemButton, ListItemIcon, ListItemText, Typography, IconButton, Avatar } from '@mui/material';
-import { BiBox, BiCategory, BiCog, BiHome, BiMenu, BiShoppingBag, BiStore } from 'react-icons/bi';
+import { BiBox, BiCategory, BiHome, BiMenu, BiShoppingBag, BiStore } from 'react-icons/bi';
 import { RiAdminLine } from 'react-icons/ri';
 import { HiOutlineUserGroup } from 'react-icons/hi';
 import Link from 'next/link';
 import { useMediaQuery, Theme } from '@mui/material';
-import { signOut, useSession } from 'next-auth/react';
+import { signOut } from 'next-auth/react';
 import ProfileIcon from './profileIcon';
 import { GoSignOut } from 'react-icons/go'
 
@@ -16,7 +16,6 @@ const SidebarMenu: React.FC = () => {
     const [mobileOpen, setMobileOpen] = useState(false);
 
     const isMdUp = useMediaQuery((theme: Theme) => theme.breakpoints.up('md'));
-    const { data: session, data } = useSession();
 
     const toggleDrawer = () => {
         setMobileOpen(!mobileOpen);

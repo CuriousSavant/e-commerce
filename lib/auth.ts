@@ -20,7 +20,7 @@ export const authOptions: AuthOptions = {
         });
 
         if (!user) {
-          throw new Error("ไม่พบผู้ใช้");
+          throw new Error("email หรือ password ไม่ถูกต้อง");
         }
 
         if (

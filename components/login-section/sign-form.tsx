@@ -1,29 +1,20 @@
 import { Button, TextField, Box, IconButton, InputAdornment } from '@mui/material';
 import { FiEye, FiEyeOff } from 'react-icons/fi';
 import { useState } from 'react';
+import { FormDataProps, FormErrorProps } from '../auth-form';
 
 interface SignUpFormProps {
-    userName: string;
-    setUserName: (value: string) => void;
-    email: string;
-    setEmail: (value: string) => void;
-    password: string;
-    setPassword: (value: string) => void;
-    confirmPassword: string;
-    setConfirmPassword: (value: string) => void;
+    formData: FormDataProps;
+    formError: FormErrorProps;
+    handleChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
     onSignUp: (e: React.FormEvent<HTMLFormElement>) => void;
 }
 
 const SignUpForm: React.FC<SignUpFormProps> = ({
-    userName,
-    setUserName,
-    email,
-    setEmail,
-    password,
-    setPassword,
-    confirmPassword,
-    setConfirmPassword,
-    onSignUp
+    formData,
+    formError,
+    handleChange,
+    onSignUp,
 }) => {
     const [passwordVisible, setPasswordVisible] = useState(false);
     const [confirmPasswordVisible, setConfirmPasswordVisible] = useState(false);
@@ -42,32 +33,57 @@ const SignUpForm: React.FC<SignUpFormProps> = ({
                 label="ชื่อ"
                 type="text"
                 placeholder="กรอกชื่อของคุณ"
-                fullWidth
                 variant="outlined"
                 margin="normal"
                 size="small"
-                value={userName}
-                onChange={(e) => setUserName(e.target.value)}
+                name="userName"
+                value={formData.userName}
+                onChange={handleChange}
+                error={!!formError.userName}
+                helperText={formError.userName && "กรุณากรอกชื่อ"}
+                fullWidth
+            />
+            <TextField
+                label="นามสกุล"
+                type="text"
+                placeholder="กรอกนามสกุลของคุณ"
+                variant="outlined"
+                margin="normal"
+                size="small"
+                name="lastName"
+                value={formData.lastName}
+                onChange={handleChange}
+                error={!!formError.lastName}
+                helperText={formError.lastName && "กรุณากรอกนามสกุล"}
+                fullWidth
             />
             <TextField
                 label="อีเมล"
                 type="email"
                 placeholder="กรอกอีเมลของคุณ"
-                fullWidth
                 variant="outlined"
                 margin="normal"
                 size="small"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
+                name="email"
+                value={formData.email}
+                onChange={handleChange}
+                error={!!formError.email}
+                helperText={formError.email && "กรุณากรอกอีเมลที่ถูกต้อง"}
+                fullWidth
             />
             <TextField
                 label="รหัสผ่าน"
-                type={passwordVisible ? "text" : "password"}
                 placeholder="กรอกรหัสผ่านของคุณ"
-                fullWidth
                 variant="outlined"
                 margin="normal"
                 size="small"
+                name="password"
+                type={passwordVisible ? "text" : "password"}
+                value={formData.password}
+                onChange={handleChange}
+                error={!!formError.password}
+                helperText={formError.password && "รหัสผ่านต้องมีความยาวอย่างน้อย 8 ตัวอักษร"}
+                fullWidth
                 InputProps={{
                     endAdornment: (
                         <InputAdornment position="end">
@@ -77,17 +93,20 @@ const SignUpForm: React.FC<SignUpFormProps> = ({
                         </InputAdornment>
                     ),
                 }}
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
             />
             <TextField
                 label="ยืนยันรหัสผ่าน"
-                type={confirmPasswordVisible ? "text" : "password"}
                 placeholder="ยืนยันรหัสผ่านของคุณ"
                 fullWidth
                 variant="outlined"
                 margin="normal"
                 size="small"
+                name="confirmPassword"
+                type={confirmPasswordVisible ? "text" : "password"}
+                value={formData.confirmPassword}
+                onChange={handleChange}
+                error={!!formError.confirmPassword}
+                helperText={formError.confirmPassword && "รหัสผ่านและยืนยันรหัสผ่านไม่ตรงกัน"}
                 InputProps={{
                     endAdornment: (
                         <InputAdornment position="end">
@@ -97,15 +116,13 @@ const SignUpForm: React.FC<SignUpFormProps> = ({
                         </InputAdornment>
                     ),
                 }}
-                value={confirmPassword}
-                onChange={(e) => setConfirmPassword(e.target.value)}
             />
             <Button
                 type="submit"
                 fullWidth
                 variant="contained"
                 color="primary"
-                sx={{ mt: 2 }}
+                sx={{ mt: 2, bgcolor: "primary.500" }}
             >
                 สมัครสมาชิก
             </Button>

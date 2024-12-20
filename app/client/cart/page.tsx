@@ -26,14 +26,12 @@ const CartPage = () => {
         toggleSelectAllItems,
         toggleSelectItem,
         removeItemFromCart,
-        handleOrder,
         loading,
     } = useCart();
-
     const router = useRouter();
 
     return (
-        <Box sx={{ minHeight: '100vh', mt: 10 }}>
+        <Box sx={{ mt: 14 }}>
             {cartItems.length > 0 ? (
                 <>
                     {loading ? (
@@ -58,99 +56,110 @@ const CartPage = () => {
                                         <Typography ml={1}>เลือกทั้งหมด</Typography>
                                     </Box>
                                     <Box>
-                                        <Box>
-                                            {cartItems.flatMap(cartItem => cartItem.product).map((cartItem, index) => (
-                                                <Box
-                                                    key={index}
-                                                    display="flex"
-                                                    alignItems="center"
-                                                    justifyContent="space-between"
-                                                    borderBottom="1px solid #f5f5f5"
-                                                    py={2}
-                                                // px={2}
-                                                >
-                                                    <Box display="flex" alignItems="center" gap={0.5} flex={2}>
-                                                        {/* Checkbox ของ MUI */}
-                                                        <Checkbox
-                                                            checked={selectedItems.includes(cartItem.id)}
-                                                            onChange={() => toggleSelectItem(cartItem.id)}
-                                                        />
-                                                        <Box
-                                                            component="img"
-                                                            src={cartItem.image?.[0]}
-                                                            alt={cartItem.title}
-                                                            sx={{ width: 48, height: 48, borderRadius: 1 }}
-                                                        />
-                                                        <Box>
-                                                            <Typography
-                                                                component={Link}
-                                                                href={`/client/${cartItem.slug}`}
-                                                                sx={{
-                                                                    fontSize: '14px',
-                                                                    ':hover': { textDecoration: 'underline' },
-                                                                    display: '-webkit-box',
-                                                                    WebkitLineClamp: 1,
-                                                                    WebkitBoxOrient: 'vertical',
-                                                                    overflow: 'hidden',
-                                                                }}
-                                                            >
-                                                                {cartItem.title}
-                                                            </Typography>
-                                                        </Box>
-                                                        <Box sx={{ fontSize: 15 }}>฿{cartItem.price.toLocaleString('th-TH')}</Box>
-                                                        <Box display="flex" alignItems="center" gap={0.5}>
-                                                            <IconButton
-                                                                size="small"
-                                                                onClick={() => updateItemQuantity(cartItem.id, false)}
-                                                            >
-                                                                <BiMinus />
-                                                            </IconButton>
-                                                            <Typography>{itemQuantities[cartItem.id]?.toLocaleString('th-TH')}</Typography>
-                                                            <IconButton
-                                                                size="small"
-                                                                onClick={() => updateItemQuantity(cartItem.id, true)}
-                                                            >
-                                                                <MdAdd />
-                                                            </IconButton>
-                                                        </Box>
+                                        {cartItems.flatMap(cartItem => cartItem.product).map((cartItem, index) => (
+                                            <Box
+                                                key={index}
+                                                display="flex"
+                                                alignItems="center"
+                                                justifyContent="space-between"
+                                                borderBottom="1px solid #f5f5f5"
+                                                py={2}
+                                            >
+                                                <Box display="flex" alignItems="center" gap={{ xs: 0.5, md: 2 }} flex={2}>
+                                                    <Checkbox
+                                                        checked={selectedItems.includes(cartItem.id)}
+                                                        onChange={() => toggleSelectItem(cartItem.id)}
+                                                    />
+                                                    <Box
+                                                        component="img"
+                                                        src={cartItem.image?.[0]}
+                                                        alt={cartItem.title}
+                                                        sx={{ width: 48, height: 48, borderRadius: 1 }}
+                                                    />
+                                                    <Box
+                                                        sx={{
+                                                            display: 'flex',
+                                                            flexDirection: 'column',
+                                                            flexGrow: 1,
+                                                            overflow: 'hidden',
+                                                            maxWidth: '500px',
+                                                        }}
+                                                    >
+                                                        <Typography
+                                                            component={Link}
+                                                            href={`/client/${cartItem.slug}`}
+                                                            sx={{
+                                                                fontSize: '14px',
+                                                                ':hover': { textDecoration: 'underline' },
+                                                                display: '-webkit-box',
+                                                                WebkitLineClamp: 1,
+                                                                WebkitBoxOrient: 'vertical',
+                                                                overflow: 'hidden',
+                                                                color: 'gray',
+                                                            }}
+                                                        >
+                                                            {cartItem.title}
+                                                        </Typography>
                                                     </Box>
-                                                    <Tooltip title="นำออกจากรถเข็น">
-                                                        <IconButton onClick={() => removeItemFromCart(cartItem.id)}>
-                                                            <MdDeleteOutline />
+                                                    <Box sx={{ fontSize: 15 }}>฿{cartItem.price.toLocaleString('th-TH')}</Box>
+                                                    <Box display="flex" alignItems="center" gap={0.5}>
+                                                        <IconButton
+                                                            size="small"
+                                                            onClick={() => updateItemQuantity(cartItem.id, false)}
+                                                            disabled={itemQuantities[cartItem.id] <= 1}
+                                                        >
+                                                            <BiMinus />
                                                         </IconButton>
-                                                    </Tooltip>
+                                                        <Typography>{itemQuantities[cartItem.id]?.toLocaleString('th-TH')}</Typography>
+                                                        <IconButton
+                                                            size="small"
+                                                            onClick={() => updateItemQuantity(cartItem.id, true)}
+                                                        >
+                                                            <MdAdd />
+                                                        </IconButton>
+                                                    </Box>
                                                 </Box>
-                                            ))}
-                                        </Box>
+                                                <Tooltip title="นำออกจากรถเข็น">
+                                                    <IconButton onClick={() => removeItemFromCart(cartItem.id)}>
+                                                        <MdDeleteOutline />
+                                                    </IconButton>
+                                                </Tooltip>
+                                            </Box>
+                                        ))}
                                     </Box>
                                 </Box>
 
                                 {/* สรุปคำสั่งซื้อ */}
                                 <Box flex={0.4} sx={{ p: 3, border: '1px solid #f0f0f0', borderRadius: '8px' }}>
-                                    <Typography variant="h6" fontWeight="bold" mb={2}>
-                                        สรุปการสั่งซื้อ
+                                    <Typography variant="h6" mb={2}>
+                                        สรุปคำสั่งซื้อ
                                     </Typography>
-                                    <Box display="flex" justifyContent="space-between" py={1}>
-                                        <Typography>ยอดรวมสินค้า</Typography>
-                                        <Typography>฿{cartTotalPrice.toLocaleString('th-TH')}</Typography>
-                                    </Box>
-                                    <Box display="flex" justifyContent="space-between" fontWeight="bold">
-                                        <Typography>ส่วนลด</Typography>
-                                        <Typography variant="subtitle1">ไม่มี</Typography>
-                                    </Box>
-                                    <Divider sx={{ my: 2 }} />
-                                    <Box display="flex" justifyContent="space-between" fontWeight="bold">
-                                        <Typography>ยอดรวม</Typography>
-                                        <Typography variant="h6">฿{cartTotalPrice.toLocaleString('th-TH')}</Typography>
+                                    <Box sx={{ display: "flex", flexDirection: "column", gap: 1 }}>
+                                        <Box display="flex" justifyContent="space-between">
+                                            <Typography color='gray' variant='body2'>จำนวนสินค้า</Typography>
+                                            <Typography color='gray' variant='body2'>{selectedItems.length > 0 ? selectedItems.length + " ชิ้น" : "-"}</Typography>
+                                        </Box>
+                                        <Box display="flex" justifyContent="space-between">
+                                            <Typography color='gray' variant='body2'>ค่าจัดส่ง</Typography>
+                                            <Typography color='gray' variant='body2'>ฟรี</Typography>
+                                        </Box>
+                                        <Box display="flex" justifyContent="space-between" fontWeight="bold">
+                                            <Typography color='gray' variant='body2'>ส่วนลด</Typography>
+                                            <Typography color='gray' variant='body2'>ไม่มี</Typography>
+                                        </Box>
+                                        <Divider sx={{ my: 1 }} />
+                                        <Box display="flex" justifyContent="space-between" fontWeight="bold">
+                                            <Typography variant='body1'>ยอดรวม</Typography>
+                                            <Typography variant="body1" fontWeight={700} color='primary'>฿{cartTotalPrice.toLocaleString('th-TH')}</Typography>
+                                        </Box>
                                     </Box>
                                     <Button
                                         fullWidth
                                         variant="contained"
-                                        color="primary"
-                                        sx={{ mt: 3 }}
-                                        onClick={handleOrder}
+                                        sx={{ mt: 2, bgcolor: '#0f63e9' }}
+                                        onClick={() => router.push('/client/checkout')}
                                     >
-                                        ทำการสั่งซื้อ
+                                        ชำระเงิน
                                     </Button>
                                 </Box>
                             </Box>

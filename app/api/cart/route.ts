@@ -34,12 +34,6 @@ export async function POST(req: Request) {
       },
     });
 
-    console.log(userId, productId, quantity);
-
-    // await prisma.cartItem.deleteMany({
-    //   where: { produc }
-    // })
-
     return NextResponse.json(cartItem, { status: 201 });
   } catch (err) {
     return NextResponse.json({ msg: err }, { status: 500 });

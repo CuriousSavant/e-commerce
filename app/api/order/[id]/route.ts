@@ -1,15 +1,21 @@
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
 import { StatusOrder } from "@prisma/client";
 
 export async function GET(
-  request: Request,
+  req: NextRequest,
   { params }: { params: { id: string } }
 ) {
-  const orderId = parseInt(params.id);
+  const orderId = params.id;
+  const { searchParams } = new URL(req.url);
+  const userId = searchParams.get("userId");
 
   try {
-    const order = await prisma.order.findUnique({
+    if (!userId) {
+      throw new Error("User Not Found");
+    }
+
+    const orderItem = await prisma.order.findMany({
       where: { id: orderId },
       include: {
         orderItems: {
@@ -17,15 +23,15 @@ export async function GET(
             product: true,
           },
         },
-        user: true,
       },
     });
 
-    if (!order) {
+    if (!orderItem) {
       return NextResponse.json({ error: "Order not found" }, { status: 404 });
     }
 
-    return NextResponse.json(order);
+    console.log(orderItem);
+    return NextResponse.json(orderItem);
   } catch (error: any) {
     return NextResponse.json({ error: error.message }, { status: 500 });
   }
@@ -35,7 +41,7 @@ export async function PUT(
   request: Request,
   { params }: { params: { id: string } }
 ) {
-  const orderId = parseInt(params.id);
+  const orderId = params.id;
   const { status } = await request.json();
 
   try {
@@ -58,7 +64,8 @@ export async function DELETE(
   request: Request,
   { params }: { params: { id: string } }
 ) {
-  const orderId = parseInt(params.id);
+  const orderId = params.id;
+  console.log(orderId);
   try {
     await prisma.orderItem.deleteMany({
       where: { orderId: orderId },

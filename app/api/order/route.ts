@@ -6,8 +6,6 @@ export async function GET(req: NextRequest) {
   const { searchParams } = new URL(req.url);
   const userId = searchParams.get("userId");
 
-  console.log(userId);
-
   if (!userId) {
     return NextResponse.json({ msg: "UserId is required" }, { status: 400 });
   }
@@ -27,61 +25,64 @@ export async function GET(req: NextRequest) {
   }
 }
 
-export async function POST(request: Request) {
-  const { userId, orderItems } = await request.json();
+function generateOrderId(): string {
+  const prefix = "T";
+  const randomNumber = Math.floor(100 + Math.random() * 900); // สุ่มตัวเลข 100-999
+  return `${prefix}-${randomNumber}`;
+}
 
-  if (!Array.isArray(orderItems)) {
+export async function POST(request: Request) {
+  const { userId, orderItems, totalAmount } = await request.json();
+
+  if (!Array.isArray(orderItems) || orderItems.length === 0) {
     return NextResponse.json(
-      { error: "Invalid orderItems format" },
+      { error: "Invalid or empty orderItems format" },
       { status: 400 }
     );
   }
 
   try {
-    const order = await prisma.order.create({
-      data: {
-        userId,
-        status: StatusOrder.PENDING,
-        orderDate: new Date(),
-        orderItems: {
-          create: await Promise.all(
-            orderItems.map(
-              async (item: { productId: number; quantity: number }) => {
-                const product = await prisma.product.findUnique({
+    // Start a Prisma transaction
+    const result = await prisma.$transaction(async (tx) => {
+      const order = await tx.order.create({
+        data: {
+          id: generateOrderId(),
+          userId,
+          status: StatusOrder.PENDING,
+          orderDate: new Date(),
+          totalAmount,
+          orderItems: {
+            create: await Promise.all(
+              orderItems.map(async (item: { productId: number; quantity: number }) => {
+                const product = await tx.product.findUnique({
                   where: { id: item.productId },
                 });
 
-                if (product) {
-                  return {
-                    productId: item.productId,
-                    quantity: item.quantity,
-                    price: product.price,
-                  };
-                } else {
-                  throw new Error(
-                    `Product with ID: ${item.productId} not found`
-                  );
+                if (!product || product.stock < item.quantity) {
+                  throw new Error(`Insufficient stock for product ID: ${item.productId}`);
                 }
-              }
-            )
-          ),
-        },
-      },
-    });
 
-    for (const item of orderItems) {
-      const product = await prisma.product.findUnique({
-        where: { id: item.productId },
+                // Reserve stock (reduce stock temporarily)
+                await tx.product.update({
+                  where: { id: item.productId },
+                  data: { stock: product.stock - item.quantity },
+                });
+
+                return {
+                  id: generateOrderId(),
+                  productId: item.productId,
+                  quantity: item.quantity,
+                  price: product.price,
+                  totalPrice: product.price * item.quantity,
+                };
+              })
+            ),
+          },
+        },
       });
 
-      if (product) {
-        await prisma.product.update({
-          where: { id: item.productId },
-          data: { stock: product.stock || 0 - item.quantity },
-        });
-      }
-
-      await prisma.cartItem.deleteMany({
+      // Remove items from the cart
+      await tx.cartItem.deleteMany({
         where: {
           cartId: userId,
           productId: {
@@ -89,12 +90,30 @@ export async function POST(request: Request) {
           },
         },
       });
-    }
 
-    // หลังสั่งชื้อ ให้ลลบสินค้าในตะกร้าทั้งหมด
-    return NextResponse.json(order);
+      return order;
+    });
+
+    return NextResponse.json(result);
   } catch (err: any) {
     console.error(err);
-    return NextResponse.json({ msg: err }, { status: 500 });
+
+    // Rollback stock adjustment if there's an error
+    await Promise.all(
+      orderItems.map(async (item: { productId: number; quantity: number }) => {
+        const product = await prisma.product.findUnique({
+          where: { id: item.productId },
+        });
+
+        if (product) {
+          await prisma.product.update({
+            where: { id: item.productId },
+            data: { stock: product.stock + item.quantity },
+          });
+        }
+      })
+    );
+
+    return NextResponse.json({ error: err.message }, { status: 500 });
   }
 }

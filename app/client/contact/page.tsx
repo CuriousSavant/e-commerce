@@ -3,10 +3,9 @@ import { Button, TextField, Typography } from '@mui/material';
 import Link from 'next/link';
 import React, { useState } from 'react';
 import { CiGlobe, CiInstagram, CiLocationOn, CiMail, CiPhone } from 'react-icons/ci';
-import writeFileSyncLib from '@/lib/read-file';
+// import writeFileSyncLib from '@/lib/read-file';
 import { useSession } from 'next-auth/react';
-import Swall from 'sweetalert2'
-import Swal from 'sweetalert2';
+import Swal from 'sweetalert2'
 
 const contactInfo = {
     address: "123/45 ถนนสุขสันต์ แขวงบางรัก เขตบางรัก กรุงเทพมหานคร 10500",
@@ -38,13 +37,12 @@ const ContactPage = () => {
         ]
 
         try {
-            writeFileSyncLib('json/contact-msg.json', data)
-            console.log('เขียนข้อมูลเสร็จแล้ว')
             Swal.fire({
                 icon: "success",
                 title: "ส่งข้อความแล้ว🥳",
-                text: "ปัจจุบันผมยังไม่รับงานนะครับ ไว้มีโอกาสค่อยมาร่วมงานกันนะ🥰"
+                // text: "ปัจจุบันผมยังไม่รับงานนะครับ ไว้มีโอกาสค่อยมาร่วมงานกันนะ🥰"
             })
+            // writeFileSyncLib('json/contact-msg.json', data)
             setFirstName("");
             setLastName("");
             setEmail("");
@@ -65,32 +63,40 @@ const ContactPage = () => {
                 <h1 className='text-2xl font-semibold mb-6'>Contact Us</h1>
                 <div className='flex flex-col gap-4'>
                     <div className='flex gap-2'>
-                        <Typography fontSize={24}>{<CiLocationOn />}</Typography>
-                        <Typography variant='subtitle1'>{contactInfo.address}
-                            <Typography variant='subtitle2' sx={{ color: "#6b7280", fontSize: 12 }}>ข้อมูลจำลอง</Typography>
-                        </Typography>
+                        <h1 className='text-2xl'>
+                            <CiLocationOn />
+                        </h1>
+                        <h6>{contactInfo.address}
+                            <p className='text-[#6b7280] text-sm'>ข้อมูลจำลอง</p>
+                        </h6>
                     </div>
                     <div className='flex gap-2'>
-                        <Typography fontSize={24}>{<CiPhone />}</Typography>
-                        <Typography variant='subtitle1'>
-                            {contactInfo.phone}
-                            <Typography variant='subtitle2' sx={{ color: "#6b7280", fontSize: 12 }}>ข้อมูลจำลอง</Typography>
-                        </Typography>
+                        <h1 className='text-2xl'>
+                            <CiPhone />
+                        </h1>
+                        <h6>{contactInfo.phone}
+                            <p className='text-[#6b7280] text-sm'>ข้อมูลจำลอง</p>
+                        </h6>
                     </div>
                     <div className='flex gap-2'>
-                        <Typography fontSize={24}>{<CiMail />}</Typography>
-                        <Typography variant='subtitle1'>
-                            {contactInfo.email}
-                            <Typography variant='subtitle2' sx={{ color: "#6b7280", fontSize: 12 }}>ข้อมูลจำลอง</Typography>
-                        </Typography>
+                        <h1 className='text-2xl'>
+                            <CiMail />
+                        </h1>
+                        <h6>{contactInfo.email}
+                            <p className='text-[#6b7280] text-sm'>ข้อมูลจำลอง</p>
+                        </h6>
                     </div>
                     <div className='flex gap-2'>
-                        <Typography fontSize={24}>{<CiGlobe />}</Typography>
-                        <Link href={contactInfo.website} className='hover:text-[#1976d2]'>{contactInfo.website}</Link>
+                        <h1 className='text-2xl'>
+                            <CiGlobe />
+                        </h1>
+                        <h6>{contactInfo.website}</h6>
                     </div>
                     <div className='flex gap-2'>
-                        <Typography fontSize={24}>{<CiInstagram />}</Typography>
-                        <Link href={contactInfo.instagram} className='hover:text-[#1976d2]'>{contactInfo.instagram}</Link>
+                        <h1 className='text-2xl'>
+                            <CiInstagram />
+                        </h1>
+                        <h6>{contactInfo.instagram}</h6>
                     </div>
                 </div>
             </div>
@@ -99,30 +105,39 @@ const ContactPage = () => {
             <div className='border p-4 rounded-md'>
                 <form className='flex flex-col gap-4' onSubmit={handleSubmitForm}>
                     <TextField
-                        size='small' label='first name'
+                        size='small'
+                        label='first name'
                         onChange={(e) => setFirstName(e.target.value)}
                         value={firstName}
-                        fullWidth required />
+                        fullWidth
+                        required
+                    />
 
                     <TextField
-                        size='small' label='last name'
+                        size='small'
+                        label='last name'
                         onChange={(e) => setLastName(e.target.value)}
                         value={lastName}
-                        fullWidth />
+                        fullWidth
+                    />
 
                     <TextField
-                        size='small' label='email'
+                        size='small'
+                        label='email'
                         onChange={(e) => setEmail(e.target.value)}
                         fullWidth
                         value={email}
-                        required />
+                        required
+                    />
 
                     <TextField
-                        size='small' label='type your message...'
+                        size='small'
+                        label='type your message...'
                         rows={6} onChange={(e) => setMessage(e.target.value)}
                         multiline
                         value={message}
-                        fullWidth />
+                        fullWidth
+                    />
                     <div className='mt-2'>
                         <Button type='submit' variant='contained' fullWidth>Submit</Button>
                     </div>

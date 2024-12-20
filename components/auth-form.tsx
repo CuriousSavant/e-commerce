@@ -8,22 +8,79 @@ import axios from 'axios';
 import { signIn } from 'next-auth/react';
 import writeFileSyncLib from '@/lib/read-file';
 
+export interface FormDataProps {
+    userName: string;
+    lastName: string;
+    email: string;
+    password: string;
+    confirmPassword: string;
+}
+
+export interface FormErrorProps {
+    userName: boolean;
+    lastName: boolean;
+    email: boolean;
+    password: boolean;
+    confirmPassword: boolean;
+}
+
 function AuthModal({ onClose }: { onClose: () => void }) {
     const [activeTab, setActiveTab] = useState<'login' | 'signup'>('login');
-    const [userName, setUserName] = useState<string>('');
-    const [email, setEmail] = useState<string>('');
-    const [password, setPassword] = useState<string>('');
-    const [confirmPassword, setConfirmPassword] = useState<string>('');
     const [errorMsg, setErrorMsg] = useState<string>('');
+
+    const [formData, setFormData] = useState<FormDataProps>({
+        userName: "",
+        lastName: "",
+        email: "",
+        password: "",
+        confirmPassword: "",
+    })
+
+    const [formError, setFormError] = useState<FormErrorProps>({
+        userName: false,
+        lastName: false,
+        email: false,
+        password: false,
+        confirmPassword: false,
+    })
 
     const handleTabChange = (value: 'login' | 'signup') => {
         setActiveTab(value);
-        setUserName('');
-        setEmail('');
-        setPassword('');
-        setConfirmPassword('');
-        setErrorMsg('');
+        setErrorMsg('')
+        setFormData({
+            userName: "",
+            lastName: "",
+            email: "",
+            password: "",
+            confirmPassword: "",
+        })
+        setFormError({
+            userName: false,
+            lastName: false,
+            email: false,
+            password: false,
+            confirmPassword: false,
+        })
     };
+
+    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        e.preventDefault()
+        const { name, value } = e.target;
+        setFormData((prev) => ({
+            ...prev,
+            [name]: value
+        }))
+
+        setFormError((prev) => ({
+            ...prev,
+            password: name === 'password' && value.length < 8,
+            confirmPassword: name === 'confirmPassword' && value !== formData.password,
+        }))
+
+        if (name === 'password' || name === 'confirmPassword') {
+            setErrorMsg('')
+        }
+    }
 
     const handleLogin = async (email: string | undefined, password: string | undefined) => {
         const res = await signIn('credentials', {
@@ -35,28 +92,40 @@ function AuthModal({ onClose }: { onClose: () => void }) {
             setErrorMsg(res.error as any)
         }
         onClose()
-        console.log(res)
     }
 
     const handleSignUp = async (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-        setErrorMsg('');
-        const data = {
-            name: userName,
-            email,
-            password,
-            confirmPassword,
+
+        const errors: FormErrorProps = {
+            userName: !formData.userName.trim(),
+            lastName: !formData.lastName.trim(),
+            email: !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email),
+            password: formData.password.length < 8,
+            confirmPassword: formData.confirmPassword !== formData.password || formData.confirmPassword.length < 8,
+        };
+
+        setFormError(errors);
+
+        // ตรวจสอบว่ามีข้อผิดพลาดหรือไม่
+        const hasError = Object.values(errors).some((error) => error);
+        if (hasError) {
+            setErrorMsg("กรุณากรอกข้อมูลให้ถูกต้อง");
+            return;
         }
+        console.log("hasError:",hasError)
+
         try {
-            await axios.post('/api/users', data);
-            await handleLogin(email, password)
-            // เขียนข้อมูลการ signup ของ user ลงในไฟล์ .json
-            writeFileSyncLib('json/signup.json', [data])
+            await axios.post('/api/users', formData);
+            await handleLogin(formData.email, formData.password);
+
+            // เขียนข้อมูลการ signup ลงในไฟล์ .json
+            writeFileSyncLib('json/signup.json', [formData]);
             window.location.reload();
-            onClose()
+            onClose();
         } catch (err: any) {
             if (err.response?.status === 400) {
-                setErrorMsg(err.response.data.error);
+                setErrorMsg(err.response.data.msg);
             } else {
                 setErrorMsg('เกิดข้อผิดพลาดในการสมัครสมาชิก');
             }
@@ -72,7 +141,7 @@ function AuthModal({ onClose }: { onClose: () => void }) {
                 justifyContent: 'center',
                 alignItems: 'center',
                 backgroundColor: 'rgba(0, 0, 0, 0.7)',
-                zIndex: 9999,
+                zIndex: 99999,
             }}
         >
             <Box
@@ -106,23 +175,18 @@ function AuthModal({ onClose }: { onClose: () => void }) {
 
                 {activeTab === 'login' ? (
                     <LoginForm
-                        email={email}
-                        setEmail={setEmail}
-                        password={password}
-                        setPassword={setPassword}
+                        formData={formData}
+                        handleChange={handleChange}
                         onClose={onClose}
+                        setFormError={setFormError}
                         setErrorMsg={setErrorMsg}
+                        formError={formError}
                     />
                 ) : (
                     <SignupForm
-                        userName={userName}
-                        setUserName={setUserName}
-                        email={email}
-                        setEmail={setEmail}
-                        password={password}
-                        setPassword={setPassword}
-                        confirmPassword={confirmPassword}
-                        setConfirmPassword={setConfirmPassword}
+                        formData={formData}
+                        formError={formError}
+                        handleChange={handleChange}
                         onSignUp={handleSignUp}
                     />
                 )}

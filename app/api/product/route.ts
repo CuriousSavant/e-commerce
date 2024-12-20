@@ -6,22 +6,57 @@ export async function GET(req: Request) {
   try {
     const url = new URL(req.url);
     const sortOrder = url.searchParams.get("sortOrder") || "desc";
+    const sortBy = url.searchParams.get("sortBy") || "createdAt";
+    const search = url.searchParams.get("search");
+
+    let products;
 
     if (sortOrder !== "asc" && sortOrder !== "desc") {
       throw new Error("Invalid SortOrder value");
     }
 
-    const products = await prisma.product.findMany({
-      orderBy: {
-        createdAt: sortOrder,
-      },
-      include: { orderItem: true },
-    });
+    const searchFilter = search
+      ? {
+          where: {
+            title: {
+              contains: search.toLowerCase(),
+            },
+          },
+        }
+      : undefined;
+
+    switch (sortBy) {
+      case "lowPrice":
+        products = await prisma.product.findMany({
+          ...searchFilter,
+          orderBy: { price: "asc" },
+        });
+        break;
+      case "highPrice":
+        products = await prisma.product.findMany({
+          ...searchFilter,
+          orderBy: { price: "desc" },
+        });
+        break;
+      default:
+        products = await prisma.product.findMany({
+          ...searchFilter,
+          orderBy: { [sortBy]: sortOrder },
+        });
+        break;
+    }
+
+    if (products.length === 0) {
+      products = await prisma.product.findMany({
+        take: 5,
+        orderBy: { [sortBy]: sortOrder },
+      });
+    }
 
     return NextResponse.json(products);
   } catch (error) {
     console.error(error);
-    return NextResponse.error();
+    return NextResponse.json({ msg: error }, { status: 500 });
   }
 }
 

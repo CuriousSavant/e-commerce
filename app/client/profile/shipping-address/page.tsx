@@ -1,82 +1,139 @@
-/**
- * Note for Developers:
- *
- * This project is a small example of an E-commerce website created by a beginner 
- * for learning and practice purposes only. 
- * **It is not functional for real-world use** and does not include full E-commerce features.
- *
- * - The forms in this project are not connected to a real backend.
- * - Please build your own forms and backend systems for actual use cases.
- *
- * The goal of this project is to showcase a basic design example 
- * that you can customize and expand according to your needs.
- *
- * Thank you for your interest and feel free to continue developing it further!
- */
-
-'use client'
-import React, { useState } from 'react';
-import { Box, Button, Snackbar, Alert, IconButton } from '@mui/material';
-import { MdAdd } from 'react-icons/md';
+'use client';
+import React from 'react';
+import { Box, Button, IconButton, Typography, List, ListItem, ListItemText, Paper, Chip } from '@mui/material';
+import { MdAdd, MdDelete } from 'react-icons/md';
 import { BiArrowBack } from 'react-icons/bi';
+import { BsHeart } from 'react-icons/bs';
 import { useRouter } from 'next/navigation';
+import useAddress from '@/hooks/useAddress';
+import FormAddress from '@/components/checkout/form-address';
 
 const ShippingAddress = () => {
-  const [snackOpen, setSnackOpen] = useState(false);
-
-  const handleButtonClick = () => {
-    setSnackOpen(true);
-  };
-
-  const handleSnackClose = () => {
-    setSnackOpen(false);
-  };
-
   const router = useRouter();
+  const {
+    allAddress,
+    isFormOpen,
+    formData,
+    formErrors,
+    handleChange,
+    handleSubmit,
+    handleEdit,
+    handleClose,
+    setIsFormOpen,
+    handleDelete,
+    handleSetDefaultAddress,
+  } = useAddress();
+
+  const handleSetDefault = (addressId: number) => {
+    handleSetDefaultAddress(addressId);
+  };
 
   return (
     <Box sx={{ px: 3 }}>
-      <IconButton sx={{ mb: 4 }} onClick={() => router.push('/client/profile/overview')}>
+      <IconButton sx={{ mb: 4 }} onClick={() => router.back()}>
         <BiArrowBack />
       </IconButton>
-      <Box
-        sx={{
-          borderWidth: 3,
-          height: "20rem",
-          borderStyle: "dashed",
-          minWidth: "100%",
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
-          borderRadius: "8px",
-        }}
-      >
-        <Button
-          sx={{
-            px: 5,
-            py: 1.5,
-            color: "black",
-            fontSize: "18px",
-            border: "1px solid black",
-          }}
-          variant="outlined"
-          startIcon={<MdAdd />}
-          onClick={handleButtonClick}
-        >
-          เพิ่มที่อยู่ใหม่
-        </Button>
+
+      <Box display={'flex'} justifyContent={'space-between'} alignItems={'center'}>
+        <Typography variant="h5" sx={{ mb: 3, display: 'flex', alignItems: 'center', fontWeight: 'bold' }} component={'div'}>
+          <BsHeart size={24} style={{ marginRight: '8px' }} />
+          จัดการที่อยู่จัดส่ง
+        </Typography>
+        {allAddress.length > 0 && <Button size='small' onClick={() => setIsFormOpen(true)}>+ เพิ่มที่อยู่</Button>}
       </Box>
 
-      <Snackbar
-        open={snackOpen}
-        autoHideDuration={3000}
-        onClose={handleSnackClose}
-        anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
-      >
-        <Alert onClose={handleSnackClose} severity="warning" variant="filled">
-          ยังไม่สามารถเพิ่มที่อยู่ได้
-        </Alert>
-      </Snackbar>
+      {allAddress.length > 0 ? (
+        <Box>
+          {allAddress.map((address, index) => (
+            <ListItem
+              key={index}
+              divider
+              sx={{
+                cursor: 'pointer',
+                '&:hover': {
+                  backgroundColor: '#f5f5f5',
+                }
+              }}
+              onClick={() => handleSetDefault(address.id as number)}
+            >
+              <ListItemText
+                primary={
+                  <Box display={'flex'} gap={1}>
+                    <Typography component="span">{address.fullName}</Typography>
+                    {address.type && <Chip label={address.type} size="small" />}
+                    {address.isDefault && <Chip label="ค่าเริ่มต้น" color='primary' size='small' />}
+                  </Box>
+                }
+                secondary={
+                  <Box>
+                    <Typography variant="body2" component="span">
+                      เบอร์โทร: {address.phoneNumber}
+                    </Typography>
+                    <Typography variant="body2" component="span">
+                      รายละเอียดที่อยู่: {`${address.address}, ${address.subDistrict}, ${address.district}, ${address.province} ${address.postalCode}`}
+                    </Typography>
+                  </Box>
+                }
+                primaryTypographyProps={{ component: 'div' }}
+                secondaryTypographyProps={{ component: 'div' }}
+              />
+              <Box sx={{ position: "absolute", top: 10, right: 10 }}>
+                <Button
+                  color="primary"
+                  size="small"
+                  onClick={(e) => { e.stopPropagation(); handleEdit(address); }}
+                >
+                  แก้ไข
+                </Button>
+                <IconButton
+                  color="error"
+                  size='small'
+                  sx={{ p: '6px' }}
+                  onClick={(e) => { e.stopPropagation(); handleDelete(address.id as number); }}
+                >
+                  <MdDelete />
+                </IconButton>
+              </Box>
+            </ListItem>
+          ))}
+        </Box>
+      ) : (
+        <Box
+          display={'flex'}
+          justifyContent={'center'}
+          flexDirection={'column'}
+          alignItems={'center'}
+          height={'40vh'}
+        >
+          <Typography variant="h6" sx={{ mb: 2, color: "#666" }}>
+            คุณยังไม่มีที่อยู่จัดส่ง
+          </Typography>
+          <Button
+            sx={{
+              px: 6,
+              py: 1.5,
+              fontSize: "16px",
+              fontWeight: "bold",
+              textTransform: "none",
+            }}
+            variant='outlined'
+            startIcon={<MdAdd />}
+            onClick={() => setIsFormOpen(true)}
+          >
+            เพิ่มที่อยู่ใหม่
+          </Button>
+        </Box>
+      )}
+
+      {/* form สำหรับจัดการ */}
+      <FormAddress
+        formData={formData}
+        formErrors={formErrors}
+        handleChange={handleChange}
+        handleClose={handleClose}
+        handleSubmit={handleSubmit}
+        isFormOpen={isFormOpen}
+      />
     </Box>
   );
 };

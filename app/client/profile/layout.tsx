@@ -29,7 +29,7 @@ const SidebarLayout: React.FC<SidebarLayoutProps> = ({ children }) => {
     { label: 'ข้อมูลส่วนตัว', icon: <FiUser color="#1976d2" />, action: () => router.push('/client/profile/overview') },
     { label: 'จัดการข้อมูลส่วนตัว', icon: <FiShield color="#1976d2" />, action: () => router.push('/client/profile/account-information') },
     { label: 'จัดการที่อยู่จัดส่ง', icon: <FiMapPin color="#1976d2" />, action: () => router.push('/client/profile/shipping-address') },
-    { label: 'คำสั่งชื้อ', icon: <RiFileList3Line color="#1976d2" />, action: () => router.push('/client/profile/order-history') },
+    { label: 'คำสั่งชื้อ', icon: <RiFileList3Line color="#1976d2" />, action: () => router.push('/client/profile/order-summary') },
     { label: 'รายการโปรด', icon: <BsHeart color="#1976d2" />, action: () => router.push('/client/profile/wishlist') },
     { divider: true },
     { label: 'ออกจากระบบ', icon: <FiLogOut color="#1976d2" />, action: () => signOut({ callbackUrl: '/' }) },
@@ -66,14 +66,18 @@ const SidebarLayout: React.FC<SidebarLayoutProps> = ({ children }) => {
 
   return (
     <>
-      <Box sx={{ display: "flex", minHeight: '100vh', mt: 12 }}>
+      <Box sx={{ display: "flex", minHeight: '100vh', mt: 12, maxWidth: "100%" }}>
         {/* Sidebar สำหรับหน้าจอใหญ่ */}
         <Box
           sx={{
+            position: "fixed",
             minWidth: { xs: 0, md: 250 },
             padding: 2,
-            borderRight: { xs: 'none', md: '1px solid #e0e0e0' },
-            display: { xs: 'none', md: 'block' },
+            display: { xs: "none", md: "block" },
+            borderRight: "1px solid #e0e0e0",
+            backgroundColor: "#fff",
+            zIndex: 100,
+            overflowY: "auto",
           }}
         >
           {drawerContent}
@@ -99,7 +103,16 @@ const SidebarLayout: React.FC<SidebarLayoutProps> = ({ children }) => {
         </IconButton>
 
         {/* Content */}
-        <Box sx={{ flexGrow: 1, padding: { xs: 0, md: 2 } }}>{children}</Box>
+        <Box
+          sx={{
+            flexGrow: 1,
+            px: { xs: 0, md: 2 },
+            marginLeft: { xs: 0, md: "250px" },
+            maxWidth: "100%",
+          }}
+        >
+          {children}
+        </Box>
       </Box>
     </>
   );

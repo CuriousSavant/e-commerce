@@ -9,16 +9,17 @@ import { toast } from 'react-toastify'
 import { useSession } from 'next-auth/react'
 import { BiArrowBack } from 'react-icons/bi'
 import { useRouter } from 'next/navigation'
+import { Wishlist } from '@/types/wishlist'
 
-const Wishlist = () => {
-  const [favoriteProduct, setFavoriteProduct] = useState<any[]>([])
+const WishlistPage = () => {
+  const [favoriteProduct, setFavoriteProduct] = useState<Wishlist[]>([])
   const { data: session } = useSession()
   const router = useRouter()
 
   const handleDelete = async (productId: number) => {
     try {
       await axios.delete(`/api/wishlist/${productId}`)
-      setFavoriteProduct(favoriteProduct.filter(item => item.id !== productId))
+      setFavoriteProduct(favoriteProduct.filter(item => item.product.id !== productId))
       toast.success('ลบสินค้าจากรายการโปรดเรียบร้อยแล้ว')
     } catch (err) {
       toast.error('เกิดข้อผิดพลาดในการลบสินค้า')
@@ -34,7 +35,7 @@ const Wishlist = () => {
 
     try {
       await axios.post('/api/cart', {
-        userId: 1,
+        userId: session?.user.id,
         productId,
         quantity: 1,
       })
@@ -72,7 +73,7 @@ const Wishlist = () => {
       {favoriteProduct.length === 0 ? (
         <Box display="flex" flexDirection="column" alignItems="center" justifyContent="center" height="50vh">
           <BsCartX fontSize="10rem" color="#f1f2f3" />
-          <Typography sx={{ mb: 1, fontWeight: 700, fontSize: '20px' }}>ไม่มีสินค้าในรายการโปรด</Typography>
+          <Typography sx={{ mb: 1, fontWeight: 700, fontSize: '20px', color: "gray" }}>ไม่มีสินค้าในรายการโปรด</Typography>
           <Typography variant="subtitle1" color="textSecondary">
             ไปช้อปปิ้งกันเถอะ
           </Typography>
@@ -111,7 +112,7 @@ const Wishlist = () => {
                   >
                     {item.product.title}
                   </Typography>
-                  <Typography color="error" fontWeight="bold">
+                  <Typography fontWeight="bold" color='primary'>
                     ฿{item.product.price.toLocaleString('th-TH')}
                   </Typography>
                 </CardContent>
@@ -125,9 +126,9 @@ const Wishlist = () => {
                   >
                     เพิ่มลงตะกร้า
                   </Button>
-                  <IconButton onClick={() => handleDelete(item.id)} color="error">
+                  <IconButton onClick={() => handleDelete(item.product.id)} color="error">
                     <MdDelete />
-                    </IconButton>
+                  </IconButton>
                 </CardActions>
               </Card>
             </Grid>
@@ -139,4 +140,4 @@ const Wishlist = () => {
   )
 }
 
-export default Wishlist
+export default WishlistPage;

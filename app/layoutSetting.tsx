@@ -6,6 +6,7 @@ import { CssBaseline } from '@mui/material';
 import Footer from '@/components/section/footer';
 import { ThemeProvider } from '@emotion/react';
 import theme from '@/lib/theme';
+import { SearchProvider } from './context/ProductSearchContext';
 
 const LayoutSetting = ({ children }: { children: React.ReactNode }) => {
     const pathname = usePathname()
@@ -13,12 +14,14 @@ const LayoutSetting = ({ children }: { children: React.ReactNode }) => {
     return (
         <>
             <ThemeProvider theme={theme}>
-                {/* Reset Css Base */}
-                <CssBaseline />
-                {/* If we are on a path that starts with /admin, do not display the navbar and footer components */}
-                {!pathname.startsWith('/arc/admin') && <Navbar />}
-                {children}
-                {!pathname.startsWith('/arc/admin') && <Footer />}
+                <SearchProvider>
+                    {/* Reset Css Base */}
+                    <CssBaseline />
+                    {/* If we are on a path that starts with /admin, do not display the navbar and footer components */}
+                    {!pathname.startsWith('/arc/admin') && <Navbar />}
+                    {children}
+                    {!pathname.startsWith('/arc/admin') && <Footer />}
+                </SearchProvider>
             </ThemeProvider>
         </>
     )

@@ -30,30 +30,32 @@ export async function POST(request: Request) {
   const session = await getServerSession(authOptions);
   const { productId } = await request.json();
 
-  if (!session || !session.user?.id) {
-    return NextResponse.json(
-      { error: "Unauthorized" },
-      { status: 401 }
-    );
-  }
-
-  if (!productId) {
-    return NextResponse.json(
-      { error: "Product ID is required" },
-      { status: 400 }
-    );
-  }
+  console.log(session)
 
   try {
-    const wishlistItem = await prisma.wishlist.upsert({
+    if (!session || !session.user?.id) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+
+    console.log(session.user.id);
+    console.log(productId);
+
+    const existingItem = await prisma.wishlist.findFirst({
       where: {
-        userId_productId: {
-          userId: Number(session.user.id),
-          productId,
-        },
+        userId: Number(session.user.id),
+        productId,
       },
-      update: {},
-      create: {
+    });
+
+    if (existingItem) {
+      return NextResponse.json(
+        { message: "This product is already in your wishlist" },
+        { status: 400 }
+      );
+    }
+
+    const wishlistItem = await prisma.wishlist.create({
+      data: {
         userId: Number(session.user.id),
         productId,
       },
@@ -61,15 +63,7 @@ export async function POST(request: Request) {
 
     return NextResponse.json(wishlistItem, { status: 201 });
   } catch (error: any) {
-    console.error(error);
-
-    if (error.code === "P2002") {
-      return NextResponse.json(
-        { error: "This product is already in the wishlist" },
-        { status: 400 }
-      );
-    }
-
+    console.log(error);
     return NextResponse.json(
       { error: "Failed to add to wishlist" },
       { status: 500 }

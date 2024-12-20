@@ -12,8 +12,8 @@ export async function middleware(req: NextRequest) {
     return NextResponse.rewrite(new URL("/404", req.url));
   }
 
-  if (pathname.startsWith("/admin") && (!token || token.role !== "admin")) {
-    return NextResponse.redirect(new URL("/client/login", req.url));
+  if (pathname.startsWith("/arc/admin") && (!token || token.role !== "admin")) {
+    return NextResponse.redirect(new URL("/404", req.url));
   }
 
   if (pathname.startsWith("/client/cart") && !token) {
@@ -34,7 +34,7 @@ export const config = {
   matcher: [
     "/client/profile/:path*",
     "/client/cart",
-    "/admin/:path*",
+    "/arc/admin/:path*",
     "/api/:path*",
   ],
 };

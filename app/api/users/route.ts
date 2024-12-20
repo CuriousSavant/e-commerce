@@ -16,7 +16,6 @@ export async function GET(req: Request) {
     // not userId case
     const users = await prisma.user.findMany();
     return NextResponse.json(users, { status: 200 });
-
   } catch (error) {
     return NextResponse.json("Error fetching users", { status: 500 });
   }
@@ -24,7 +23,8 @@ export async function GET(req: Request) {
 
 export async function POST(req: Request) {
   try {
-    const { name, email, password, confirmPassword, role } = await req.json();
+    const { userName, lastName, email, password, confirmPassword, role } =
+      await req.json();
 
     const existingUser = await prisma.user.findUnique({
       where: { email },
@@ -44,14 +44,24 @@ export async function POST(req: Request) {
       );
     }
 
+    if (!userName || !email || !password || !confirmPassword) {
+      return NextResponse.json(
+        {
+          msg: "จำเป็นต้องกรอกข้อมูลให้ครบ",
+        },
+        { status: 400 }
+      );
+    }
+
     const hashedPassword = await bcrypt.hash(password, 10);
 
     const user = await prisma.user.create({
       data: {
-        name,
+        name: userName,
+        lastName,
         email,
         password: hashedPassword,
-        role: role || "member",
+        role: userName === "admin" ? "admin" : "member",
       },
     });
 
