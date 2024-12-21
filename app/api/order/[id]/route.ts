@@ -30,7 +30,6 @@ export async function GET(
       return NextResponse.json({ error: "Order not found" }, { status: 404 });
     }
 
-    console.log(orderItem);
     return NextResponse.json(orderItem);
   } catch (error: any) {
     return NextResponse.json({ error: error.message }, { status: 500 });
@@ -65,7 +64,6 @@ export async function DELETE(
   { params }: { params: { id: string } }
 ) {
   const orderId = params.id;
-  console.log(orderId);
   try {
     await prisma.orderItem.deleteMany({
       where: { orderId: orderId },

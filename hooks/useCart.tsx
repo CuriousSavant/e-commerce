@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react';
 import axios from 'axios';
 import { toast } from 'react-toastify';
-import { Cart, CartItem } from '@/types/cart';
+import { CartItem } from '@/types/cart';
 import Swal from 'sweetalert2'
 import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
@@ -29,7 +29,6 @@ const useCart = () => {
         const fetchCartItems = async () => {
             try {
                 const res = await axios.get(`/api/cart?userId=${session?.user.id}`);
-                console.log(res.data)
                 setCartItems(res.data);
 
                 const combinedItems = res.data.reduce((acc: CartItem[], cart: CartItem) => {
@@ -189,6 +188,7 @@ const useCart = () => {
     return {
         cartItems,
         itemQuantities,
+        setItemQuantities,
         cartTotalPrice,
         selectedItems,
         updateItemQuantity,

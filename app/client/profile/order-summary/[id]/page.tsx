@@ -19,7 +19,6 @@ const OrderDetail = () => {
             try {
                 const res = await axios.get(`/api/order/${id}?userId=${session?.user.id}`);
                 setOrders(res.data);
-                console.log(res.data);
             } catch (err) {
                 console.error(err);
             }
@@ -94,8 +93,9 @@ const OrderDetail = () => {
                                                     variant="subtitle1"
                                                     fontWeight="600"
                                                     fontSize={{ xs: '0.875rem', md: '1rem' }}
+                                                    color="primary"
                                                 >
-                                                    ${item.totalPrice.toLocaleString('th-TH')}
+                                                    ฿{item.totalPrice.toLocaleString('th-TH')}
                                                 </Typography>
                                             </Box>
                                         </Box>
@@ -115,15 +115,15 @@ const OrderDetail = () => {
                                     <Stack spacing={1} mt={1}>
                                         <Grid container justifyContent="space-between">
                                             <Typography variant="subtitle2" sx={{ color: "gray" }}>ยอดรวม</Typography>
-                                            <Typography variant="subtitle2" sx={{ color: "gray" }}>${item.totalPrice.toLocaleString('th-TH')}</Typography>
+                                            <Typography variant="subtitle2">฿{item.totalPrice.toLocaleString('th-TH')}</Typography>
                                         </Grid>
                                         <Grid container justifyContent="space-between">
                                             <Typography variant="subtitle2" sx={{ color: "gray" }}>ส่วนลด</Typography>
-                                            <Typography variant="subtitle2" sx={{ color: "gray" }}>$0</Typography>
+                                            <Typography variant="subtitle2">$0</Typography>
                                         </Grid>
                                         <Grid container justifyContent="space-between">
                                             <Typography variant="subtitle2" sx={{ color: "gray" }}>ค่าส่ง</Typography>
-                                            <Typography variant="subtitle2" sx={{ color: "gray" }}>ฟรี</Typography>
+                                            <Typography variant="subtitle2">ฟรี</Typography>
                                         </Grid>
                                     </Stack>
                                     <Divider sx={{ my: 1 }} />
@@ -131,7 +131,7 @@ const OrderDetail = () => {
                                         <Typography fontWeight="600">
                                             ยอดสุทธิ
                                         </Typography>
-                                        <Typography fontWeight="600">
+                                        <Typography fontWeight="600" color="primary">
                                             ${order.totalAmount.toLocaleString('th-TH')}
                                         </Typography>
                                     </Grid>

@@ -30,15 +30,10 @@ export async function POST(request: Request) {
   const session = await getServerSession(authOptions);
   const { productId } = await request.json();
 
-  console.log(session)
-
   try {
     if (!session || !session.user?.id) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
-
-    console.log(session.user.id);
-    console.log(productId);
 
     const existingItem = await prisma.wishlist.findFirst({
       where: {
@@ -63,7 +58,6 @@ export async function POST(request: Request) {
 
     return NextResponse.json(wishlistItem, { status: 201 });
   } catch (error: any) {
-    console.log(error);
     return NextResponse.json(
       { error: "Failed to add to wishlist" },
       { status: 500 }

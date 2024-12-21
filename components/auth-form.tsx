@@ -113,7 +113,6 @@ function AuthModal({ onClose }: { onClose: () => void }) {
             setErrorMsg("กรุณากรอกข้อมูลให้ถูกต้อง");
             return;
         }
-        console.log("hasError:",hasError)
 
         try {
             await axios.post('/api/users', formData);

@@ -13,6 +13,4 @@ import slugify from "slugify";
       });
     }
   }
-
-  console.log("All products updated with slug!");
 })();

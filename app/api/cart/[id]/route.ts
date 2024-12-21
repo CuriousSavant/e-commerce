@@ -22,7 +22,6 @@ export async function DELETE(
 ) {
   try {
     const productId = Number(params.id);
-    console.log(productId);
 
     const itemsToDelete = await prisma.cartItem.findMany({
       where: { productId: productId },

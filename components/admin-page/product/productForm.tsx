@@ -4,7 +4,7 @@ import { BiUpload } from 'react-icons/bi';
 import axios from 'axios';
 import { redirect } from 'next/navigation';
 import { CgClose } from 'react-icons/cg';
-import { Categories } from '@/types/product';
+import { Category } from '@/types/product';
 import { Button, TextField, Select, MenuItem, InputLabel, FormControl, FormGroup, Box, Typography } from '@mui/material';
 import { useRouter } from 'next/navigation';
 
@@ -22,8 +22,7 @@ const ProductForm: React.FC<SlugProps> = ({ slug }) => {
     const [goToProduct, setGoToProduct] = useState<boolean>(false);
 
     const [categoryId, setCategoryId] = useState<number | null>(null);
-    const [categories, setCategories] = useState<Categories[]>([]);
-    const [productProperties, setProductProperties] = useState<{ [key: string]: string }>({});
+    const [categories, setCategories] = useState<Category[]>([]);
 
     const router = useRouter()
 
@@ -42,7 +41,6 @@ const ProductForm: React.FC<SlugProps> = ({ slug }) => {
                 setBrand(product.brand);
                 setStock(product.stock);
                 setCategoryId(product.categoryId);
-                setProductProperties(product.productProperty || {});
             });
         }
     }, [slug]);
@@ -89,7 +87,6 @@ const ProductForm: React.FC<SlugProps> = ({ slug }) => {
             brand: brand,
             stock: stock,
             categoryId: categoryId,
-            productProperties: productProperties,
         };
 
         try {

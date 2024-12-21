@@ -27,7 +27,7 @@ export async function GET(req: NextRequest) {
 
 function generateOrderId(): string {
   const prefix = "T";
-  const randomNumber = Math.floor(100 + Math.random() * 900); // สุ่มตัวเลข 100-999
+  const randomNumber = Math.floor(100 + Math.random() * 900);
   return `${prefix}-${randomNumber}`;
 }
 
@@ -53,35 +53,38 @@ export async function POST(request: Request) {
           totalAmount,
           orderItems: {
             create: await Promise.all(
-              orderItems.map(async (item: { productId: number; quantity: number }) => {
-                const product = await tx.product.findUnique({
-                  where: { id: item.productId },
-                });
+              orderItems.map(
+                async (item: { productId: number; quantity: number }) => {
+                  const product = await tx.product.findUnique({
+                    where: { id: item.productId },
+                  });
 
-                if (!product || product.stock < item.quantity) {
-                  throw new Error(`Insufficient stock for product ID: ${item.productId}`);
+                  if (!product || product.stock < item.quantity) {
+                    throw new Error(
+                      `Insufficient stock for product ID: ${item.productId}`
+                    );
+                  }
+
+                  // Reserve stock (reduce stock temporarily)
+                  await tx.product.update({
+                    where: { id: item.productId },
+                    data: { stock: product.stock - item.quantity },
+                  });
+
+                  return {
+                    id: generateOrderId(),
+                    productId: item.productId,
+                    quantity: item.quantity,
+                    price: product.price,
+                    totalPrice: product.price * item.quantity,
+                  };
                 }
-
-                // Reserve stock (reduce stock temporarily)
-                await tx.product.update({
-                  where: { id: item.productId },
-                  data: { stock: product.stock - item.quantity },
-                });
-
-                return {
-                  id: generateOrderId(),
-                  productId: item.productId,
-                  quantity: item.quantity,
-                  price: product.price,
-                  totalPrice: product.price * item.quantity,
-                };
-              })
+              )
             ),
           },
         },
       });
 
-      // Remove items from the cart
       await tx.cartItem.deleteMany({
         where: {
           cartId: userId,

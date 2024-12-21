@@ -71,7 +71,7 @@ export const POST = async (req: Request) => {
       brand,
       stock,
       categoryId,
-      productProperties,
+      features,
     } = await req.json();
 
     const slug = slugify(title, { lower: true, strict: true });
@@ -86,8 +86,8 @@ export const POST = async (req: Request) => {
         brand,
         stock,
         categoryId,
-        productProperty: productProperties,
         slug,
+        features,
       },
     });
 

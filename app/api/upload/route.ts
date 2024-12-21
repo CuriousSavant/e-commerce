@@ -5,7 +5,6 @@ export const POST = async (req: Request) => {
   try {
     const data = await req.formData();
     const file = data.get("file");
-    console.log("file:",file)
 
     const result = await cloudinary.uploader.upload(file as any, {
       folder: "e-commerce-v1",

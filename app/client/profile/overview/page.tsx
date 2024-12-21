@@ -52,6 +52,10 @@ const UserProfile: React.FC = () => {
                 <Typography>{users?.name}</Typography>
               </Grid>
               <Grid item xs={12} md={6}>
+                <Typography fontWeight={600}>นามสกุล</Typography>
+                <Typography>{users?.lastName}</Typography>
+              </Grid>
+              <Grid item xs={12} md={6}>
                 <Typography fontWeight={600}>อีเมล</Typography>
                 <Typography>
                   {users?.email}{' '}

@@ -164,17 +164,6 @@ const OrderList: React.FC<OrderListProps> = ({
                                 >
                                     ฿{citem.totalPrice.toLocaleString("th-TH")}
                                 </Typography>
-                                <Typography
-                                    variant="body2"
-                                    sx={{
-                                        textDecoration: "line-through",
-                                        color: "gray",
-                                        ml: 1,
-                                        fontSize: "0.8rem",
-                                    }}
-                                >
-                                    ฿{citem.product.price.toLocaleString("th-TH")}
-                                </Typography>
                             </Box>
                         </Box>
                     </CardContent>

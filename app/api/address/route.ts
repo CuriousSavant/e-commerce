@@ -40,7 +40,6 @@ export const POST = async (req: Request) => {
         userId: Number(session?.user?.id),
       },
     });
-    console.log(createData);
     return NextResponse.json(createData);
   } catch (err) {
     return NextResponse.json({ msg: err }, { status: 500 });

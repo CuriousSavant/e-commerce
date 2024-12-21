@@ -1,22 +1,26 @@
 'use client';
-import React, { SetStateAction, useEffect, useState } from 'react';
-import { AppBar, Toolbar, Typography, IconButton, Box, Button, Link as MuiLink, Dialog, DialogContent, Drawer, List, ListItem, ListItemButton, ListItemText, Avatar, Divider, ListItemIcon, TextField, InputAdornment, useMediaQuery, Backdrop, FormControl, Tooltip, Badge } from '@mui/material';
-import { FaCartShopping } from 'react-icons/fa6';
-import { BiLogOut } from 'react-icons/bi';
-import { HiMenu, HiOutlineHome, HiOutlineSearch, HiOutlineUserGroup } from 'react-icons/hi';
-import { MdClose } from 'react-icons/md';
+import React, { useState } from 'react';
 
+// components
 import Profile from './profile';
-import NextLink from 'next/link';
 import AuthModel from '@/components/auth-form';
-import useDialog from '@/hooks/useDialog';
-import { signOut, useSession } from 'next-auth/react';
+import { AppBar, Toolbar, Typography, IconButton, Box, Button, Link as MuiLink, Dialog, DialogContent, Drawer, List, ListItem, ListItemButton, ListItemText, Avatar, Divider, ListItemIcon, TextField, InputAdornment, useMediaQuery, Backdrop, FormControl, Tooltip, Badge } from '@mui/material';
+import NextLink from 'next/link';
+import SearchBox from '../navbar/search-box';
+import SearchBar from '../navbar/search-bar';
+import ShoppingCart from '../navbar/shopping-cart';
+import LoginRegisterBottom from '../navbar/login-register-bottom';
+
+// icon
+import { HiMenu, HiOutlineHome, HiOutlineSearch, HiOutlineUserGroup } from 'react-icons/hi';
+import { BiLogOut } from 'react-icons/bi';
+import { MdClose } from 'react-icons/md';
 import { BsGrid3X3Gap } from 'react-icons/bs';
 import { RiContactsLine, RiFileList3Line } from 'react-icons/ri';
-import { CiLogin } from 'react-icons/ci';
-import { useSearchContext } from '@/app/context/ProductSearchContext';
-import { useRouter } from 'next/navigation';
-import useCart from '@/hooks/useCart';
+
+// customers hooks
+import useDialog from '@/hooks/useDialog';
+import { signOut, useSession } from 'next-auth/react';
 
 const LinkInfo = [
     { title: "หน้าแรก", href: "/", icon: <HiOutlineHome />, color: "#1976d2" },
@@ -25,7 +29,7 @@ const LinkInfo = [
     { title: "ติดต่อ", href: "/client/contact", icon: <RiContactsLine />, color: "#1976d2" },
     { title: "คำสั่งซื้อ", href: "/client/profile/order-summary", icon: <RiFileList3Line />, color: "#1976d2", authRequired: true },
     { divider: true },
-    { title: "ออกจากระบบ", href: "#", icon: <BiLogOut />, color: "#fff", action: "logout", authRequired: true },
+    { title: "ออกจากระบบ", href: "#", icon: <BiLogOut />, color: "#1976d2", action: "logout", authRequired: true },
 ]
 
 const Navbar = () => {
@@ -163,7 +167,7 @@ const Navbar = () => {
 
                         {/* ถ้ายังไม่ได้ให้แสดงปุ่ม login */}
                         {status !== "authenticated" && (
-                            <BtnLoginRegister handleDialogToggle={handleDialogToggle} />
+                            <LoginRegisterBottom handleDialogToggle={handleDialogToggle} />
                         )}
                     </Box>
                 </Toolbar>
@@ -218,13 +222,7 @@ const Navbar = () => {
                                     <ListItem key={index} disablePadding>
                                         <ListItemButton LinkComponent={link.action !== "logout" ? NextLink : undefined}
                                             href={link.href || "#"}
-                                            sx={{
-                                                textDecoration: "none",
-                                                bgcolor: `${link.action === 'logout' ? 'red' : 'unset'}`,
-                                                color: `${link.action === 'logout' ? '#fff' : ''}`,
-                                                borderRadius: 2,
-                                                ":hover": { bgcolor: `${link.action === 'logout' ? 'red' : ''}` }
-                                            }}
+                                            sx={{ textDecoration: "none", borderRadius: 2, }}
                                             onClick={() => {
                                                 if (link.action === "logout") signOut({ callbackUrl: "/" });
                                                 toggleDrawer(false);
@@ -235,14 +233,14 @@ const Navbar = () => {
                                             </ListItemIcon>
                                             <ListItemText
                                                 primary={link.title}
-                                                sx={link.action === "logout" ? { color: "white", fontSize: 18 } : undefined}
+                                                sx={link.action === "logout" ? { color: "red", fontSize: 18 } : undefined}
                                             />
                                         </ListItemButton>
                                     </ListItem>
                                 )
                             )}
                         {/* Login Button if user not login */}
-                        {status === 'unauthenticated' && <BtnLoginRegister handleDialogToggle={handleDialogToggle} />}
+                        {status === 'unauthenticated' && <LoginRegisterBottom handleDialogToggle={handleDialogToggle} />}
                     </List>
                 </Box>
             </Drawer>
@@ -258,164 +256,3 @@ const Navbar = () => {
 };
 
 export default Navbar;
-
-const ShoppingCart = ({ size = 22 }: { size?: number }) => {
-    const { cartItems } = useCart()
-
-    return (
-        <Badge
-            badgeContent={cartItems.flatMap(cartItem => cartItem.product).length}
-            color="primary"
-            component={'a'}
-            href="/client/cart"
-        >
-            <FaCartShopping size={size} color='#000' />
-        </Badge>
-    );
-};
-
-const BtnLoginRegister = ({ handleDialogToggle }: { handleDialogToggle: () => void }) => {
-    return (
-        <Tooltip title="Login/Register">
-            <Button
-                onClick={handleDialogToggle}
-                sx={{ color: "black", width: { xs: "100%", md: "auto" }, py: { xs: 2, md: 1 }, border: { xs: "1px solid #ddd", md: "0px" } }}
-            >
-                <CiLogin size={22} />
-            </Button>
-        </Tooltip>
-    )
-}
-
-const SearchBar = ({ setIsSearchOpen }: { setIsSearchOpen: React.Dispatch<SetStateAction<boolean>> }) => {
-    const { setSearchQuery, searchQuery } = useSearchContext();
-    const router = useRouter();
-
-    const handleSearch = (e: React.FormEvent) => {
-        e.preventDefault();
-        if (searchQuery) {
-            router.push(`/client/products/search?q=${searchQuery}`);
-        } else {
-            router.push('/client/products')
-        }
-        setIsSearchOpen(false)
-    };
-
-    return (
-        <Box
-            component={'form'}
-            onSubmit={handleSearch}
-            sx={{
-                display: "flex",
-                alignItems: "center",
-                border: "1px solid #d4d4d4",
-                borderRadius: "8px",
-                maxWidth: "400px",
-                width: "100%",
-                mr: 3,
-            }}
-        >
-            <TextField
-                placeholder="Searching for..."
-                variant="standard"
-                fullWidth
-                size='small'
-                onChange={(e) => setSearchQuery(e.target.value)}
-                InputProps={{
-                    disableUnderline: true,
-                    startAdornment: (
-                        <InputAdornment position="start" sx={{ borderRight: '1px solid #ddd', px: 1 }}>
-                            <HiOutlineSearch size={20} className='text-[#6c757d]' />
-                        </InputAdornment>
-                    ),
-                }}
-                sx={{
-                    "& .MuiInputBase-input": {
-                        fontSize: "16px",
-                        padding: 1,
-                    },
-                }}
-            />
-        </Box>
-    );
-};
-
-const SearchBox = ({ isSearchOpen, setIsSearchOpen }: { isSearchOpen: boolean, setIsSearchOpen: React.Dispatch<SetStateAction<boolean>> }) => {
-    const { searchQuery, setSearchQuery } = useSearchContext()
-    const router = useRouter();
-
-    const handleSearch = (e: React.FormEvent) => {
-        e.preventDefault();
-        if (searchQuery) {
-            router.push(`/client/products/search?q=${searchQuery}`);
-        } else {
-            router.push('/client/products')
-        }
-        setIsSearchOpen(false)
-    };
-
-    return (
-        <Dialog
-            open={isSearchOpen}
-            onClose={() => setIsSearchOpen(false)}
-            fullScreen
-            sx={{
-                '& .MuiDialog-paper': {
-                    display: 'flex',
-                    justifyContent: 'center',
-                    alignItems: 'center',
-                },
-            }}
-        >
-            <DialogContent sx={{ width: '100%' }}>
-                <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-                    <Typography variant='subtitle1' sx={{ fontSize: 16, color: "gray" }}>ค้นหาสินค้า</Typography>
-                    <IconButton
-                        onClick={() => setIsSearchOpen(false)}
-                        sx={{ color: 'black' }}
-                    >
-                        <MdClose size={20} />
-                    </IconButton>
-                </Box>
-                <Box component={'form'} onSubmit={handleSearch} sx={{ display: "flex", flexDirection: "row", alignItems: "center", mt: 1, height: "44px" }}>
-                    <TextField
-                        size="small"
-                        placeholder="Searching for..."
-                        onChange={(e) => setSearchQuery(e.target.value)}
-                        fullWidth
-                        autoFocus
-                        InputProps={{
-                            startAdornment: (
-                                <HiOutlineSearch style={{ marginLeft: '14px', marginRight: '14px', color: '#757575' }} size={20} />
-                            ),
-                        }}
-                        sx={{
-                            '& .MuiOutlinedInput-root': {
-                                height: '40px',
-                                bgcolor: '#f4f5f7',
-                                borderTopRightRadius: 0,
-                                borderBottomRightRadius: 0,
-                                '& .MuiOutlinedInput-notchedOutline': { border: 'none' },
-                                paddingLeft: 0,
-                            },
-                        }}
-                    />
-                    <Button
-                        type='submit'
-                        variant='contained'
-                        sx={{
-                            height: '40px',
-                            color: '#fff',
-                            borderTopLeftRadius: 0,
-                            borderBottomLeftRadius: 0,
-                            textTransform: 'none',
-                            px: 2,
-                            boxShadow: 'none',
-                        }}>
-                        Search
-                    </Button>
-                </Box>
-            </DialogContent>
-        </Dialog>
-    );
-};

@@ -2,7 +2,6 @@
 import React, { useEffect, useState } from 'react';
 import { Box, Typography, Paper, Button, Grid, TextField, Dialog, DialogActions, DialogContent, DialogTitle, Snackbar, IconButton, InputAdornment } from '@mui/material';
 import axios from 'axios';
-import { User } from '@/types/user';
 import { Alert } from '@mui/material';
 import { useSession } from 'next-auth/react';
 import { BiArrowBack } from 'react-icons/bi';
@@ -11,12 +10,13 @@ import { MdOutlineRemoveRedEye } from 'react-icons/md';
 import { LuEyeClosed } from 'react-icons/lu'
 
 const AccountInformation = () => {
-  const [users, setUsers] = useState<User | null>(null);
-  const [newName, setNewName] = useState('');
-  const [newLastName, setNewLastName] = useState('');
-  const [newEmail, setNewEmail] = useState('');
-  const [newPhone, setNewPhone] = useState('');
-  const [newDateOfBirth, setNewDateOfBirth] = useState<string>('');
+  const [userDetails, setUserDetails] = useState({
+    name: '',
+    lastName: '',
+    email: '',
+    phone: '',
+    dateOfBirth: ''
+  });
   const [errors, setErrors] = useState<{ [key: string]: string }>({});
 
   const [openDialog, setOpenDialog] = useState(false);
@@ -34,18 +34,37 @@ const AccountInformation = () => {
       axios.get(`/api/users?userId=${session?.user.id}`)
         .then((res) => {
           const user = res.data;
-          setUsers(user);
-          setNewName(user.name || '');
-          setNewLastName(user.lastName || '');
-          setNewEmail(user.email || '');
-          setNewPhone(user.phone || '');
-          setNewDateOfBirth(user.dateOfBirth ? new Date(user.dateOfBirth).toISOString().slice(0, 10) : '');
+          setUserDetails({
+            name: user.name || '',
+            lastName: user.lastName || '',
+            email: user.email || '',
+            phone: user.phone || '',
+            dateOfBirth: user.dateOfBirth ? new Date(user.dateOfBirth).toISOString().slice(0, 10) : ''
+          });
         });
     }
-  }, []);
+  }, [session?.user.id]);
 
   const handleDialogOpen = () => setOpenDialog(true);
   const handleDialogClose = () => setOpenDialog(false);
+
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    let { name, value } = e.target;
+
+    if (name === 'phone') {
+      value = value.replace(/\D/g, "");
+      if (value.length <= 3) value = value;
+      else if (value.length <= 6)
+        value = `${value.slice(0, 3)} ${value.slice(3)}`;
+      else
+        value = `${value.slice(0, 3)} ${value.slice(3, 6)} ${value.slice(
+          6,
+          10
+        )}`;
+    }
+
+    setUserDetails({ ...userDetails, [name]: value });
+  };
 
   const handleUpdateUser = async () => {
     const validationErrors: { [key: string]: string } = {};
@@ -58,16 +77,12 @@ const AccountInformation = () => {
     }
 
     try {
-      const res = await axios.post('/api/verify-password', { password: currentPassword, userId: users?.id });
+      const res = await axios.post('/api/verify-password', { password: currentPassword, userId: session?.user.id });
 
       if (res.data.valid) {
         const updatedData = {
-          id: users?.id,
-          name: newName,
-          lastName: newLastName,
-          email: newEmail,
-          phone: newPhone,
-          dateOfBirth: newDateOfBirth,
+          ...userDetails,
+          id: session?.user.id,
           currentPassword,
         };
 
@@ -107,10 +122,9 @@ const AccountInformation = () => {
                 fullWidth
                 label="ชื่อ"
                 variant="standard"
-                value={newName}
-                onChange={(e) => {
-                  setNewName(e.target.value);
-                }}
+                name="name"
+                value={userDetails.name}
+                onChange={handleInputChange}
               />
             </Grid>
 
@@ -120,10 +134,9 @@ const AccountInformation = () => {
                 fullWidth
                 label="นามสกุล"
                 variant="standard"
-                value={newLastName}
-                onChange={(e) => {
-                  setNewLastName(e.target.value);
-                }}
+                name="lastName"
+                value={userDetails.lastName}
+                onChange={handleInputChange}
               />
             </Grid>
 
@@ -133,10 +146,9 @@ const AccountInformation = () => {
                 fullWidth
                 label="อีเมล"
                 variant="standard"
-                value={newEmail}
-                onChange={(e) => {
-                  setNewEmail(e.target.value);
-                }}
+                name="email"
+                value={userDetails.email}
+                onChange={handleInputChange}
               />
             </Grid>
 
@@ -146,10 +158,9 @@ const AccountInformation = () => {
                 fullWidth
                 label="เบอร์โทรศัพท์"
                 variant="standard"
-                value={newPhone}
-                onChange={(e) => {
-                  setNewPhone(e.target.value);
-                }}
+                name="phone"
+                value={userDetails.phone}
+                onChange={handleInputChange}
               />
             </Grid>
 
@@ -160,10 +171,9 @@ const AccountInformation = () => {
                 label="วันที่เกิด"
                 variant="standard"
                 type="date"
-                value={newDateOfBirth}
-                onChange={(e) => {
-                  setNewDateOfBirth(e.target.value);
-                }}
+                name="dateOfBirth"
+                value={userDetails.dateOfBirth}
+                onChange={handleInputChange}
                 InputLabelProps={{
                   shrink: true,
                 }}

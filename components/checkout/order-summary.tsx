@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import {
     Box,
     Typography,
@@ -9,14 +9,15 @@ import {
     Tooltip,
     IconButton,
 } from "@mui/material";
-import { Cart } from '@/types/cart';
+import { CartItem } from '@/types/cart';
 import { MdAdd } from 'react-icons/md';
 import { BiMinus } from 'react-icons/bi';
 
 interface OrderSummaryProps {
-    cartItems: Cart[],
+    cartItems: CartItem[],
     itemQuantities: Record<number, number>;
     cartTotalPrice: number
+    setItemQuantities: React.Dispatch<React.SetStateAction<Record<number, number>>>;
     handleOrder: () => void
     updateItemQuantity: (productId: number, increment: boolean) => void;
 }
@@ -27,7 +28,20 @@ const OrderSummary: React.FC<OrderSummaryProps> = ({
     handleOrder,
     itemQuantities,
     updateItemQuantity,
+    setItemQuantities,
 }) => {
+    useEffect(() => {
+        try {
+            const savedQuantities = JSON.parse(localStorage.getItem("cartItemQuantities") || "{}");
+            if (typeof savedQuantities === "object" && savedQuantities !== null) {
+                setItemQuantities(savedQuantities);
+            }
+        } catch (error) {
+            console.error("Error parsing cartItemQuantities from localStorage:", error);
+            localStorage.removeItem("cartItemQuantities");
+        }
+    }, []);
+    
     return (
         <Card variant="outlined">
             <CardContent>

@@ -67,7 +67,7 @@ const CategorysPage = () => {
           setProperties([]);
         })
     } catch (err) {
-      console.log('Error during save:', err);
+      console.error('Error during save:', err);
     }
   };
 

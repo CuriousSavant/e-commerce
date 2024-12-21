@@ -3,7 +3,6 @@ import React, { useEffect, useState } from "react";
 import { useParams, notFound, useRouter } from "next/navigation";
 import { Product } from "@/types/product";
 import axios from "axios";
-import { toast } from 'react-toastify'
 import {
   Box,
   CircularProgress,
@@ -20,6 +19,7 @@ import AuthModal from "@/components/auth-form";
 import { FaHeart } from "react-icons/fa6";
 import { Wishlist } from "@prisma/client";
 import RandomProducts from "@/components/section/random-product";
+import { toast } from 'react-toastify';
 
 const ProductDetailPage = () => {
   const [product, setProduct] = useState<Product | null>(null);
@@ -69,13 +69,17 @@ const ProductDetailPage = () => {
 
       if (response.status === (isFavorite ? 200 : 201)) {
         setIsFavorite(!isFavorite);
-        toast.success(isFavorite ? "นำสินค้าออกจากรายการโปรดแล้ว" : "เพิ่มสินค้าลงในรายการโปรดแล้ว 🎉");
+        toast.success(isFavorite ? "นำสินค้าออกจากรายการโปรดแล้ว" : "เพิ่มสินค้าลงในรายการโปรดแล้ว 🎉", {
+          autoClose: 1200
+        });
       }
     } catch (err: any) {
       const errorMessage = err.response?.data?.error || "เกิดข้อผิดพลาด";
-      toast.error(errorMessage);
+      toast.error(errorMessage, {
+        autoClose: 1200
+      });
     }
-  };
+  }
 
   // เพิ่มสินค้าลงตะกร้า
   const handleAddToCart = async () => {
@@ -87,27 +91,25 @@ const ProductDetailPage = () => {
     try {
       if (product) {
         if (product?.stock <= 0) {
-          toast.error('สินค้าหมดแล้ว')
+          toast.error("สินค้าหมดแล้ว😭", {
+            autoClose: 1200
+          });
         } else {
           await axios.post("/api/cart", {
             userId: session?.user?.id,
             productId: product?.id,
             quantity: quantity
           })
-          toast.success('สินค้าถูกเพิ่มลงในตะกร้าแล้ว!', {
-            position: "top-right",
-            autoClose: 1500,
-            closeButton: true,
+          toast.success("เพิ่มสินค้าลงตะกร้าแล้ว 🎉", {
+            autoClose: 1200
           });
         }
       }
     } catch (error) {
-      console.log(error)
-      toast.error('เกิดข้อผิดพลาดไม่สามารถเพิ่มสินค้าลงตระกร้าได้', {
-        position: "top-right",
-        autoClose: 1500,
-        closeButton: true,
-      })
+      console.error(error)
+      toast.error("เกิดข้อผิดพลาดไม่สามารถเพิ่มสินค้าลงตะกร้าได้", {
+        autoClose: 1200
+      });
     }
   }
 
@@ -162,7 +164,7 @@ const ProductDetailPage = () => {
             <img
               src={product.image?.[activeImage]}
               alt={product.title}
-              className="h-[60vh] w-full object-cover bg-center"
+              className="h-[70vh] w-full object-cover bg-center"
             />
 
             {product.stock <= 0 && (
@@ -276,7 +278,7 @@ const ProductDetailPage = () => {
                     <IconButton
                       onClick={() => handleWishlist(product.id)}
                       className={`${isFavorite ? 'border-red-500 text-red-500' : 'border-gray-400 text-gray-400'}`}
-                      size={"medium"}
+                      size={"large"}
                     >
                       {isFavorite ? <FaHeart /> : <BiHeart />}
                     </IconButton>
@@ -395,7 +397,6 @@ const PriceCard = ({ price }: { price: number }) => {
         >
           ฿{price.toLocaleString('th-Th')}
         </Typography>
-        <span className="text-sm text-gray-400 line-through">฿18,000</span>
       </div>
     </div>
   )

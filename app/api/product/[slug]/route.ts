@@ -35,8 +35,20 @@ export const PUT = async (
       categoryId,
       brand,
       stock,
-      productProperties,
+      features,
     } = await req.json();
+
+    console.log(
+      title,
+      description,
+      image,
+      price,
+      categoryId,
+      brand,
+      stock,
+      features
+    );
+
     const updateProduct = await prisma.product.update({
       data: {
         title,
@@ -46,7 +58,7 @@ export const PUT = async (
         categoryId,
         brand,
         stock,
-        productProperty: productProperties,
+        features,
       },
       where: { slug: params.slug },
     });

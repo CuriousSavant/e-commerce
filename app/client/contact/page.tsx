@@ -1,11 +1,11 @@
 'use client'
-import { Button, TextField, Typography } from '@mui/material';
-import Link from 'next/link';
+import { Button, TextField } from '@mui/material';
 import React, { useState } from 'react';
 import { CiGlobe, CiInstagram, CiLocationOn, CiMail, CiPhone } from 'react-icons/ci';
-// import writeFileSyncLib from '@/lib/read-file';
 import { useSession } from 'next-auth/react';
 import Swal from 'sweetalert2'
+import writeFileSyncLib from '@/lib/read-file';
+import Link from 'next/link';
 
 const contactInfo = {
     address: "123/45 ถนนสุขสันต์ แขวงบางรัก เขตบางรัก กรุงเทพมหานคร 10500",
@@ -40,15 +40,15 @@ const ContactPage = () => {
             Swal.fire({
                 icon: "success",
                 title: "ส่งข้อความแล้ว🥳",
-                // text: "ปัจจุบันผมยังไม่รับงานนะครับ ไว้มีโอกาสค่อยมาร่วมงานกันนะ🥰"
+                text: "ขอบคุณสำหรับข้อความนะครับ ปัจจุบันผมยังไม่รับงานนะครับ ไว้มีโอกาสค่อยมาร่วมงานกันนะ🥰"
             })
-            // writeFileSyncLib('json/contact-msg.json', data)
+            writeFileSyncLib('json/contact-msg.json', data)
             setFirstName("");
             setLastName("");
             setEmail("");
             setMessage("");
         } catch (err) {
-            console.log(err)
+            console.error(err)
             Swal.fire({
                 title: "เกิดข้อผิดพลาด 😢",
                 text: "ไม่สามารถส่งข้อความได้ในขณะนี้ กรุณาลองอีกครั้งในภายหลัง",
@@ -90,13 +90,13 @@ const ContactPage = () => {
                         <h1 className='text-2xl'>
                             <CiGlobe />
                         </h1>
-                        <h6>{contactInfo.website}</h6>
+                        <Link href={contactInfo.instagram} className='hover:underline'>{contactInfo.website}</Link>
                     </div>
                     <div className='flex gap-2'>
                         <h1 className='text-2xl'>
                             <CiInstagram />
                         </h1>
-                        <h6>{contactInfo.instagram}</h6>
+                        <Link href={contactInfo.instagram} className='hover:underline'>{contactInfo.instagram}</Link>
                     </div>
                 </div>
             </div>

@@ -65,7 +65,7 @@ const LoginForm: React.FC<LoginFormProps> = ({ formData, handleChange, onClose, 
             window.location.reload()
             onClose()
         } catch (err) {
-            console.log(err)
+            console.error(err)
         }
     }
 

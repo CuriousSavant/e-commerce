@@ -8,7 +8,6 @@ export async function GET(
 ) {
   try {
     const userId = Number(params.id);
-    console.log(userId)
 
     if (!userId) {
       return NextResponse.json({ msg: "Not Found User Id" }, { status: 404 });
@@ -53,8 +52,6 @@ export async function PUT(req: Request) {
       currentPassword,
       user.password
     );
-
-    console.log(isCurrentPasswordValid);
 
     if (!isCurrentPasswordValid) {
       return NextResponse.json(

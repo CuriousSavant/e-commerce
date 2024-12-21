@@ -52,12 +52,12 @@ const CartProduct = ({ product, viewMode = 'grid' }: { product: Product, viewMod
     };
 
     return (
-        <div className={`group h-full flex ${viewMode === 'grid' ? 'flex-col w-full' : 'flex-row w-full'} shadow-md hover:shadow-xl transition duration-75 bg-white rounded-lg overflow-hidden relative`}>
+        <div className={`group h-full flex ${viewMode === 'grid' ? 'flex-col w-full' : 'flex-row w-full'} shadow-md transition duration-75 bg-white rounded-lg overflow-hidden relative`}>
             <Link
                 href={`/client/${product.slug}`}
                 className={`w-full ${viewMode === 'grid' ? 'flex flex-col items-center' : 'flex flex-row'}`}
             >
-                <div className={`flex flex-col overflow-hidden rounded-lg w-full ${viewMode === 'grid' ? 'h-44 lg:h-[12rem]' : 'h-28 lg:h-32 min-w-[130px] max-w-[130px] md:min-w-[150px] md:max-w-[150px]'}`}>
+                <div className={`flex flex-col overflow-hidden rounded-lg w-full ${viewMode === 'grid' ? 'h-44 lg:h-[12rem]' : 'h-32 lg:h-32 min-w-[130px] max-w-[130px] md:min-w-[150px] md:max-w-[150px]'}`}>
                     <div
                         className="w-full h-full group-hover:scale-110 group-hover:filter group-hover:brightness-70 bg-cover bg-center transition-transform duration-500"
                         style={{ backgroundImage: `url(${product.image?.[0]})` }}

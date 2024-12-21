@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Box, Grid } from "@mui/material";
 import { FaMoneyBill } from "react-icons/fa6";
 import { MdCreditCard } from "react-icons/md";
@@ -35,6 +35,7 @@ const CheckoutPage = () => {
         cartTotalPrice,
         handleOrder,
         updateItemQuantity,
+        setItemQuantities,
     } = useCart()
 
     return (
@@ -67,6 +68,7 @@ const CheckoutPage = () => {
                         cartTotalPrice={cartTotalPrice}
                         handleOrder={handleOrder}
                         updateItemQuantity={updateItemQuantity}
+                        setItemQuantities={setItemQuantities}
                     />
                 </Grid>
             </Grid>

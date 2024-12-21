@@ -113,7 +113,7 @@ const ProductTable: React.FC<RowPageProps> = ({
             confirmButtonColor: "#ed1616",
         }).then((result) => {
             if (result.isConfirmed) {
-                axios.delete(`/api/product/`, { data: { slugs: selected } }).catch((error) => console.log(error))
+                axios.delete(`/api/product/`, { data: { slugs: selected } }).catch((error) => console.error(error))
                     // วิธีส่งข้อมูลที่ต้องการลบไปหลายตัว เนื่องจาก params รับค่าได้แค่ตัวเดียว
                     .then(() => {
                         setProducts((prev) => prev.filter(p => !selected.includes(p.slug)))
@@ -125,7 +125,6 @@ const ProductTable: React.FC<RowPageProps> = ({
                             `${selected.length} items have been deleted.`,
                             "success"
                         );
-                        console.log("success")
                     })
                     .catch((error) => {
                         Swal.fire(
@@ -133,7 +132,6 @@ const ProductTable: React.FC<RowPageProps> = ({
                             "Some items could not be deleted. Please try again.",
                             "error"
                         )
-                        console.log('error', error)
                     });
             }
         });

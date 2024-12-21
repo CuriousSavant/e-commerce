@@ -3,7 +3,6 @@ import React, { useState } from 'react'
 import axios from 'axios';
 import { Product } from '@/types/product';
 import CartProduct from './cart-product';
-import Link from 'next/link';
 
 const LatestProduct = () => {
     const [featureProduct, setFeatureProduct] = useState<Product[]>([])
@@ -22,7 +21,6 @@ const LatestProduct = () => {
                     <CartProduct product={product} key={product.id} />
                 ))}
             </div>
-
         </div>
     )
 }

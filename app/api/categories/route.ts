@@ -13,7 +13,6 @@ export const GET = async () => {
 export const POST = async (req: Request) => {
   try {
     const { name, parentId, properties } = await req.json();
-    console.log("ค่าที่ส่งมา:", { name: name, parentId: parentId }, properties);
 
     const crateCategory = await prisma.category.create({
       data: {
@@ -30,7 +29,6 @@ export const POST = async (req: Request) => {
       },
       include: { properties: true }
     });
-    console.log(crateCategory);
     return NextResponse.json(crateCategory);
   } catch (err) {
     return NextResponse.json({ MsgError: err }, { status: 500 });

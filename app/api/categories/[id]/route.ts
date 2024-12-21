@@ -24,8 +24,6 @@ export const PUT = async (
 ) => {
   try {
     const { name, parentId, properties } = await req.json();
-    console.log("ค่าที่ส่งเข้ามา:", name, parentId, properties);
-    console.log(properties.id);
     const propertyIds = properties
       .map((property: any) => property.id)
       .filter(Boolean);
@@ -54,7 +52,6 @@ export const PUT = async (
                 },
               });
             } else {
-              console.log("มีการทำงานที่ post:");
               return prisma.properties.create({
                 data: {
                   name: property.name,
@@ -79,7 +76,6 @@ export const PUT = async (
       where: { id: Number(params.id) },
       include: { properties: true },
     });
-    console.log("ค่าที่ถูก update:", updateCategory);
     return NextResponse.json(updateCategory);
   } catch (err) {
     return NextResponse.json({ msg: err }, { status: 500 });

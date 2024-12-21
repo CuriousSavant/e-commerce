@@ -31,7 +31,7 @@ export const SearchProvider: React.FC<{ children: React.ReactNode }> = ({ childr
     const [originalProducts, setOriginalProducts] = useState<Product[]>([]);
     const [searchQuery, setSearchQuery] = useState('');
     const [categorys, setCategorys] = useState<Category[]>([]);
-    const [selectedCategory, setSelectedCategory] = useState<string | null>('ค่าเริ่มต้น');
+    const [selectedCategory, setSelectedCategory] = useState<string | null>('สินค้าแนะนำ');
     const [loading, setLoading] = useState<boolean>(false)
 
     // use hooks
@@ -56,7 +56,7 @@ export const SearchProvider: React.FC<{ children: React.ReactNode }> = ({ childr
     }, [query, sortOption]);
 
     const filteredProducts = useMemo(() => {
-        if (selectedCategory === 'ค่าเริ่มต้น') return originalProducts;
+        if (selectedCategory === 'สินค้าแนะนำ') return originalProducts;
 
         const selectedCategoryId = Number(selectedCategory)
 

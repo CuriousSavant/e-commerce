@@ -53,5 +53,26 @@
     "email": "admin@gmail.com",
     "password": "admin123",
     "confirmPassword": "admin123"
+  },
+  {
+    "userName": "local123",
+    "lastName": "locacl123",
+    "email": "local123@gmail.com",
+    "password": "123123123",
+    "confirmPassword": "123123123"
+  },
+  {
+    "userName": "admin",
+    "lastName": "123",
+    "email": "admin@gmail.com",
+    "password": "admin123123",
+    "confirmPassword": "admin123123"
+  },
+  {
+    "userName": "local",
+    "lastName": "local1",
+    "email": "locacl@gmail.com",
+    "password": "local123",
+    "confirmPassword": "local123"
   }
 ]

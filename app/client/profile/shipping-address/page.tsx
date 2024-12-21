@@ -1,6 +1,6 @@
 'use client';
 import React from 'react';
-import { Box, Button, IconButton, Typography, List, ListItem, ListItemText, Paper, Chip } from '@mui/material';
+import { Box, Button, IconButton, Typography, ListItem, ListItemText, Chip } from '@mui/material';
 import { MdAdd, MdDelete } from 'react-icons/md';
 import { BiArrowBack } from 'react-icons/bi';
 import { BsHeart } from 'react-icons/bs';
@@ -105,7 +105,7 @@ const ShippingAddress = () => {
           alignItems={'center'}
           height={'40vh'}
         >
-          <Typography variant="h6" sx={{ mb: 2, color: "#666" }}>
+          <Typography variant="h6" sx={{ mb: 2, color: "#666", fontSize: "16px" }}>
             คุณยังไม่มีที่อยู่จัดส่ง
           </Typography>
           <Button

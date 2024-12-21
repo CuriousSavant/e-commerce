@@ -30,7 +30,7 @@ const SearchLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => 
                         onChange={(e) => setSelectedCategory(e.target.value)}
                         displayEmpty
                     >
-                        <MenuItem value="ค่าเริ่มต้น">ค่าเริ่มต้น</MenuItem>
+                        <MenuItem value="สินค้าแนะนำ">สินค้าแนะนำ</MenuItem>
                         {categorys.map((item) => {
                             return (
                                 <MenuItem key={item.id} value={item.id}>{item.name}</MenuItem>
