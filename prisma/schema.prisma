@@ -14,7 +14,7 @@ model Product {
   image       Json?
   price       Float
   brand       String?
-  stock       Int?      @default(0)
+  stock       Int       @default(0)
   categoryId  Int?
   slug        String?   @unique
   category    Category? @relation(fields: [categoryId], references: [id])
@@ -22,10 +22,11 @@ model Product {
   createdAt DateTime @default(now())
   updatedAt DateTime @default(now()) @updatedAt
 
-  feature   Feature[]
-  orderItem OrderItem[]
-  cartItem  CartItem[]
-  wishlist  Wishlist[]
+  feature    Feature[]
+  orderItem  OrderItem[]
+  cartItem   CartItem[]
+  wishlist   Wishlist[]
+  properties Properties[]
 
   @@map("product")
 }
@@ -40,10 +41,11 @@ model Feature {
 }
 
 model Category {
-  id         Int          @id @default(autoincrement())
-  name       String
-  parentId   Int?
-  parent     Category?    @relation("CategoryToCategory", fields: [parentId], references: [id])
+  id       Int       @id @default(autoincrement())
+  name     String
+  parentId Int?
+  parent   Category? @relation("CategoryToCategory", fields: [parentId], references: [id])
+
   properties Properties[]
   product    Product[]
   children   Category[]   @relation("CategoryToCategory")
@@ -52,11 +54,14 @@ model Category {
 }
 
 model Properties {
-  id         Int       @id @default(autoincrement())
+  id         Int    @id @default(autoincrement())
   name       String
   value      String
   categoryId Int?
-  category   Category? @relation(fields: [categoryId], references: [id])
+  productId  Int?
+
+  category Category? @relation(fields: [categoryId], references: [id])
+  Product  Product?  @relation(fields: [productId], references: [id])
 }
 
 model User {

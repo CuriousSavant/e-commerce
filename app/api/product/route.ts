@@ -30,18 +30,21 @@ export async function GET(req: Request) {
         products = await prisma.product.findMany({
           ...searchFilter,
           orderBy: { price: "asc" },
+          include: { category: true }, // Include category relation
         });
         break;
       case "highPrice":
         products = await prisma.product.findMany({
           ...searchFilter,
           orderBy: { price: "desc" },
+          include: { category: true }, // Include category relation
         });
         break;
       default:
         products = await prisma.product.findMany({
           ...searchFilter,
           orderBy: { [sortBy]: sortOrder },
+          include: { category: true }, // Include category relation
         });
         break;
     }
@@ -50,6 +53,7 @@ export async function GET(req: Request) {
       products = await prisma.product.findMany({
         take: 5,
         orderBy: { [sortBy]: sortOrder },
+        include: { category: true }, // Include category relation
       });
     }
 
@@ -72,6 +76,7 @@ export const POST = async (req: Request) => {
       stock,
       categoryId,
       feature,
+      properties,
     } = await req.json();
 
     const slug = slugify(title, { lower: true, strict: true });
@@ -90,6 +95,12 @@ export const POST = async (req: Request) => {
         feature: {
           create: feature.map((item: any) => ({
             desctiption: item.description,
+          })),
+        },
+        properties: {
+          create: properties.map((item: any) => ({
+            name: item.name,
+            value: item.value,
           })),
         },
       },

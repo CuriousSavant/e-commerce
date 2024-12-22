@@ -208,7 +208,7 @@ const ProductTable: React.FC<RowPageProps> = ({
                                     onChange={handleSelectAllClick}
                                 />
                             </TableCell>
-                            <TableCell size="small" sx={{ pt: 1.5, width: "140px" }}>Product ID</TableCell>
+                            <TableCell size="small" sx={{ pt: 1.5, whiteSpace: "pre" }}>Product ID</TableCell>
                             <TableCell size="small" sx={{ pt: 1.5 }}>Name</TableCell>
                             <TableCell size="small" sx={{ pt: 1.5 }}>Category</TableCell>
                             <TableCell size="small" sx={{ pt: 1.5 }}>Stock</TableCell>
@@ -275,7 +275,7 @@ const ProductTable: React.FC<RowPageProps> = ({
                                     </TableCell>
                                     <TableCell size="small">
                                         <Chip
-                                            label={"unknown"}
+                                            label={product.category.name || "Uncategorized"}
                                             sx={{
                                                 backgroundColor: "#F3F4F6",
                                                 color: "#374151",

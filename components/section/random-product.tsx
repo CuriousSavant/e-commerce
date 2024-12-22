@@ -31,17 +31,15 @@ const RandomProducts: React.FC = () => {
                 sx={{
                     display: "flex",
                     gap: 2,
-                    overflowX: "auto",
                     p: 1,
-                    // "&::-webkit-scrollbar": { display: "none" },
-                    width: "full",
-                    height: "full",
+                    overflowX: "auto",
+                    '&::-webkit-scrollbar': { display: 'none' },
                 }}
             >
                 {products.map((product, index) => (
                     <Box
                         key={index}
-                        sx={{ width: { xs: 140, sm: 180 } }}
+                        sx={{ width: { xs: 140, sm: 180 }, flex: "0 0 auto" }}
                         height={"auto"}
                     >
                         <Link

@@ -16,6 +16,7 @@ const SearchBar = ({ setIsSearchOpen }: { setIsSearchOpen: React.Dispatch<SetSta
         } else {
             router.push('/client/products')
         }
+        console.log("Hello world")
         setSearchQuery('')
         setIsSearchOpen(false)
     };

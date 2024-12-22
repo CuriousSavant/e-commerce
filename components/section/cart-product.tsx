@@ -9,7 +9,6 @@ import React, { useEffect, useState } from 'react';
 import { BiHeart } from 'react-icons/bi';
 import { toast } from 'react-toastify';
 import AuthModal from '../auth-form';
-import { motion } from 'framer-motion';
 
 const CartProduct = ({ product, viewMode = 'grid' }: { product: Product, viewMode?: 'grid' | 'list' }) => {
     const { isDialogOpen, setIsDialogOpen } = useDialog()
@@ -57,13 +56,7 @@ const CartProduct = ({ product, viewMode = 'grid' }: { product: Product, viewMod
     };
 
     return (
-        <motion.div
-            className={`group h-full flex ${viewMode === 'grid' ? 'flex-col w-full' : 'flex-row w-full'} shadow-md transition duration-75 bg-white rounded-lg overflow-hidden relative`}
-            initial={{ opacity: 0, y: 50 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5 }}
-            viewport={{ once: true }}
-        >
+        <div className={`group h-full flex ${viewMode === 'grid' ? 'flex-col w-full' : 'flex-row w-full'} shadow-md transition duration-75 bg-white rounded-lg overflow-hidden relative`}>
             <Link
                 href={`/client/${product.slug}`}
                 className={`w-full ${viewMode === 'grid' ? 'flex flex-col items-center' : 'flex flex-row'}`}
@@ -113,7 +106,7 @@ const CartProduct = ({ product, viewMode = 'grid' }: { product: Product, viewMod
             >
                 <BiHeart size={20} />
             </button>
-        </motion.div>
+        </div>
     );
 };
 

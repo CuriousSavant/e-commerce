@@ -206,6 +206,7 @@ const ProductForm: React.FC<SlugProps> = ({ slug }) => {
                                 <div key={index} className="relative">
                                     <img src={image} className="h-20 rounded-md" alt="uploaded product" />
                                     <button
+                                        type='button'
                                         className="absolute top-0 right-0 text-red-500 p-0.5"
                                         onClick={() => handleRemoveImage(index)}
                                     >
