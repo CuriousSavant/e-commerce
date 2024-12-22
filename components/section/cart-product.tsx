@@ -9,6 +9,7 @@ import React, { useEffect, useState } from 'react';
 import { BiHeart } from 'react-icons/bi';
 import { toast } from 'react-toastify';
 import AuthModal from '../auth-form';
+import { motion } from 'framer-motion';
 
 const CartProduct = ({ product, viewMode = 'grid' }: { product: Product, viewMode?: 'grid' | 'list' }) => {
     const { isDialogOpen, setIsDialogOpen } = useDialog()
@@ -43,21 +44,33 @@ const CartProduct = ({ product, viewMode = 'grid' }: { product: Product, viewMod
 
             if (response.status === (isFavorite ? 200 : 201)) {
                 setIsFavorite(!isFavorite);
-                toast.success(isFavorite ? "นำสินค้าออกจากรายการโปรดแล้ว" : "เพิ่มสินค้าลงในรายการโปรดแล้ว 🎉");
+                toast.success(isFavorite ? "นำสินค้าออกจากรายการโปรดแล้ว" : "เพิ่มสินค้าลงในรายการโปรดแล้ว 🎉", {
+                    autoClose: 1200
+                });
             }
         } catch (err: any) {
             const errorMessage = err.response?.data?.error || "เกิดข้อผิดพลาด";
-            toast.error(errorMessage);
+            toast.error(errorMessage, {
+                autoClose: 1200
+            });
         }
     };
 
     return (
-        <div className={`group h-full flex ${viewMode === 'grid' ? 'flex-col w-full' : 'flex-row w-full'} shadow-md transition duration-75 bg-white rounded-lg overflow-hidden relative`}>
+        <motion.div
+            className={`group h-full flex ${viewMode === 'grid' ? 'flex-col w-full' : 'flex-row w-full'} shadow-md transition duration-75 bg-white rounded-lg overflow-hidden relative`}
+            initial={{ opacity: 0, y: 50 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5 }}
+            viewport={{ once: true }}
+        >
             <Link
                 href={`/client/${product.slug}`}
                 className={`w-full ${viewMode === 'grid' ? 'flex flex-col items-center' : 'flex flex-row'}`}
             >
-                <div className={`flex flex-col overflow-hidden rounded-lg w-full ${viewMode === 'grid' ? 'h-44 lg:h-[12rem]' : 'h-32 lg:h-32 min-w-[130px] max-w-[130px] md:min-w-[150px] md:max-w-[150px]'}`}>
+                <div className={`flex flex-col overflow-hidden rounded-lg w-full 
+                    ${viewMode === 'grid' ? 'h-44 lg:h-[14rem]' : 'h-32 md:h-[130px] min-w-[130px] max-w-[130px] md:min-w-[150px] md:max-w-[150px]'}`}
+                >
                     <div
                         className="w-full h-full group-hover:scale-110 group-hover:filter group-hover:brightness-70 bg-cover bg-center transition-transform duration-500"
                         style={{ backgroundImage: `url(${product.image?.[0]})` }}
@@ -93,14 +106,14 @@ const CartProduct = ({ product, viewMode = 'grid' }: { product: Product, viewMod
 
             <button
                 onClick={(e) => { e.stopPropagation(), handleWishlist(product.id) }}
-                className={`absolute top-3 right-3 flex items-center justify-center w-8 h-8 rounded-full bg-white text-black ${viewMode === 'list'
-                    ? 'opacity-100 translate-x-0'
-                    : 'opacity-0 translate-x-[100px] group-hover:opacity-100 group-hover:translate-x-0'
-                    } transition-all duration-300 z-[999] ${isFavorite ? 'bg-pink-200 text-pink-500' : ''}`}
+                className={`absolute right-3 flex items-center justify-center w-8 h-8 rounded-full bg-white text-black ${viewMode === 'list' ?
+                    'opacity-100 translate-x-0 top-[5.5rem]' :
+                    'opacity-0 top-3 translate-x-[100px] group-hover:opacity-100 group-hover:translate-x-0'} 
+                    transition-all duration-300 z-[999] ${isFavorite ? 'bg-pink-200 text-pink-500' : ''}`}
             >
                 <BiHeart size={20} />
             </button>
-        </div>
+        </motion.div>
     );
 };
 

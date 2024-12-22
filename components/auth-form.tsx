@@ -25,7 +25,7 @@ export interface FormErrorProps {
 }
 
 function AuthModal({ onClose }: { onClose: () => void }) {
-    const [activeTab, setActiveTab] = useState<'login' | 'signup'>('login');
+    const [activeTab, setActiveTab] = useState<'login' | 'signup'>('signup');
     const [errorMsg, setErrorMsg] = useState<string>('');
 
     const [formData, setFormData] = useState<FormDataProps>({
@@ -76,10 +76,6 @@ function AuthModal({ onClose }: { onClose: () => void }) {
             password: name === 'password' && value.length < 8,
             confirmPassword: name === 'confirmPassword' && value !== formData.password,
         }))
-
-        if (name === 'password' || name === 'confirmPassword') {
-            setErrorMsg('')
-        }
     }
 
     const handleLogin = async (email: string | undefined, password: string | undefined) => {
@@ -99,13 +95,14 @@ function AuthModal({ onClose }: { onClose: () => void }) {
 
         const errors: FormErrorProps = {
             userName: !formData.userName.trim(),
-            lastName: !formData.lastName.trim(),
+            lastName: !formData.lastName?.trim(),
             email: !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email),
             password: formData.password.length < 8,
             confirmPassword: formData.confirmPassword !== formData.password || formData.confirmPassword.length < 8,
         };
 
         setFormError(errors);
+
 
         // ตรวจสอบว่ามีข้อผิดพลาดหรือไม่
         const hasError = Object.values(errors).some((error) => error);
@@ -138,9 +135,12 @@ function AuthModal({ onClose }: { onClose: () => void }) {
                 inset: 0,
                 display: 'flex',
                 justifyContent: 'center',
-                alignItems: 'center',
+                alignItems: `${activeTab === 'login' ? 'center' : 'start'}`,
                 backgroundColor: 'rgba(0, 0, 0, 0.7)',
                 zIndex: 99999,
+                height: "100vh",
+                overflowY: "auto",
+                py: 2
             }}
         >
             <Box
@@ -149,8 +149,10 @@ function AuthModal({ onClose }: { onClose: () => void }) {
                     maxWidth: 400,
                     bgcolor: 'white',
                     borderRadius: 2,
+                    minHeight: "auto",
                     boxShadow: 3,
                     p: 3,
+                    overflowY: 'auto',
                 }}
             >
                 <Header activeTab={activeTab} onClose={onClose} />
@@ -223,3 +225,4 @@ function AuthModal({ onClose }: { onClose: () => void }) {
 }
 
 export default AuthModal;
+

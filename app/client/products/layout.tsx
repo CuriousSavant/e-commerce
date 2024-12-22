@@ -21,7 +21,7 @@ const SearchLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => 
         <>
             <div className="mt-24 mb-6 flex flex-col md:flex-row md:justify-end md:items-center px-6">
                 {/* หมวดหมุ่ */}
-                <div className="flex gap-1 items-center mr-3 w-full md:w-auto mb-2">
+                <div className="flex gap-1 items-center mr-3 w-full md:w-auto mb-2 md:mb-0">
                     <h1 className="text-gray-400 whitespace-pre w-[5rem] md:w-auto">หมวดหมุ่: </h1>
                     <Select
                         size="small"

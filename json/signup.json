@@ -74,5 +74,26 @@
     "email": "locacl@gmail.com",
     "password": "local123",
     "confirmPassword": "local123"
+  },
+  {
+    "userName": "user123",
+    "lastName": "",
+    "email": "user123@gmail.com",
+    "password": "user-email-123",
+    "confirmPassword": "user-email-123"
+  },
+  {
+    "userName": "test",
+    "lastName": "user-123",
+    "email": "test-user-123@example.io",
+    "password": "text-user-example-123",
+    "confirmPassword": "text-user-example-123"
+  },
+  {
+    "userName": "test",
+    "lastName": "user-123",
+    "email": "test-user-123@example.io",
+    "password": "text-user-example-123",
+    "confirmPassword": "text-user-example-123"
   }
 ]

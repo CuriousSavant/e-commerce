@@ -2,10 +2,9 @@ import axios from "axios";
 import cheerio from "cheerio";
 import prisma from "@/lib/prisma";
 
-// URL ของสินค้าที่ต้องการ scrape
 const urls: string[] = [
   "https://www.bnn.in.th/th/p/apple/apple-mac/apple-macbook-air/apple-macbook-air-15-m3-chip-8c-cpu10c-gpu8gb512gb-space-gray-2024-mryn3tha_dmx5ev?ref=search-result",
-  "https://bnn.in.th/th/p/tablet-and-accessories/tablet/samsung-tablet/samsung-galaxy-tab-a9-lte-8128gb-silver-8806095279398_zpy7lw?ref=21-dec-2024",
+  "https://www.bnn.in.th/th/p/tablet-and-accessories/tablet/samsung-tablet/samsung-galaxy-tab-a9-lte-8128gb-silver-8806095279398_zpy7lw?ref=21-dec-2024",
   "https://www.bnn.in.th/th/p/apple/apple-iphone/apple-iphone-12-series/apple-iphone-12-128gb-green-194252032633_r01n6d?ref=best-seller",
 ];
 
@@ -15,7 +14,6 @@ interface Product {
   description: string;
   image: string[];
   price: number;
-  category: { name: string };
   stock: number;
   brand: string;
   features: string[];
@@ -44,9 +42,6 @@ async function ScrapeProduct(url: string): Promise<Product | null> {
           .join("")
           .replace(",", "")
       ),
-      category: {
-        name: $(".brand-value").text().trim(),
-      },
       stock: 20,
       brand: $(".brand-value").text().trim(),
       features: [],
@@ -74,12 +69,12 @@ async function ScrapeProduct(url: string): Promise<Product | null> {
 
     return product;
   } catch (err) {
-    console.error(`Error scraping URL: ${url}`, err.message);
+    console.error(`Error scraping URL: ${url}`, err);
     return null;
   }
 }
 
-async function scrapeAllProducts(): Promise<void> {
+export async function scrapeAllProducts(): Promise<void> {
   try {
     const products = await Promise.all(urls.map((url) => ScrapeProduct(url)));
     const validProducts = products.filter(
@@ -94,10 +89,9 @@ async function scrapeAllProducts(): Promise<void> {
           description: product.description,
           image: product.image,
           price: product.price,
-          category: { connect: { name: product.category.name } }, // Assuming category is unique by name
           stock: product.stock,
           brand: product.brand,
-          features: {
+          feature: {
             create: product.features.map((feature) => ({
               desctiption: feature,
             })),
@@ -111,6 +105,3 @@ async function scrapeAllProducts(): Promise<void> {
     console.error("Error during scraping process:", err);
   }
 }
-
-// เรียกใช้ฟังก์ชันในการ scrape ข้อมูล
-scrapeAllProducts();

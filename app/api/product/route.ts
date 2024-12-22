@@ -71,7 +71,7 @@ export const POST = async (req: Request) => {
       brand,
       stock,
       categoryId,
-      features,
+      feature,
     } = await req.json();
 
     const slug = slugify(title, { lower: true, strict: true });
@@ -87,7 +87,11 @@ export const POST = async (req: Request) => {
         stock,
         categoryId,
         slug,
-        features,
+        feature: {
+          create: feature.map((item: any) => ({
+            desctiption: item.description,
+          })),
+        },
       },
     });
 

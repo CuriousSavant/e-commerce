@@ -1,4 +1,4 @@
-import { OrderItem } from "./order";
+import { Feature } from "@prisma/client";
 
 export interface Product {
   id: number;
@@ -11,6 +11,7 @@ export interface Product {
   slug: string;
   properties: Propertie;
   category: Category;
+  feature: Feature[]
   categoryId: number | null;
   createdAt?: Date;
   updatedAt?: Date;

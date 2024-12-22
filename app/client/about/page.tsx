@@ -1,4 +1,5 @@
 'use client'
+import { Typography } from '@mui/material'
 import Link from 'next/link'
 import React from 'react'
 
@@ -9,8 +10,8 @@ const page = () => {
       <p>
         เว็บไซต์นี้เป็นเพียงแค่ตัวอย่างของโปรเจกต์เล็กๆ สำหรับการเรียนรู้และฝึกพัฒนาทักษะทางด้านการเขียนโค้ดและการสร้างเว็บแอปพลิเคชันของผมครับ เนื้อหาและสินค้าบนเว็บไซต์นี้ไม่มีการจำหน่ายจริง และไม่สามารถใช้งานในเชิงพาณิชย์ได้
       </p>
-      <div className='mt-4 flex flex-col'>
-        <p>Credit รูปภาพสินค้า และ ข้อมูลรายละเอียดสินค้า:</p>
+      <div className='mt-4 flex flex-col items-center'>
+        <Typography variant='subtitle2'>Credit รูปภาพสินค้า และ ข้อมูลรายละเอียดสินค้า</Typography>
         <Link href={'https://www.bnn.in.th/th'} className='text-blue-500 underline'>https://www.bnn.in.th/th</Link>
       </div>
     </div>

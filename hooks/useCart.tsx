@@ -124,11 +124,11 @@ const useCart = () => {
                     return updatedQuantities;
                 });
 
-                toast.success('ลบสินค้าทั้งหมดเรียบร้อย!', { autoClose: 1500 });
+                toast.success('ลบสินค้าทั้งหมดเรียบร้อย!', { autoClose: 1200 });
             }
         } catch (err) {
             console.error("เกิดข้อผิดพลาดระหว่างลบสินค้า:", err);
-            toast.error('เกิดข้อผิดพลาด! กรุณาลองใหม่', { autoClose: 1500 });
+            toast.error('เกิดข้อผิดพลาด! กรุณาลองใหม่', { autoClose: 1200 });
         }
     };
 

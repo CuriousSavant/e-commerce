@@ -1,5 +1,4 @@
 import prisma from "@/lib/prisma";
-import { PathParamsContext } from "next/dist/shared/lib/hooks-client-context.shared-runtime";
 import { NextResponse } from "next/server";
 
 export const GET = async (
@@ -9,7 +8,15 @@ export const GET = async (
   try {
     const product = await prisma.product.findUnique({
       where: { slug: params.slug },
-      include: { category: { include: { parent: true, properties: true } } },
+      include: {
+        category: {
+          include: {
+            parent: true,
+            properties: true,
+          },
+        },
+        feature: true,
+      },
     });
 
     return NextResponse.json(product);
@@ -35,19 +42,8 @@ export const PUT = async (
       categoryId,
       brand,
       stock,
-      features,
+      feature,
     } = await req.json();
-
-    console.log(
-      title,
-      description,
-      image,
-      price,
-      categoryId,
-      brand,
-      stock,
-      features
-    );
 
     const updateProduct = await prisma.product.update({
       data: {
@@ -58,7 +54,7 @@ export const PUT = async (
         categoryId,
         brand,
         stock,
-        features,
+        feature,
       },
       where: { slug: params.slug },
     });

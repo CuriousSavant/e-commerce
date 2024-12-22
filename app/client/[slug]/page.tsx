@@ -37,7 +37,10 @@ const ProductDetailPage = () => {
   useEffect(() => {
     axios
       .get(`/api/product/${slug}`)
-      .then((res) => setProduct(res.data))
+      .then((res) => {
+        setProduct(res.data)
+        console.log(res.data)
+      })
       .finally(() => setLoading(false));
   }, [slug]);
 
@@ -164,7 +167,7 @@ const ProductDetailPage = () => {
             <img
               src={product.image?.[activeImage]}
               alt={product.title}
-              className="h-[70vh] w-full object-cover bg-center"
+              className="h-auto md:h-[74vh] w-full object-cover bg-center"
             />
 
             {product.stock <= 0 && (
@@ -214,14 +217,24 @@ const ProductDetailPage = () => {
 
           {/* Section: Product Info */}
           <div className="flex flex-col bg-white p-2 md:p-4 rounded-lg">
-            <Typography fontWeight={800} fontSize={"24px"} className="mb-2">
+            <Typography fontWeight={800} fontSize={{ xs: "20px", md: "24px" }} className="mb-2">
               {product.title}
             </Typography>
-            <p className="mb-4 text-gray-600">{product.description}</p>
+            <Typography sx={{ mb: 2, color: 'gray' }} variant="subtitle2">{product.description}</Typography>
 
-            {/* แสดงเมื่อขนาด 600px ขึ้นไป */}
+            {/* แสดงราคา และ ปุ่มสำหรับเพิ่มสินค้าลงรายการโปรด(ในขนาดเล็ก) */}
             {!isMediumScreen && (
-              <PriceCard price={product.price} />
+              <>
+                <Box display={'flex'} justifyContent={'space-between'} alignItems={'center'} mb={2}>
+                  <PriceCard price={product.price} />
+                  <IconButton
+                    onClick={() => handleWishlist(product.id)}
+                    className={`${isFavorite ? 'border-red-500 text-red-500' : 'border-gray-400 text-gray-400'}`}
+                  >
+                    {isFavorite ? <FaHeart /> : <BiHeart />}
+                  </IconButton>
+                </Box>
+              </>
             )}
 
             {/* รายละเอียดสินค้า */}
@@ -231,13 +244,13 @@ const ProductDetailPage = () => {
                 สินค้าของเราถูกออกแบบมาให้มีคุณภาพสูงสุดเพื่อความพึงพอใจของคุณ
               </p>
               <ul className="list-disc pl-6 space-y-2 text-sm">
-                <li>ออกแบบด้วยวัสดุคุณภาพ</li>
-                <li>ใช้งานง่าย เหมาะสำหรับทุกคน</li>
-                <li>รับประกันสินค้า 1 ปี</li>
+                {product.feature.map((item, index) => (
+                  <li key={index}>{item.desctiption}</li>
+                ))}
               </ul>
             </div>
 
-            {/* แสดงเมื่อขนาด 600px ขึ้นไป */}
+            {/* แสดงราคาสินค้า(ในขนาดใหญ่) */}
             {isMediumScreen && (
               <PriceCard price={product.price} />
             )}
@@ -387,17 +400,15 @@ export default ProductDetailPage;
 
 const PriceCard = ({ price }: { price: number }) => {
   return (
-    <div className="flex items-center justify-between mb-4">
-      <div className="flex items-center gap-2">
-        <Typography
-          color="primary"
-          fontSize={"24px"}
-          fontWeight={800}
-          className="text-blue-500"
-        >
-          ฿{price.toLocaleString('th-Th')}
-        </Typography>
-      </div>
+    <div className="flex items-center gap-2">
+      <Typography
+        color="primary"
+        fontSize={"24px"}
+        fontWeight={800}
+        className="text-blue-500"
+      >
+        ฿{price.toLocaleString('th-Th')}
+      </Typography>
     </div>
   )
 }

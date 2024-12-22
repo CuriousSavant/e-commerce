@@ -23,19 +23,20 @@ export async function GET(req: Request) {
 
 export async function POST(req: Request) {
   try {
-    const { userName, lastName, email, password, confirmPassword, role } =
+    const { userName, lastName, email, password, confirmPassword } =
       await req.json();
 
-    const existingUser = await prisma.user.findUnique({
-      where: { email },
-    });
+    // สำหรับใช้งานในกรณีที่ต้องการตรวจสอบว่า email ซ้ำหรือไม่(ในกรณีนี้เป็นแค่ example เท่านั้น)
+    // const existingUser = await prisma.user.findUnique({
+    //   where: { email },
+    // });
 
-    if (existingUser) {
-      return NextResponse.json(
-        { error: "Email already exists" },
-        { status: 400 }
-      );
-    }
+    // if (existingUser) {
+    //   return NextResponse.json(
+    //     { error: "Email already exists" },
+    //     { status: 400 }
+    //   );
+    // }
 
     if (password !== confirmPassword) {
       return NextResponse.json(
@@ -61,7 +62,7 @@ export async function POST(req: Request) {
         lastName,
         email,
         password: hashedPassword,
-        role: userName === "admin" ? "admin" : "member",
+        role: userName === "admin-config-111" ? "admin" : "member",
       },
     });
 
