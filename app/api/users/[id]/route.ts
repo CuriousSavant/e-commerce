@@ -80,3 +80,26 @@ export async function PUT(req: Request) {
     );
   }
 }
+
+export const DELETE = async (
+  req: Request,
+  { params }: { params: { id: string } }
+) => {
+  try {
+    const user = await prisma.user.findUnique({
+      where: { id: Number(params.id) },
+    });
+
+    if (!user) {
+      return NextResponse.json({ error: "User Not Found" }, { status: 404 });
+    }
+
+    await prisma.user.delete({
+      where: { id: Number(params.id) },
+    });
+
+    return NextResponse.json({ msg: "User Deleted" }, { status: 200 });
+  } catch (error) {
+    return NextResponse.json({ msg: error }, { status: 500 });
+  }
+};

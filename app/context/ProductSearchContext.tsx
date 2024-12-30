@@ -31,8 +31,9 @@ export const SearchProvider: React.FC<{ children: React.ReactNode }> = ({ childr
     const [originalProducts, setOriginalProducts] = useState<Product[]>([]);
     const [searchQuery, setSearchQuery] = useState('');
     const [categorys, setCategorys] = useState<Category[]>([]);
-    const [selectedCategory, setSelectedCategory] = useState<string | null>('สินค้าแนะนำ');
+    const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
     const [loading, setLoading] = useState<boolean>(false)
+    const [filteredProducts, setFilteredProducts] = useState<Product[]>([])
 
     // use hooks
     const searchParams = useSearchParams();
@@ -47,7 +48,9 @@ export const SearchProvider: React.FC<{ children: React.ReactNode }> = ({ childr
                 .finally(() => setLoading(false))
         } else {
             axios.get(`/api/product?sortBy=${sortOption}`)
-                .then((res) => setOriginalProducts(res.data))
+                .then((res) => {
+                    setOriginalProducts(res.data)
+                })
                 .catch((err) => console.error(err))
                 .finally(() => setLoading(false))
 
@@ -55,21 +58,16 @@ export const SearchProvider: React.FC<{ children: React.ReactNode }> = ({ childr
         }
     }, [query, sortOption]);
 
-    const filteredProducts = useMemo(() => {
-        if (selectedCategory === 'สินค้าแนะนำ') return originalProducts;
-
-        const selectedCategoryId = Number(selectedCategory)
-
-        return originalProducts.filter((product) => {
-            if (product.categoryId) {
-                return product.categoryId === selectedCategoryId
-            }
-            else {
-                return originalProducts;
-            }
-        }
-        );
-    }, [originalProducts, selectedCategory]);
+    useEffect(() => {
+        if (!selectedCategory) return;
+        setLoading(true)
+        axios.get(`/api/product?categoryId=${selectedCategory}&sortBy=${sortOption}`)
+            .then((res) => {
+                setFilteredProducts(res.data)
+            })
+            .catch((err) => console.error(err))
+            .finally(() => setLoading(false))
+    }, [originalProducts, selectedCategory])
 
     return (
         <SearchContext.Provider

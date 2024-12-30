@@ -20,6 +20,7 @@ import { FaHeart } from "react-icons/fa6";
 import { Wishlist } from "@prisma/client";
 import RandomProducts from "@/components/section/random-product";
 import { toast } from 'react-toastify';
+import PropertiesTable from "@/components/section/properties-table";
 
 const ProductDetailPage = () => {
   const [product, setProduct] = useState<Product | null>(null);
@@ -37,10 +38,7 @@ const ProductDetailPage = () => {
   useEffect(() => {
     axios
       .get(`/api/product/${slug}`)
-      .then((res) => {
-        setProduct(res.data)
-        console.log(res.data)
-      })
+      .then((res) => setProduct(res.data))
       .finally(() => setLoading(false));
   }, [slug]);
 
@@ -320,30 +318,8 @@ const ProductDetailPage = () => {
           </div>
         </div>
 
-        {/* คุณสมบัติสินค้า */}
-        {product?.category?.properties && product.category.properties.length > 0 && (
-          <>
-            <div className="mt-8">
-              <Typography fontWeight={800} fontSize="20px" className="mb-4">
-                คุณสมบัติสินค้า
-              </Typography>
-              <Paper elevation={0} className="rounded-lg">
-                <TableContainer>
-                  <Table>
-                    <TableBody>
-                      {product.category.properties.map((item, index) => (
-                        <TableRow key={item.id} className={index % 2 === 0 ? 'bg-gray-100' : ''}>
-                          <TableCell sx={{ padding: "10px" }}>{item.name}</TableCell>
-                          <TableCell sx={{ padding: "10px" }}>{item.value}</TableCell>
-                        </TableRow>
-                      ))}
-                    </TableBody>
-                  </Table>
-                </TableContainer>
-              </Paper>
-            </div>
-          </>
-        )}
+        {/* แสดงคุณสมบัติสินค้า */}
+        <PropertiesTable product={product} />
 
         {/* menu สั่งชื้อเมื่ออยู่ในขนาดเล้ก */}
         <div className="fixed bottom-0 left-0 right-0 bg-white shadow-md z-[9999]">

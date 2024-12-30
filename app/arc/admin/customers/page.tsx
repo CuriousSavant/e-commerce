@@ -15,16 +15,22 @@ import {
   IconButton,
   Tooltip,
   Chip,
+  MenuItem,
+  Select,
+  FormControl,
+  InputLabel,
 } from '@mui/material';
 import { User } from '@/types/user';
 import { BiEdit } from 'react-icons/bi';
+import { MdDelete } from 'react-icons/md';
 
 export default function CustomersPage() {
   const [users, setUsers] = useState<User[]>([])
   const [customerId, setCustomerId] = useState<string>('')
+  const [sortOrder, setSortOrder] = useState<string>('asc')
 
   const fetchUsers = () => {
-    axios.get('/api/users')
+    axios.get(`/api/users?sortOrder=${sortOrder}`)
       .then((res) => {
         setUsers(res.data)
       })
@@ -32,7 +38,7 @@ export default function CustomersPage() {
 
   useEffect(() => {
     fetchUsers();
-  }, [])
+  }, [sortOrder])
 
   useEffect(() => {
     if (customerId.trim() === '') {
@@ -43,8 +49,8 @@ export default function CustomersPage() {
   useEffect(() => {
     axios.get(`/api/users/${customerId}`)
       .then(res => {
-        setUsers(Array.isArray(res.data) ? res.data : Array(res.data))
-      }).catch(err => {
+        setUsers(Array.isArray(res.data) ? res.data : [res.data])
+      }).catch(() => {
         setUsers([]);
       })
   }, [customerId]);
@@ -58,6 +64,19 @@ export default function CustomersPage() {
     hour12: true,    // ใช้รูปแบบ 12 ชั่วโมง
   })
 
+  const handleDeleteCustomer = (customerId: number) => {
+    if (!customerId) return;
+    try {
+      axios.delete(`/api/users/${customerId}`).then(() => {
+        setUsers((prev) => prev.filter((user) => user.id !== customerId))
+      }).catch(err => {
+        console.error(err)
+      })
+    } catch (err) {
+      console.error(err)
+    }
+  }
+
   return (
     <Box sx={{ padding: 3, backgroundColor: '#f9fafb', minHeight: '100vh' }}>
       {/* Header */}
@@ -68,7 +87,6 @@ export default function CustomersPage() {
       {/* Filter and Actions */}
       <Box
         display="flex"
-        justifyContent="space-between"
         alignItems="center"
         mb={2}
         flexWrap="wrap"
@@ -81,6 +99,17 @@ export default function CustomersPage() {
           onChange={(e) => setCustomerId(e.target.value)}
           value={customerId}
         />
+        <FormControl size="small" sx={{ minWidth: 120 }}>
+          <InputLabel>Sort Order</InputLabel>
+          <Select
+            value={sortOrder}
+            onChange={(e) => setSortOrder(e.target.value)}
+            label="Sort Order"
+          >
+            <MenuItem value="asc">Asc</MenuItem>
+            <MenuItem value="desc">Desc</MenuItem>
+          </Select>
+        </FormControl>
       </Box>
 
       {/* Customer Table */}
@@ -107,8 +136,8 @@ export default function CustomersPage() {
             </TableRow>
           </TableHead>
           <TableBody>
-            {users.map((product) => (
-              <TableRow key={product.id}>
+            {users.map((user) => (
+              <TableRow key={user.id}>
                 <TableCell size="small">
                   <Typography
                     sx={{
@@ -116,13 +145,13 @@ export default function CustomersPage() {
                       fontWeight: "bold",
                     }}
                   >
-                    {product.id}
+                    {user.id}
                   </Typography>
                 </TableCell>
                 <TableCell size="small">
                   <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
                     <Avatar
-                      alt={product.name}
+                      alt={user.name}
                       style={{
                         width: 40,
                         height: 40,
@@ -140,27 +169,30 @@ export default function CustomersPage() {
                         fontSize: "13px",
                       }}
                     >
-                      <Typography fontWeight="bold">{product.name}</Typography>
+                      <Typography fontWeight="bold">{user.name}</Typography>
                       <Typography variant="body2" color="textSecondary">
-                        {product.email}
+                        {user.email}
                       </Typography>
                     </Box>
                   </Box>
                 </TableCell>
-                <TableCell>{product.phone}</TableCell>
-                <TableCell>{formatDate.format(new Date(product.createdAt))}</TableCell>
+                <TableCell>{user.phone || "-"}</TableCell>
+                <TableCell>{formatDate.format(new Date(user.createdAt))}</TableCell>
                 <TableCell>
                   <Chip
-                    color={product.emailVerified !== null ? "success" : "error"}
-                    label={product.emailVerified !== null ? "Verified" : "Not Verified"}
+                    color={user.emailVerified !== null ? "success" : "error"}
+                    label={user.emailVerified !== null ? "Verified" : "Not Verified"}
                   />
                 </TableCell>
                 <TableCell>
                   <Tooltip title="ว่าจะทำหน้าสำหรับแก้ไข user และ เพิ่มรายละเอียดเกี่ยวกับ สินค้าในคะกร้ามีกี่ชิ้น, และ อื่นๆ">
                     <IconButton>
-                      <BiEdit />
+                      <BiEdit color='#0f63e9' />
                     </IconButton>
                   </Tooltip>
+                  <IconButton onClick={() => handleDeleteCustomer(user.id)}>
+                    <MdDelete color='red' />
+                  </IconButton>
                 </TableCell>
               </TableRow>
             ))}

@@ -6,6 +6,8 @@ export async function GET(req: Request) {
   try {
     const { searchParams } = new URL(req.url);
     const userId = searchParams.get("userId");
+    const sortOrder = searchParams.get("sortOrder") || "asc";
+
     if (userId) {
       const users = await prisma.user.findUnique({
         where: { id: Number(userId) },
@@ -14,7 +16,11 @@ export async function GET(req: Request) {
     }
 
     // not userId case
-    const users = await prisma.user.findMany();
+    const users = await prisma.user.findMany({
+      orderBy: {
+        createdAt: sortOrder as "asc" | "desc",
+      },
+    });
     return NextResponse.json(users, { status: 200 });
   } catch (error) {
     return NextResponse.json("Error fetching users", { status: 500 });
@@ -26,17 +32,16 @@ export async function POST(req: Request) {
     const { userName, lastName, email, password, confirmPassword } =
       await req.json();
 
-    // สำหรับใช้งานในกรณีที่ต้องการตรวจสอบว่า email ซ้ำหรือไม่(ในกรณีนี้เป็นแค่ example เท่านั้น)
-    // const existingUser = await prisma.user.findUnique({
-    //   where: { email },
-    // });
+    const existingUser = await prisma.user.findUnique({
+      where: { email },
+    });
 
-    // if (existingUser) {
-    //   return NextResponse.json(
-    //     { error: "Email already exists" },
-    //     { status: 400 }
-    //   );
-    // }
+    if (existingUser) {
+      return NextResponse.json(
+        { error: "Email already exists" },
+        { status: 400 }
+      );
+    }
 
     if (password !== confirmPassword) {
       return NextResponse.json(

@@ -102,5 +102,12 @@
     "email": "admin123@gmail.com",
     "password": "admin123",
     "confirmPassword": "admin123"
+  },
+  {
+    "userName": "admin-config-111",
+    "lastName": "admin",
+    "email": "admin@gmail.com",
+    "password": "admin123",
+    "confirmPassword": "admin123"
   }
 ]

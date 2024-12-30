@@ -8,59 +8,90 @@ export async function GET(req: Request) {
     const sortOrder = url.searchParams.get("sortOrder") || "desc";
     const sortBy = url.searchParams.get("sortBy") || "createdAt";
     const search = url.searchParams.get("search");
+    const categoryId = url.searchParams.get("categoryId");
 
+    // Validate sortOrder
+    if (!["asc", "desc"].includes(sortOrder)) {
+      throw new Error("Invalid sortOrder value");
+    }
+
+    // Validate sortBy
+    const allowedSortByFields = [
+      "createdAt",
+      "updatedAt",
+      "lowPrice",
+      "highPrice",
+    ];
+    if (!allowedSortByFields.includes(sortBy)) {
+      throw new Error("Invalid sortBy value");
+    }
+
+    // Build filters
+    const whereClause: any = {};
     let products;
 
-    if (sortOrder !== "asc" && sortOrder !== "desc") {
-      throw new Error("Invalid SortOrder value");
+    if (categoryId) {
+      whereClause.categoryId = Number(categoryId);
     }
 
-    const searchFilter = search
-      ? {
-          where: {
-            title: {
-              contains: search.toLowerCase(),
+    if (search) {
+      whereClause.title = {
+        contains: search.toLowerCase(),
+      };
+    }
+
+    // Determine orderBy
+    const orderBy =
+      sortBy === "lowPrice"
+        ? { price: "asc" }
+        : sortBy === "highPrice"
+        ? { price: "desc" }
+        : { [sortBy]: sortOrder };
+
+    if (!search && !categoryId) {
+      products = await prisma.product.findMany({
+        orderBy: orderBy as any,
+        include: {
+          category: {
+            include: {
+              parent: true,
             },
           },
-        }
-      : undefined;
-
-    switch (sortBy) {
-      case "lowPrice":
-        products = await prisma.product.findMany({
-          ...searchFilter,
-          orderBy: { price: "asc" },
-          include: { category: true }, // Include category relation
-        });
-        break;
-      case "highPrice":
-        products = await prisma.product.findMany({
-          ...searchFilter,
-          orderBy: { price: "desc" },
-          include: { category: true }, // Include category relation
-        });
-        break;
-      default:
-        products = await prisma.product.findMany({
-          ...searchFilter,
-          orderBy: { [sortBy]: sortOrder },
-          include: { category: true }, // Include category relation
-        });
-        break;
-    }
-
-    if (products.length === 0) {
+          properties: true,
+        },
+      });
+    } else {
+      // Fetch products
       products = await prisma.product.findMany({
-        take: 5,
-        orderBy: { [sortBy]: sortOrder },
-        include: { category: true }, // Include category relation
+        where: whereClause,
+        orderBy: orderBy as any,
+        include: {
+          category: {
+            include: {
+              parent: true,
+            },
+          },
+          properties: true,
+        },
       });
     }
 
+    // Fallback for no products
+    if (products.length === 0) {
+      const fallbackProducts = await prisma.product.findMany({
+        orderBy: { [sortBy]: sortOrder },
+        include: {
+          category: true,
+          properties: true,
+        },
+      });
+      return NextResponse.json(fallbackProducts);
+    }
+
     return NextResponse.json(products);
-  } catch (error) {
+  } catch (error: any) {
     console.error(error);
-    return NextResponse.json({ msg: error }, { status: 500 });
+    return NextResponse.json({ msg: error.message }, { status: 500 });
   }
 }
 
@@ -71,7 +102,6 @@ export const POST = async (req: Request) => {
       description,
       image,
       price,
-      category,
       brand,
       stock,
       categoryId,
@@ -87,7 +117,6 @@ export const POST = async (req: Request) => {
         description,
         image,
         price,
-        category,
         brand,
         stock,
         categoryId,

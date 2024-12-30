@@ -4,6 +4,7 @@ import LatestProduct from "@/components/section/latest-product";
 import LayoutProduct from "@/components/layout/layout-product";
 import { BsCartX } from "react-icons/bs";
 import prisma from "@/lib/prisma";
+import CardCategorys from "@/components/section/categorys";
 
 export default async function Home() {
   const products = await prisma.product.findMany()
@@ -19,6 +20,8 @@ export default async function Home() {
           <h1 className='text-3xl font-semibold text-gray-400 mt-6'>ไม่มีสินค้า</h1>
         </div>
       )}
+      <CardCategorys />
+      {/* <Cta /> */}
     </LayoutProduct >
   );
 }

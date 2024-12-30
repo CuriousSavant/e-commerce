@@ -1,11 +1,19 @@
 'use client';
 import CartProduct from '@/components/section/cart-product';
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useSearchContext } from '@/app/context/ProductSearchContext';
 import { Skeleton } from '@mui/material';
+import { useSearchParams } from 'next/navigation';
 
 const Products = () => {
-    const { viewMode, loading, filteredProducts } = useSearchContext();
+    const { viewMode, loading, originalProducts, filteredProducts, selectedCategory, setSelectedCategory } = useSearchContext();
+
+    const params = useSearchParams()
+    const categoryId = params.get('categoryId')
+
+    useEffect(() => {
+        setSelectedCategory(categoryId)
+    }, [categoryId])
 
     const getContainerClass = (viewMode: string) => (
         viewMode === 'grid'
@@ -24,11 +32,10 @@ const Products = () => {
                     >
                         <Skeleton
                             variant="rectangular"
-                            className={`${
-                                viewMode === 'grid'
-                                    ? 'w-full h-44 lg:h-[12rem]'
-                                    : 'h-32 lg:h-32 min-w-[130px] max-w-[130px] md:min-w-[150px] md:max-w-[150px]'
-                            }`}
+                            className={`${viewMode === 'grid'
+                                ? 'w-full h-44 lg:h-[12rem]'
+                                : 'h-32 lg:h-32 min-w-[130px] max-w-[130px] md:min-w-[150px] md:max-w-[150px]'
+                                }`}
                             animation="wave"
                         />
                         <div className="p-3 flex flex-col gap-1 flex-grow">
@@ -42,12 +49,14 @@ const Products = () => {
         );
     };
 
+    const products = selectedCategory === null ? originalProducts : filteredProducts
+
     const ProductList = () => (
         loading ? (
-            renderSkeletons(filteredProducts.length)
-        ) : filteredProducts.length > 0 ? (
+            renderSkeletons(products.length)
+        ) : products.length > 0 ? (
             <div className={getContainerClass(viewMode)}>
-                {filteredProducts.map((product) => (
+                {products.map((product) => (
                     <CartProduct product={product} viewMode={viewMode} key={product.id} />
                 ))}
             </div>

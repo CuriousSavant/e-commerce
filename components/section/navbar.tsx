@@ -27,8 +27,8 @@ const LinkInfo = [
     { title: "สินค้า", href: "/client/products", icon: <BsGrid3X3Gap />, color: "#1976d2" },
     { title: "เกี่ยวกับเรา", href: "/client/about", icon: <HiOutlineUserGroup />, color: "#1976d2" },
     { title: "ติดต่อ", href: "/client/contact", icon: <RiContactsLine />, color: "#1976d2" },
-    { title: "คำสั่งซื้อ", href: "/client/profile/order-summary", icon: <RiFileList3Line />, color: "#1976d2", authRequired: true },
     { divider: true },
+    { title: "คำสั่งซื้อ", href: "/client/profile/order-summary", icon: <RiFileList3Line />, color: "#1976d2", authRequired: true },
     { title: "ออกจากระบบ", href: "#", icon: <BiLogOut />, color: "#1976d2", action: "logout", authRequired: true },
 ]
 
@@ -203,7 +203,7 @@ const Navbar = () => {
                                 </Box>
                                 <Box sx={{ display: "flex", flexDirection: "column", marginLeft: 1 }}>
                                     <Typography variant="subtitle2" fontSize={12} color="gray">สวัสดีคุณ</Typography>
-                                    <Typography fontWeight={700}>{session?.user?.name}</Typography>
+                                    <Typography fontWeight={700} className='line-clamp-1'>{session?.user?.name}</Typography>
                                 </Box>
                             </Button>
                         )}

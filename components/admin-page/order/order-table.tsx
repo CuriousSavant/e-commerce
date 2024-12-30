@@ -50,54 +50,60 @@ const OrderTable: React.FC<OrderTableProps> = ({ orders, setOrder }) => {
                 borderRadius: '10px',
             }}
         >
-            <Table size="small">
-                <TableHead>
-                    <TableRow>
-                        <TableCell sx={{ whiteSpace: "pre" }}>หมายเลขคำสั่งซื้อ</TableCell>
-                        <TableCell sx={{ whiteSpace: "pre" }}>ผู้ใช้</TableCell>
-                        <TableCell sx={{ whiteSpace: "pre" }}>วันที่สั่งซื้อ</TableCell>
-                        <TableCell sx={{ whiteSpace: "pre" }}>จำนวนสินค้า</TableCell>
-                        <TableCell sx={{ whiteSpace: "pre" }}>สถานะคำสั่งซื้อ</TableCell>
-                        <TableCell sx={{ whiteSpace: "pre" }}>การจัดการ</TableCell>
-                    </TableRow>
-                </TableHead>
-                <TableBody>
-                    {orders.map((order) =>
-                        order.orderItems.map((item) => (
-                            <TableRow key={item.id}>
-                                <TableCell size='small'>
-                                    <Typography sx={{ color: '#4F46E5', fontWeight: 'bold' }}>{item.id}</Typography>
-                                </TableCell>
-                                <TableCell size='small'>
-                                    <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                                        <Avatar>{order.user.name?.charAt(0)}</Avatar>
-                                        <Box>
-                                            <Typography fontWeight="bold">{order.user.name}</Typography>
-                                            <Typography variant="body2" color="textSecondary">
-                                                {order.user.email}
-                                            </Typography>
+            {orders.length > 0 ? (
+                <Table size="small">
+                    <TableHead>
+                        <TableRow>
+                            <TableCell sx={{ whiteSpace: "pre" }}>หมายเลขคำสั่งซื้อ</TableCell>
+                            <TableCell sx={{ whiteSpace: "pre" }}>ผู้ใช้</TableCell>
+                            <TableCell sx={{ whiteSpace: "pre" }}>วันที่สั่งซื้อ</TableCell>
+                            <TableCell sx={{ whiteSpace: "pre" }}>จำนวนสินค้า</TableCell>
+                            <TableCell sx={{ whiteSpace: "pre" }}>สถานะคำสั่งซื้อ</TableCell>
+                            <TableCell sx={{ whiteSpace: "pre" }}>การจัดการ</TableCell>
+                        </TableRow>
+                    </TableHead>
+                    <TableBody>
+                        {orders.map((order) =>
+                            order.orderItems.map((item) => (
+                                <TableRow key={item.id}>
+                                    <TableCell size='small'>
+                                        <Typography sx={{ color: '#4F46E5', fontWeight: 'bold' }}>{item.id}</Typography>
+                                    </TableCell>
+                                    <TableCell size='small'>
+                                        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                                            <Avatar>{order.user.name?.charAt(0)}</Avatar>
+                                            <Box>
+                                                <Typography fontWeight="bold">{order.user.name}</Typography>
+                                                <Typography variant="body2" color="textSecondary">
+                                                    {order.user.email}
+                                                </Typography>
+                                            </Box>
                                         </Box>
-                                    </Box>
-                                </TableCell>
-                                <TableCell size='small' sx={{ whiteSpace: "pre" }}>{format(new Date(order.createdAt), 'dd MMM yyyy, HH:mm')}</TableCell>
-                                <TableCell size='small'>{item.quantity}</TableCell>
-                                <TableCell size='small'>
-                                    <Chip
-                                        label={formatStatus(order.status).label}
-                                        color={formatStatus(order.status).color as any}
-                                        sx={{ fontWeight: 'bold' }}
-                                    />
-                                </TableCell>
-                                <TableCell size='small'>
-                                    <IconButton onClick={() => handleDeleteOrder(order.id)}>
-                                        <MdDelete color="#FF0000" />
-                                    </IconButton>
-                                </TableCell>
-                            </TableRow>
-                        ))
-                    )}
-                </TableBody>
-            </Table>
+                                    </TableCell>
+                                    <TableCell size='small' sx={{ whiteSpace: "pre" }}>{format(new Date(order.createdAt), 'dd MMM yyyy, HH:mm')}</TableCell>
+                                    <TableCell size='small'>{item.quantity}</TableCell>
+                                    <TableCell size='small'>
+                                        <Chip
+                                            label={formatStatus(order.status).label}
+                                            color={formatStatus(order.status).color as any}
+                                            sx={{ fontWeight: 'bold' }}
+                                        />
+                                    </TableCell>
+                                    <TableCell size='small'>
+                                        <IconButton onClick={() => handleDeleteOrder(order.id)}>
+                                            <MdDelete color="#FF0000" />
+                                        </IconButton>
+                                    </TableCell>
+                                </TableRow>
+                            ))
+                        )}
+                    </TableBody>
+                </Table>
+            ): (
+                <div className='min-h-[20rem] flex justify-center items-center'>
+                    ไม่มี Order ในขณะนี้
+                </div>
+            )}
         </TableContainer>
     );
 }

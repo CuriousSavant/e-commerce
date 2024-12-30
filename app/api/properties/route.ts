@@ -12,12 +12,11 @@ export const GET = async () => {
 
 export const POST = async (req: Request) => {
   try {
-    const { name, value, categoryId } = await req.json();
+    const { name, value } = await req.json();
     const createProperty = await prisma.properties.create({
       data: {
         name,
         value,
-        categoryId: categoryId || null,
       },
     });
     return NextResponse.json(createProperty);

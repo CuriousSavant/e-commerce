@@ -31,6 +31,7 @@ export interface Category {
   parent: number | null;
   parentId: number | null;
   properties: Propertie[]
+  product: Product;
   createdAt?: Date;
   updatedAt?: Date;
 }

@@ -6,22 +6,15 @@ export const GET = async (
   { params }: { params: { id: string } }
 ) => {
   try {
-    const productWithProperties = await prisma.properties.findUnique({
-      where: { id: Number(params.id) },
-      include: {
-        category: {
-          include: {
-            properties: true,
-          },
-        },
-      },
+    const properties = await prisma.properties.findMany({
+      where: { productId: Number(params.id) },
     });
 
-    if (!productWithProperties) {
+    if (!properties) {
       return NextResponse.json({ msg: "Product not found" }, { status: 404 });
     }
 
-    return NextResponse.json(productWithProperties);
+    return NextResponse.json(properties);
   } catch (err) {
     return NextResponse.json({ msg: err }, { status: 500 });
   }

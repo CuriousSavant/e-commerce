@@ -1,4 +1,4 @@
-import React, { SetStateAction, useState } from 'react';
+import React, { SetStateAction } from 'react';
 import { Typography, IconButton, Box, Button, Dialog, DialogContent, TextField } from '@mui/material';
 import { MdClose } from 'react-icons/md';
 
@@ -10,12 +10,13 @@ const SearchBox = ({ isSearchOpen, setIsSearchOpen }: { isSearchOpen: boolean, s
     const { searchQuery, setSearchQuery } = useSearchContext()
     const router = useRouter();
 
-    const handleSearch = (e: React.FormEvent) => {
+    const handleSearch = async (e: React.FormEvent) => {
         e.preventDefault();
+
         if (searchQuery) {
-            router.push(`/client/products/search?q=${searchQuery}`);
+            await router.push(`/client/products/search?q=${searchQuery}`);
         } else {
-            router.push('/client/products')
+            await router.push('/client/products')
         }
         setIsSearchOpen(false)
     };
@@ -43,7 +44,7 @@ const SearchBox = ({ isSearchOpen, setIsSearchOpen }: { isSearchOpen: boolean, s
                         <MdClose size={20} />
                     </IconButton>
                 </Box>
-                <Box component={'form'} onSubmit={handleSearch} sx={{ display: "flex", flexDirection: "row", alignItems: "center", mt: 1, height: "44px" }}>
+                <form onSubmit={handleSearch} className='flex items-center flex-row mt-2 h-[44px]'>
                     <TextField
                         size="small"
                         placeholder="Searching for..."
@@ -80,7 +81,7 @@ const SearchBox = ({ isSearchOpen, setIsSearchOpen }: { isSearchOpen: boolean, s
                         }}>
                         Search
                     </Button>
-                </Box>
+                </form>
             </DialogContent>
         </Dialog>
     );

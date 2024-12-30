@@ -41,27 +41,25 @@ model Feature {
 }
 
 model Category {
-  id       Int       @id @default(autoincrement())
-  name     String
-  parentId Int?
-  parent   Category? @relation("CategoryToCategory", fields: [parentId], references: [id])
+  id         Int       @id @default(autoincrement())
+  name       String
+  categortId Int?
+  parentId   Int?
+  parent     Category? @relation("CategoryToCategory", fields: [parentId], references: [id])
 
-  properties Properties[]
-  product    Product[]
-  children   Category[]   @relation("CategoryToCategory")
-  createdAt  DateTime     @default(now())
-  updatedAt  DateTime     @updatedAt
+  product   Product[]
+  children  Category[] @relation("CategoryToCategory")
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
 }
 
 model Properties {
-  id         Int    @id @default(autoincrement())
-  name       String
-  value      String
-  categoryId Int?
-  productId  Int?
+  id        Int    @id @default(autoincrement())
+  name      String
+  value     String
+  productId Int?
 
-  category Category? @relation(fields: [categoryId], references: [id])
-  Product  Product?  @relation(fields: [productId], references: [id])
+  Product Product? @relation(fields: [productId], references: [id])
 }
 
 model User {

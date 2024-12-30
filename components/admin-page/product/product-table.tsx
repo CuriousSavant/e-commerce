@@ -42,7 +42,13 @@ const ProductTable: React.FC<RowPageProps> = ({
     const [selected, setSelected] = useState<string[]>([]);
 
     const fetchProducts = () => {
-        axios.get(`/api/product?sortOrder=${sortOrder}`).then((res) => setProducts(res.data));
+        try {
+            axios.get(`/api/product?sortOrder=${sortOrder}`).then((res) => {
+                setProducts(res.data)
+            });
+        } catch (err) {
+            console.error(err)
+        }
     };
 
     useEffect(() => {
@@ -292,15 +298,17 @@ const ProductTable: React.FC<RowPageProps> = ({
                                             sx={{ fontWeight: "bold" }}
                                         />
                                     </TableCell>
-                                    <TableCell size="small" sx={{ display: "flex" }}>
-                                        <IconButton>
-                                            <Link href={`/arc/admin/products/edit/${product.slug}`}>
-                                                <BiEdit color="#1976d2" />
-                                            </Link>
-                                        </IconButton>
-                                        <IconButton onClick={() => handleDeleteProduct(product.slug, product.title)}>
-                                            <MdDelete color="#FF0000" />
-                                        </IconButton>
+                                    <TableCell size="small">
+                                        <Box display={'flex'} alignItems={'center'}>
+                                            <IconButton>
+                                                <Link href={`/arc/admin/products/edit/${product.slug}`}>
+                                                    <BiEdit color="#1976d2" />
+                                                </Link>
+                                            </IconButton>
+                                            <IconButton onClick={() => handleDeleteProduct(product.slug, product.title)}>
+                                                <MdDelete color="#FF0000" />
+                                            </IconButton>
+                                        </Box>
                                     </TableCell>
                                 </TableRow>
                             );

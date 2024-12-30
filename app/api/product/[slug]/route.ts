@@ -9,12 +9,8 @@ export const GET = async (
     const product = await prisma.product.findUnique({
       where: { slug: params.slug },
       include: {
-        category: {
-          include: {
-            parent: true,
-            properties: true,
-          },
-        },
+        category: true,
+        properties: true,
         feature: true,
       },
     });
@@ -33,18 +29,19 @@ export const PUT = async (
   req: Request,
   { params }: { params: { slug: string } }
 ) => {
-  try {
-    const {
-      title,
-      description,
-      image,
-      price,
-      categoryId,
-      brand,
-      stock,
-      feature,
-    } = await req.json();
+  const {
+    title,
+    description,
+    image,
+    price,
+    categoryId,
+    brand,
+    stock,
+    feature,
+    properties,
+  } = await req.json();
 
+  try {
     const updateProduct = await prisma.product.update({
       data: {
         title,
@@ -54,14 +51,24 @@ export const PUT = async (
         categoryId,
         brand,
         stock,
-        feature,
+        feature: {
+          create: feature.map((item: any) => ({
+            desctiption: item.description,
+          })),
+        },
+        properties: {
+          create: properties.map((item: any) => ({
+            name: item.name,
+            value: item.value,
+          })),
+        },
       },
       where: { slug: params.slug },
     });
     return NextResponse.json(updateProduct);
   } catch (err) {
     return NextResponse.json(
-      { msgErr: "Update product fail!" },
+      { msgErr: "Update product fail!", error: err },
       { status: 500 }
     );
   }
@@ -80,6 +87,7 @@ export const DELETE = async (
     return NextResponse.json(
       {
         msg: "An error occurred",
+        error: err,
       },
       { status: 500 }
     );

@@ -90,7 +90,7 @@ const ContactPage = () => {
                         <h1 className='text-2xl'>
                             <CiGlobe />
                         </h1>
-                        <Link href={contactInfo.instagram} className='hover:underline'>{contactInfo.website}</Link>
+                        <Link href={contactInfo.website} className='hover:underline'>{contactInfo.website}</Link>
                     </div>
                     <div className='flex gap-2'>
                         <h1 className='text-2xl'>

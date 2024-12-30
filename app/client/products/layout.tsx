@@ -26,7 +26,7 @@ const SearchLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => 
                     <Select
                         size="small"
                         className="bg-white border border-gray-300 rounded w-full md:w-auto"
-                        value={selectedCategory}
+                        value={selectedCategory || "สินค้าแนะนำ"}
                         onChange={(e) => setSelectedCategory(e.target.value)}
                         displayEmpty
                     >
@@ -50,7 +50,7 @@ const SearchLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => 
                         displayEmpty
                     >
                         <MenuItem value="createdAt">ค่าเริ่มต้น</MenuItem>
-                        <MenuItem value="title">เรียงตามชื่อ</MenuItem>
+                        <MenuItem value="updatedAt">ใหม่ล่าสุด</MenuItem>
                         <MenuItem value="lowPrice">เรียงตามราคาที่ต่ำที่สุด</MenuItem>
                         <MenuItem value="highPrice">เรียงตามราคาที่สูงที่สุด</MenuItem>
                     </Select>

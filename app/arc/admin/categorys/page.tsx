@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import Swal from 'sweetalert2';
-import { Category, Propertie } from '@/types/product';
+import { Category } from '@/types/product';
 
 import {
   Box,
@@ -21,7 +21,6 @@ const CategorysPage = () => {
   const [categoryName, setCategoryName] = useState<string>('');
   const [editId, setEditId] = useState<number | null>(null);
   const [parentId, setParentId] = useState<number | null>(null);
-  const [properties, setProperties] = useState<Propertie[]>([]);
   const [selected, setSelected] = useState<number[]>([]);
   const [loading, setLoading] = useState<boolean>(false)
 
@@ -44,11 +43,6 @@ const CategorysPage = () => {
     const payload = {
       name: categoryName,
       parentId: parentId,
-      properties: properties.map(({ id, name, value }) => ({
-        id,
-        name,
-        value,
-      })),
     };
 
     try {
@@ -58,13 +52,11 @@ const CategorysPage = () => {
           setParentId(null);
           fetchCategories();
           setEditId(null);
-          setProperties([]);
         })
         : axios.post('/api/categories', payload).then((res) => {
           setCategoryName('');
           setParentId(null);
           setCategories([res.data, ...categories]);
-          setProperties([]);
         })
     } catch (err) {
       console.error('Error during save:', err);
@@ -75,13 +67,6 @@ const CategorysPage = () => {
     setEditId(category.id);
     setCategoryName(category.name);
     setParentId(category.parentId);
-    setProperties(
-      category.properties.map(({ id, name, value }) => ({
-        id: id,
-        name: name,
-        value: value,
-      }))
-    );
     window.scrollTo({ behavior: 'smooth', top: 0 });
   };
 
@@ -111,27 +96,10 @@ const CategorysPage = () => {
     });
   };
 
-  const handleAddProperty = () => {
-    setProperties((prev) => [...prev, { id: prev.length + 1, name: '', value: '' }]);
-  };
-
-  const handlePropertyChange = (index: number, type: 'value' | 'name', value: string) => {
-    setProperties((prev) =>
-      prev.map((property, i) =>
-        i === index ? { ...property, [type]: value } : property
-      )
-    );
-  };
-
-  const handleDeleteProperty = (indexToRemove: number | undefined) => {
-    setProperties((prev) => prev.filter((prop) => prop.id !== indexToRemove));
-  };
-
   const onCancel = () => {
     setCategoryName('');
     setParentId(null);
     setEditId(null);
-    setProperties([]);
   };
 
   const handleChangePage = (event: unknown, newPage: number) => {
@@ -213,84 +181,49 @@ const CategorysPage = () => {
           </Grid>
         </Grid>
 
-        {/* Properties */}
-        <Box mb={3}>
-          <Typography variant="h6">Properties</Typography>
-          <Button variant="contained" onClick={handleAddProperty} sx={{ mb: 2 }}>
-            Add New Property
-          </Button>
-          {properties.map((property, index) => (
-            <Grid container spacing={2} key={index} alignItems="center" mb={2}>
-              <Grid item xs={5}>
-                <TextField
-                  label="Name"
-                  value={property.name}
-                  onChange={(e) =>
-                    handlePropertyChange(index, 'name', e.target.value)
-                  }
-                  size='small'
-                  fullWidth
-                />
-              </Grid>
-              <Grid item xs={5}>
-                <TextField
-                  label="Value"
-                  value={property.value}
-                  onChange={(e) =>
-                    handlePropertyChange(index, 'value', e.target.value)
-                  }
-                  size='small'
-                  fullWidth
-                />
-              </Grid>
-              <Grid item xs={2}>
-                <Button
-                  variant="outlined"
-                  color="error"
-                  onClick={() => handleDeleteProperty(property.id)}
-                >
-                  ✕
-                </Button>
-              </Grid>
-            </Grid>
-          ))}
-        </Box>
-
         <Box display="flex" gap={2}>
           {editId && (
             <Button variant="outlined" onClick={onCancel}>
               Cancel
             </Button>
           )}
-          <Button variant="contained" type="submit">
+          <Button variant="contained" type="submit" sx={{ bgcolor: "primary.500" }}>
             Save Category
           </Button>
         </Box>
       </form>
 
-      <CategoriesTable
-        categories={categories}
-        handleClick={handleClick}
-        handleDeleteCategory={handleDeleteCategory}
-        handleEditCategory={handleEditCategory}
-        handleSelectAllClick={handleSelectAllClick}
-        page={page}
-        rowsPerPage={rowsPerPage}
-        selected={selected}
-        isSelected={isSelected}
-        loading={loading}
-      />
+      {categories.length > 0 ? (
+        <>
+          <CategoriesTable
+            categories={categories}
+            handleClick={handleClick}
+            handleDeleteCategory={handleDeleteCategory}
+            handleEditCategory={handleEditCategory}
+            handleSelectAllClick={handleSelectAllClick}
+            page={page}
+            rowsPerPage={rowsPerPage}
+            selected={selected}
+            isSelected={isSelected}
+            loading={loading}
+          />
 
-      <TablePagination
-        rowsPerPageOptions={[5, 10, 25]}
-        component="div"
-        count={categories.length}
-        rowsPerPage={rowsPerPage}
-        page={page}
-        onPageChange={handleChangePage}
-        onRowsPerPageChange={handleChangeRowsPerPage}
-        sx={{ bgcolor: 'background.paper' }}
-      />
+          <TablePagination
+            rowsPerPageOptions={[5, 10, 25]}
+            component="div"
+            count={categories.length}
+            rowsPerPage={rowsPerPage}
+            page={page}
+            onPageChange={handleChangePage}
+            onRowsPerPageChange={handleChangeRowsPerPage}
+            sx={{ bgcolor: 'background.paper' }}
+          />
+        </>
+      ) : (
+        <Box display={'flex'} justifyContent={'center'} alignItems={'center'} minHeight={'20rem'}>
+          <Typography color='gray'>Not Category</Typography>
+        </Box>
+      )}
     </Box>
   );
 };
