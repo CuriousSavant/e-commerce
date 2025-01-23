@@ -187,7 +187,7 @@ const CategorysPage = () => {
               Cancel
             </Button>
           )}
-          <Button variant="contained" type="submit" sx={{ bgcolor: "primary.500" }}>
+          <Button variant="contained" type="submit" sx={{ bgcolor: "secondary.main" }}>
             Save Category
           </Button>
         </Box>

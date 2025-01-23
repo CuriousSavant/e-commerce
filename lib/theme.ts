@@ -5,16 +5,17 @@ const theme = () =>
     palette: {
       primary: {
         main: "#1976d2",
-        "500": "#0f63e9"
+        dark: "#1e1e2f", // dasboard background
       },
       secondary: {
-        main: "#635bff",
+        main: "#0f63e9",
+        dark: "#27293d", // eml in dashboard
       },
     },
     typography: {
       fontFamily: `"Noto Sans Thai", sans-serif`,
     },
-    components:{
+    components: {
       MuiOutlinedInput: {
         styleOverrides: {
           root: {

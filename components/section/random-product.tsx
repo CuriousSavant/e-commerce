@@ -11,7 +11,7 @@ const RandomProducts: React.FC = () => {
     useEffect(() => {
         const fetchRandomProducts = async () => {
             try {
-                const res = await axios.get("/api/product/random");
+                const res = await axios.get("/api/product/random-product");
                 setProducts(res.data);
             } catch (error) {
                 console.error("Error fetching random products", error);
@@ -26,7 +26,6 @@ const RandomProducts: React.FC = () => {
             <Typography variant="h5" fontWeight="bold" gutterBottom>
                 สินค้าแนะนำ
             </Typography>
-
             <Box
                 sx={{
                     display: "flex",

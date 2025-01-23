@@ -22,7 +22,6 @@ const AddAddress = () => {
         handleChange,
         handleSubmit,
         handleClose,
-        setIsFormOpen,
         defaultAddress
     } = useAddress();
 
@@ -38,8 +37,7 @@ const AddAddress = () => {
                         alignItems: "center",
                         gap: 1,
                         fontSize: { xs: "1rem", md: "1.25rem" },
-                    }}
-                >
+                    }}>
                     <SlLocationPin size={28} />
                     ที่อยู่จัดส่ง
                 </Typography>

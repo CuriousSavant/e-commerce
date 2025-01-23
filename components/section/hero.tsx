@@ -22,7 +22,7 @@ const HeroSection = () => {
                         <Button
                             href={'/client/products'}
                             variant='contained'
-                            sx={{ bgcolor: "primary.500", color: "white", px: 3 }}>เริ่มช้อปปิ้งเลย</Button>
+                            sx={{ bgcolor: "secondary.main", color: "white", px: 3 }}>เริ่มช้อปปิ้งเลย</Button>
                     </div>
                 </div>
             </div>

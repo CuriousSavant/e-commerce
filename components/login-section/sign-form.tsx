@@ -122,7 +122,7 @@ const SignUpForm: React.FC<SignUpFormProps> = ({
                 fullWidth
                 variant="contained"
                 color="primary"
-                sx={{ mt: 2, bgcolor: "primary.500" }}
+                sx={{ mt: 2, bgcolor: "secondary.main" }}
             >
                 สมัครสมาชิก
             </Button>

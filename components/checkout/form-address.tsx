@@ -134,7 +134,7 @@ const FormAddress: React.FC<FormAddressProps> = ({
                     </Grid>
                     <Box display={'flex'} justifyContent={'end'} alignContent={'center'} mt={2} gap={1}>
                         <Button variant="outlined" sx={{ px: 6 }} onClick={handleClose}>ยกเลิก</Button>
-                        <Button type="submit" variant="contained" sx={{ bgcolor: "primary.500", px: 6 }}>บันทึก</Button>
+                        <Button type="submit" variant="contained" sx={{ bgcolor: "secondary.main", px: 6 }}>บันทึก</Button>
                     </Box>
                 </form>
             </Box>

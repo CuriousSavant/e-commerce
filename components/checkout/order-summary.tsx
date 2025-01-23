@@ -65,7 +65,7 @@ const OrderSummary: React.FC<OrderSummaryProps> = ({
                                     <Box>
                                         <IconButton
                                             size="small"
-                                            disabled={itemQuantities[item.productId] <= 1}
+                                            disabled={itemQuantities[item.productId!] <= 1}
                                             onClick={() => updateItemQuantity(item.product.id, false)}
                                         >
                                             <BiMinus />
@@ -76,12 +76,12 @@ const OrderSummary: React.FC<OrderSummaryProps> = ({
                                             className="w-6 font-bold"
                                             color='text.secondary'
                                         >
-                                            {itemQuantities[item.productId]}
+                                            {itemQuantities[item.productId!]}
                                         </Typography>
                                         <IconButton
                                             size="small"
                                             onClick={() => updateItemQuantity(item.product.id, true)}
-                                            disabled={itemQuantities[item.productId] >= item.product.stock}
+                                            disabled={itemQuantities[item.productId!] >= item.product.stock}
                                         >
                                             <MdAdd />
                                         </IconButton>
@@ -126,7 +126,7 @@ const OrderSummary: React.FC<OrderSummaryProps> = ({
                 <Button
                     variant="contained"
                     fullWidth
-                    sx={{ mt: 2, bgcolor: "primary.500" }}
+                    sx={{ mt: 2, bgcolor: "secondary.main" }}
                     onClick={handleOrder}
                 >
                     ยืนยันคำสั่งซื้อ
