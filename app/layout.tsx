@@ -33,7 +33,7 @@ export default async function RootLayout({
             </LayoutSetting>
             <ToastContainer
               position="top-right"
-              autoClose={3000}
+              autoClose={1500}
               hideProgressBar
               newestOnTop={false}
               closeOnClick
@@ -41,7 +41,6 @@ export default async function RootLayout({
               pauseOnFocusLoss
               draggable
               pauseOnHover
-              className="toast-container"
             />
           </SessionProvider>
         </body>

@@ -23,6 +23,13 @@ const theme = () =>
           }
         }
       },
+      MuiListItemButton: {
+        styleOverrides: {
+          root: {
+            borderRadius: "8px",
+          }
+        }
+      },
       MuiButton: {
         styleOverrides: {
           root: { borderRadius: "8px" }

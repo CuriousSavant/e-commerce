@@ -1,8 +1,6 @@
 import { NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
 
-// พรุ่งนีต้องลองกลับมาดูว่าแก้อะไรไปบ้างมีทีเด็ดที่การจัดการเรื่องการลบ properties
-
 export const GET = async (
   req: Request,
   { params }: { params: { id: string } }

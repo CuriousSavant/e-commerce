@@ -6,7 +6,7 @@ import { BiArrowBack } from 'react-icons/bi';
 import { BsHeart } from 'react-icons/bs';
 import { useRouter } from 'next/navigation';
 import useAddress from '@/hooks/useAddress';
-import FormAddress from '@/components/checkout/form-address';
+import FormAddress from '@/components/client/checkout/form-address';
 
 const ShippingAddress = () => {
   const router = useRouter();

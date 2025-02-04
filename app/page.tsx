@@ -1,16 +1,15 @@
 import React from "react";
-import HeroSection from "@/components/section/hero";
-import LatestProduct from "@/components/section/latest-product";
-import LayoutProduct from "@/components/layout/layout-product";
+import HeroSection from "@/components/client/section/hero";
+import LatestProduct from "@/components/client/section/latest-product";
 import { BsCartX } from "react-icons/bs";
 import prisma from "@/lib/prisma";
-import CardCategorys from "@/components/section/categorys";
+import CardCategorys from "@/components/client/section/categorys";
 
 export default async function Home() {
   const products = await prisma.product.findMany()
 
   return (
-    <LayoutProduct>
+    <div className="max-w-screen-xl mx-auto">
       <HeroSection />
       {products.length > 0 ? (
         <LatestProduct />
@@ -21,7 +20,6 @@ export default async function Home() {
         </div>
       )}
       <CardCategorys />
-      {/* <Cta /> */}
-    </LayoutProduct >
+    </div>
   );
 }

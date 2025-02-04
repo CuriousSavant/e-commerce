@@ -10,7 +10,7 @@ export const GET = async () => {
     });
     return NextResponse.json(categoryData);
   } catch (err) {
-    return NextResponse.json({ MsgError: err }, { status: 500 });
+    return NextResponse.json({ msg: err }, { status: 500 });
   }
 };
 
@@ -26,6 +26,6 @@ export const POST = async (req: Request) => {
     });
     return NextResponse.json(crateCategory);
   } catch (err) {
-    return NextResponse.json({ MsgError: err }, { status: 500 });
+    return NextResponse.json({ msg: err }, { status: 500 });
   }
 };

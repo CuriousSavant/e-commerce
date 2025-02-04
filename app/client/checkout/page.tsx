@@ -1,11 +1,11 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { Box, Grid } from "@mui/material";
 import { FaMoneyBill } from "react-icons/fa6";
 import { MdCreditCard } from "react-icons/md";
-import PaymentMethod from "@/components/checkout/payment-method";
-import OrderSummary from "@/components/checkout/order-summary";
-import AddAddress from "@/components/checkout/add-address";
+import PaymentMethod from "@/components/client/checkout/payment-method";
+import OrderSummary from "@/components/client/checkout/order-summary";
+import AddAddress from "@/components/client/checkout/add-address";
 import useCart from "@/hooks/useCart";
 
 const paymentMethods = [

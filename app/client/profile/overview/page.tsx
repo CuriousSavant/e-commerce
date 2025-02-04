@@ -5,7 +5,7 @@ import axios from 'axios';
 import { User } from '@/types/user';
 import { useSession } from 'next-auth/react';
 import { MdPersonOutline } from 'react-icons/md';
-import MobileLayout from '@/components/section/mobile-layout';
+import MobileLayout from '@/components/client/section/mobile-layout';
 
 const UserProfile: React.FC = () => {
   const [users, setUsers] = useState<User>()

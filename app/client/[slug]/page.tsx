@@ -12,15 +12,15 @@ import {
 } from "@mui/material";
 import { MdAdd, MdArrowBackIos, MdArrowForwardIos, MdShoppingCart } from "react-icons/md";
 import { BiHeart, BiMinus } from "react-icons/bi";
-import { Table, TableBody, TableCell, TableContainer, TableRow, Typography, Paper } from "@mui/material";
+import { Typography } from "@mui/material";
 import { useSession } from "next-auth/react";
 import useDialog from "@/hooks/useDialog";
-import AuthModal from "@/components/auth-form";
+import AuthModal from "@/components/client/section/auth-form";
 import { FaHeart } from "react-icons/fa6";
 import { Wishlist } from "@prisma/client";
-import RandomProducts from "@/components/section/random-product";
+import RandomProducts from "@/components/client/section/random-product";
 import { toast } from 'react-toastify';
-import PropertiesTable from "@/components/section/properties-table";
+import PropertiesTable from "@/components/client/section/properties-table";
 
 const ProductDetailPage = () => {
   const [product, setProduct] = useState<Product | null>(null);
