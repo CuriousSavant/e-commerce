@@ -1,0 +1,26 @@
+import prisma from "@/lib/prisma";
+import { NextResponse } from "next/server";
+
+export const GET = async () => {
+  try {
+    const propertery = await prisma.properties.findMany();
+    return NextResponse.json(propertery);
+  } catch (err) {
+    return NextResponse.json({ msg: err }, { status: 500 });
+  }
+};
+
+export const POST = async (req: Request) => {
+  try {
+    const { name, value } = await req.json();
+    const createProperty = await prisma.properties.create({
+      data: {
+        name,
+        value,
+      },
+    });
+    return NextResponse.json(createProperty);
+  } catch (err) {
+    return NextResponse.json({ msg: err }, { status: 500 });
+  }
+};
