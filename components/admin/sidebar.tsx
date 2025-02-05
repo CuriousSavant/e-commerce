@@ -1,7 +1,7 @@
 'use client';
 import React from 'react';
 import { usePathname } from 'next/navigation';
-import { List, ListItemText, ListItemButton, ListItemIcon } from "@mui/material";
+import { List, ListItemText, ListItemButton, ListItemIcon, Typography } from "@mui/material";
 import { ShoppingCart, Person, Inventory, AdminPanelSettings, Category, Storefront, Dashboard } from "@mui/icons-material";
 
 const SidebarMenu: React.FC = () => {
@@ -17,6 +17,16 @@ const SidebarMenu: React.FC = () => {
         { text: "Admin", icon: <AdminPanelSettings />, href: "/admin/admins" },
     ]
 
+    const linkStyles = (path: string) => {
+        return ({
+            borderLeft: "4px solid",
+            borderLeftColor: pathname === path ? '#635bff' : 'transparent',
+            color: pathname === path ? '#635bff' : '#C2C7D0',
+            borderRadius: 0,
+            transition: 'background-color 0.3s ease, color 0.3s ease',
+        })
+    };
+
     return (
         <aside className='w-[260px] bg-["#27293D"] p-4 fixed top-16 h-screen border-r border-[#4A4A4A]'>
             <List>
@@ -24,18 +34,10 @@ const SidebarMenu: React.FC = () => {
                     <ListItemButton
                         key={index}
                         href={item.href}
-                        sx={{
-                            color: "#C2C7D0",
-                            "&:hover": {
-                                backgroundColor: "blue.600",
-                                color: "#FFFFFF",
-                                "& .MuiSvgIcon-root": {
-                                    color: "#FFFFFF",
-                                },
-                            },
-                        }}
+                        style={linkStyles(item.href)}
+                        sx={{ mb: 1 }}
                     >
-                        <ListItemIcon sx={{ color: "#C2C7D0", minWidth: "38px" }}>
+                        <ListItemIcon sx={{ color:  pathname === item.href ? "#635bff" : "#C2C7D0", minWidth: "38px" }}>
                             {item.icon}
                         </ListItemIcon>
                         <ListItemText primary={item.text} />
