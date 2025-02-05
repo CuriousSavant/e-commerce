@@ -1,6 +1,7 @@
 import { Metadata } from 'next'
 import SidebarMenu from '@/components/admin/sidebar';
 import { Box } from '@mui/material';
+import NavbarAdmin from '@/components/admin/navbar';
 
 export const metadata: Metadata = {
   title: "Admin Page"
@@ -18,11 +19,14 @@ export const metadata: Metadata = {
 
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
   return (
-    <Box sx={{ backgroundColor: "#1E1E2F", minHeight: "100vh", display: "flex", color: "white" }}>
-      {/* Sidebar */}
-      <SidebarMenu />
+    <>
+      <NavbarAdmin />
+      <Box sx={{ backgroundColor: "#1E1E2F", minHeight: "100vh", display: "flex", color: "white" }}>
+        {/* Sidebar */}
+        <SidebarMenu />
 
-      {children}
-    </Box>
+        {children}
+      </Box>
+    </>
   );
 }

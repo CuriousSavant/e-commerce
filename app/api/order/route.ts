@@ -85,6 +85,7 @@ export async function POST(request: Request) {
         },
       });
 
+      // หลังจากสร้าง order เสร็จ ให้ลบ cartItem ที่มี productId ตรงกับ orderItems ออก
       await tx.cartItem.deleteMany({
         where: {
           cartId: userId,

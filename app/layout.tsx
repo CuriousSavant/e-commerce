@@ -6,6 +6,7 @@ import LayoutSetting from "./layoutSetting";
 import { ToastContainer } from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
 import { authOptions } from "@/lib/auth";
+import TopProgressBar from "@/components/TopProgressbar";
 
 export const metadata: Metadata = {
   title: "Ecommerce-website",
@@ -29,6 +30,7 @@ export default async function RootLayout({
         <body className="bg-white text-black">
           <SessionProvider session={session}>
             <LayoutSetting>
+              <TopProgressBar />
               {children}
             </LayoutSetting>
             <ToastContainer

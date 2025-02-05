@@ -7,12 +7,12 @@ export default function NavbarAdmin() {
 
     return (
         <>
-            <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-                <Box sx={{ textTransform: "uppercase", fontWeight: 800 }}>
+            <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center", bgcolor: "primary.dark", position: "sticky", top: 0, zIndex: 1000 }}>
+                <Box sx={{ textTransform: "uppercase", fontWeight: 800, fontSize: "1.5rem", color: "white", p: 2, px: 4 }}>
                     dashboard
                 </Box>
                 {/* Profile */}
-                <Box>
+                <Box sx={{ display: "flex", alignItems: "center", p: 2, px: 4 }}>
                     <Avatar>{data?.user.name?.at(0)}</Avatar>
                 </Box>
             </Box>
