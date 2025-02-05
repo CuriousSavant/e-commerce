@@ -18,7 +18,7 @@ const SidebarMenu: React.FC = () => {
     ]
 
     return (
-        <aside className='w-[250px] bg-["#27293D"] p-4 top-0 h-screen border-r border-[#4A4A4A]'>
+        <aside className='w-[260px] bg-["#27293D"] p-4 fixed top-16 h-screen border-r border-[#4A4A4A]'>
             <List>
                 {menuItems.map((item, index) => (
                     <ListItemButton
@@ -35,7 +35,7 @@ const SidebarMenu: React.FC = () => {
                             },
                         }}
                     >
-                        <ListItemIcon sx={{ color: "#C2C7D0" }}>
+                        <ListItemIcon sx={{ color: "#C2C7D0", minWidth: "38px" }}>
                             {item.icon}
                         </ListItemIcon>
                         <ListItemText primary={item.text} />

@@ -25,7 +25,9 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
         {/* Sidebar */}
         <SidebarMenu />
 
-        {children}
+        <Box sx={{ ml: { xs: 0, md: "260px" } }}>
+          {children}
+        </Box>
       </Box>
     </>
   );
