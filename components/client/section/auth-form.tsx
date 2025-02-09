@@ -112,7 +112,7 @@ function AuthModal({ onClose }: { onClose: () => void }) {
         }
 
         try {
-            await axios.post('/api/users', formData);
+            await axios.post('/api/user', formData);
             await handleLogin(formData.email, formData.password);
 
             // เขียนข้อมูลการ signup ลงในไฟล์ .json

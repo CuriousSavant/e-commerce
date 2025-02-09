@@ -4,11 +4,11 @@ const theme = () =>
   createTheme({
     palette: {
       primary: {
-        main: "#1976d2",
+        main: "#635bff",
         dark: "#1e1e2f", // dasboard background
       },
       secondary: {
-        main: "#0f63e9",
+        main: "#635bff",
         dark: "#27293d", // eml in dashboard
       },
     },
@@ -33,6 +33,20 @@ const theme = () =>
       MuiButton: {
         styleOverrides: {
           root: { borderRadius: "8px" }
+        }
+      },
+      MuiTableCell: {
+        styleOverrides: {
+          root: {
+            padding: "8px",
+          }
+        },
+      },
+      MuiSkeleton: {
+        styleOverrides: {
+          root: {
+            backgroundColor: "rgba(255,255,255,0.12)",
+          }
         }
       }
     }

@@ -31,12 +31,12 @@ const AccountInformation = () => {
 
   useEffect(() => {
     if (session?.user.id) {
-      axios.get(`/api/users?userId=${session?.user.id}`)
+      axios.get(`/api/user?userId=${session?.user.id}`)
         .then((res) => {
           const user = res.data;
           setUserDetails({
-            name: user.name || '',
-            lastName: user.lastName || '',
+            name: user.firstname || '',
+            lastName: user.lastname || '',
             email: user.email || '',
             phone: user.phone || '',
             dateOfBirth: user.dateOfBirth ? new Date(user.dateOfBirth).toISOString().slice(0, 10) : ''
@@ -86,7 +86,7 @@ const AccountInformation = () => {
           currentPassword,
         };
 
-        await axios.put(`/api/users/${session?.user.id}`, updatedData);
+        await axios.put(`/api/user/${session?.user.id}`, updatedData);
         setErrors({});
         setSnackMessage('ข้อมูลอัปเดตเรียบร้อย');
         setSnackOpen(true);

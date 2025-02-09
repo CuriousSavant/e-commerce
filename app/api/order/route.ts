@@ -3,16 +3,16 @@ import prisma from "@/lib/prisma";
 import { StatusOrder } from "@prisma/client";
 
 export async function GET(req: NextRequest) {
-  const { searchParams } = new URL(req.url);
-  const userId = searchParams.get("userId");
+  // const { searchParams } = new URL(req.url);
+  // const userId = searchParams.get("userId");
 
-  if (!userId) {
-    return NextResponse.json({ msg: "UserId is required" }, { status: 400 });
-  }
+  // if (!userId) {
+  //   return NextResponse.json({ msg: "UserId is required" }, { status: 400 });
+  // }
 
   try {
     const orders = await prisma.order.findMany({
-      where: { userId: Number(userId) },
+      // where: { userId: Number(userId) },
       include: {
         orderItems: {
           include: { product: true },

@@ -29,7 +29,7 @@ export const authOptions: AuthOptions = {
         ) {
           return {
             id: user.id,
-            name: user.name,
+            name: user.firstname,
             email: user.email,
             role: user.role,
             phone: user.phone,

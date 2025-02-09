@@ -17,7 +17,7 @@ const UserProfile: React.FC = () => {
       if (!session?.user?.id) return;
       setLoading(true);
       try {
-        const res = await axios.get(`/api/users?userId=${session.user.id}`);
+        const res = await axios.get(`/api/user?userId=${session.user.id}`);
         setUsers(res.data);
       } catch (err) {
         console.error('Failed to fetch user data:', err);
@@ -49,11 +49,11 @@ const UserProfile: React.FC = () => {
             <Grid container spacing={2}>
               <Grid item xs={12} md={6}>
                 <Typography fontWeight={600}>ชื่อ</Typography>
-                <Typography>{users?.name}</Typography>
+                <Typography>{users?.firstname}</Typography>
               </Grid>
               <Grid item xs={12} md={6}>
                 <Typography fontWeight={600}>นามสกุล</Typography>
-                <Typography>{users?.lastName}</Typography>
+                <Typography>{users?.lastname ? users.lastname : '-'}</Typography>
               </Grid>
               <Grid item xs={12} md={6}>
                 <Typography fontWeight={600}>อีเมล</Typography>

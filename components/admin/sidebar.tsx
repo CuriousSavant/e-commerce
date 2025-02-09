@@ -37,7 +37,7 @@ const SidebarMenu: React.FC = () => {
                         style={linkStyles(item.href)}
                         sx={{ mb: 1 }}
                     >
-                        <ListItemIcon sx={{ color:  pathname === item.href ? "#635bff" : "#C2C7D0", minWidth: "38px" }}>
+                        <ListItemIcon sx={{ color: pathname === item.href ? "primary.main" : "#C2C7D0", minWidth: "38px" }}>
                             {item.icon}
                         </ListItemIcon>
                         <ListItemText primary={item.text} />

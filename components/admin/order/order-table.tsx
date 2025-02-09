@@ -71,9 +71,9 @@ const OrderTable: React.FC<OrderTableProps> = ({ orders, setOrder }) => {
                                     </TableCell>
                                     <TableCell size='small'>
                                         <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                                            <Avatar>{order.user.name?.charAt(0)}</Avatar>
+                                            <Avatar>{order.user.firstname?.charAt(0)}</Avatar>
                                             <Box>
-                                                <Typography fontWeight="bold">{order.user.name}</Typography>
+                                                <Typography fontWeight="bold">{order.user.firstname}</Typography>
                                                 <Typography variant="body2" color="textSecondary">
                                                     {order.user.email}
                                                 </Typography>

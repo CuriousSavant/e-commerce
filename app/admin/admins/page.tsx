@@ -8,7 +8,7 @@ const AdminUser = () => {
   const [adminUser, setAdminUser] = useState<User[]>([])
 
   useEffect(() => {
-    axios.get('/api/users/')
+    axios.get('/api/user')
       .then((res) => {
         const adminUsers = res.data.filter((user: { role: string }) => user.role === 'admin');
         setAdminUser(adminUsers);

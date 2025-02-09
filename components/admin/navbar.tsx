@@ -1,5 +1,5 @@
 'use client'
-import { Avatar, Box, List, ListItemButton, ListItemText, } from "@mui/material";
+import { Avatar, Box } from "@mui/material";
 import { useSession } from "next-auth/react";
 import Link from 'next/link'
 

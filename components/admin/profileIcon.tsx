@@ -17,7 +17,7 @@ const ProfileIcon = () => {
 
     useEffect(() => {
         if (status === 'unauthenticated') {
-            router.push('/client/register');
+            router.push('/');
         }
     }, [status, session]);
 

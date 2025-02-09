@@ -22,8 +22,8 @@ export async function GET(req: Request) {
       },
     });
     return NextResponse.json(users, { status: 200 });
-  } catch (error) {
-    return NextResponse.json("Error fetching users", { status: 500 });
+  } catch (err) {
+    return NextResponse.json({ msg: err }, { status: 500 });
   }
 }
 
@@ -63,11 +63,11 @@ export async function POST(req: Request) {
 
     const user = await prisma.user.create({
       data: {
-        name: userName,
-        lastName,
-        email,
+        firstname: userName,
+        lastname: lastName,
+        email: email.toLowerCase(),
         password: hashedPassword,
-        role: userName === "admin-config-111" ? "admin" : "member",
+        role: userName === "admin" ? "admin" : "member",
       },
     });
 
