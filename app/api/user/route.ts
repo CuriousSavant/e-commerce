@@ -1,26 +1,43 @@
 import prisma from "@/lib/prisma";
 import { NextResponse } from "next/server";
 import bcrypt from "bcrypt";
+import { SortType } from "@/types/components/filter-sort";
 
 export async function GET(req: Request) {
   try {
     const { searchParams } = new URL(req.url);
-    const userId = searchParams.get("userId");
+    const query = searchParams.get("query") || "";
     const sortOrder = searchParams.get("sortOrder") || "asc";
+    const role = searchParams.get("role") || "all";
 
-    if (userId) {
-      const users = await prisma.user.findUnique({
-        where: { id: Number(userId) },
+    if (!query) {
+      const users = await prisma.user.findMany({
+        where: {
+          role: role === 'all' ? {} : role,
+        },
+        orderBy: {
+          createdAt: sortOrder as SortType,
+        }
       });
       return NextResponse.json(users, { status: 200 });
     }
 
-    // not userId case
+    const isNumeric = !isNaN(Number(query));
+
     const users = await prisma.user.findMany({
       orderBy: {
-        createdAt: sortOrder as "asc" | "desc",
+        createdAt: sortOrder as SortType,
       },
+      where: {
+        role: role === 'all' ? {} : role,
+        OR: [
+          { firstname: { contains: query.toLowerCase() } },
+          { email: { contains: query.toLowerCase() } },
+          ...(isNumeric ? [{ id: Number(query) }] : [])
+        ]
+      }
     });
+
     return NextResponse.json(users, { status: 200 });
   } catch (err) {
     return NextResponse.json({ msg: err }, { status: 500 });
@@ -29,8 +46,10 @@ export async function GET(req: Request) {
 
 export async function POST(req: Request) {
   try {
-    const { userName, lastName, email, password, confirmPassword } =
+    const { firstname, lastname, email, phone, birthday, role, password, confirmPassword } =
       await req.json();
+
+    console.log(firstname, lastname, email, phone, birthday, role, password, confirmPassword)
 
     const existingUser = await prisma.user.findUnique({
       where: { email },
@@ -50,24 +69,26 @@ export async function POST(req: Request) {
       );
     }
 
-    if (!userName || !email || !password || !confirmPassword) {
-      return NextResponse.json(
-        {
-          msg: "จำเป็นต้องกรอกข้อมูลให้ครบ",
-        },
-        { status: 400 }
-      );
-    }
+    // if (!firstname || !email || !password || !confirmPassword) {
+    //   return NextResponse.json(
+    //     {
+    //       msg: "จำเป็นต้องกรอกข้อมูลให้ครบ",
+    //     },
+    //     { status: 400 }
+    //   );
+    // }
 
     const hashedPassword = await bcrypt.hash(password, 10);
 
     const user = await prisma.user.create({
       data: {
-        firstname: userName,
-        lastname: lastName,
+        firstname,
+        lastname,
         email: email.toLowerCase(),
+        phone: phone,
+        dateOfBirth: birthday,
+        role: role || "member",
         password: hashedPassword,
-        role: userName === "admin" ? "admin" : "member",
       },
     });
 

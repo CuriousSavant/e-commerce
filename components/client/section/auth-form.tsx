@@ -6,7 +6,6 @@ import SignupForm from '@/components/client/login-section/sign-form';
 import Header from '@/components/client/login-section/header';
 import axios from 'axios';
 import { signIn } from 'next-auth/react';
-import writeFileSyncLib from '@/lib/read-file';
 
 export interface FormDataProps {
     userName: string;
@@ -115,8 +114,6 @@ function AuthModal({ onClose }: { onClose: () => void }) {
             await axios.post('/api/user', formData);
             await handleLogin(formData.email, formData.password);
 
-            // เขียนข้อมูลการ signup ลงในไฟล์ .json
-            writeFileSyncLib('json/signup.json', [formData]);
             window.location.reload();
             onClose();
         } catch (err: any) {
@@ -225,4 +222,3 @@ function AuthModal({ onClose }: { onClose: () => void }) {
 }
 
 export default AuthModal;
-

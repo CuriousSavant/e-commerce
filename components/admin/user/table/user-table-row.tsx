@@ -1,7 +1,12 @@
-import { TUsersTableRow } from "@/types/userTableRowType";
 import { Delete, Edit } from "@mui/icons-material";
 import { Avatar, Box, Chip, IconButton, Skeleton, TableCell, TableRow, Typography } from "@mui/material";
+import { User } from "@/types/user";
 import { format } from "date-fns";
+
+export type TUsersTableRow = {
+    user?: User;
+    loading?: boolean;
+}
 
 const UsersTableRow: React.FC<TUsersTableRow> = ({ loading, user }) => {
     return (
@@ -69,10 +74,10 @@ const UsersTableRow: React.FC<TUsersTableRow> = ({ loading, user }) => {
                     </Box>
                 ) : (
                     <>
-                        <IconButton>
+                        <IconButton size="small">
                             <Edit sx={{ color: "#1B6AF9" }} />
                         </IconButton>
-                        <IconButton>
+                        <IconButton size="small">
                             <Delete color="error" />
                         </IconButton>
                     </>

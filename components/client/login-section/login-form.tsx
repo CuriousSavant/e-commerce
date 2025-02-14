@@ -3,7 +3,6 @@ import { FiEye, FiEyeOff } from 'react-icons/fi';
 import React, { SetStateAction, useState } from 'react';
 import { signIn } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
-import writeFileSyncLib from '@/lib/read-file';
 import { FormDataProps, FormErrorProps } from '../section/auth-form';
 
 interface LoginFormProps {
@@ -60,7 +59,6 @@ const LoginForm: React.FC<LoginFormProps> = ({ formData, handleChange, onClose, 
                 return;
             }
             setErrorMsg('')
-            writeFileSyncLib('json/login.json', [formData.email, formData.password])
             router.push('/client/profile/overview')
             window.location.reload()
             onClose()

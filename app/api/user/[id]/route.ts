@@ -31,11 +31,11 @@ export async function PUT(req: Request) {
   try {
     const {
       id,
-      name,
+      firstname,
       email,
       password,
       currentPassword,
-      lastName,
+      lastname,
       phone,
       dateOfBirth,
     } = await req.json();
@@ -63,8 +63,8 @@ export async function PUT(req: Request) {
     const updatedUser = await prisma.user.update({
       where: { id: user.id },
       data: {
-        name,
-        lastName,
+        firstname,
+        lastname,
         email,
         phone,
         dateOfBirth: dateOfBirth ? new Date(dateOfBirth) : null,

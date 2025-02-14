@@ -100,8 +100,7 @@ const Navbar = () => {
                             alignItems: "center",
                             flexGrow: 1,
                             gap: 2,
-                        }}
-                    >
+                        }}>
                         {LinkInfo.map((link, index) =>
                             link.title === "ออกจากระบบ" || link.title === "คำสั่งซื้อ" ? null : (
                                 <MuiLink
@@ -128,7 +127,6 @@ const Navbar = () => {
 
                     {/* display search interface for mobile */}
                     {isSearchOpen && <SearchBox isSearchOpen={isSearchOpen} setIsSearchOpen={setIsSearchOpen} />}
-
 
                     <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center", gap: 1 }}>
                         {/* ปุ่ม search ในขนาดเล็ก */}

@@ -83,13 +83,11 @@ const useAddress = (): UseAddressReturn => {
           )}`;
       }
 
-      // change data ตาม field
       setFormData((prev) => ({
         ...prev,
         [field]: value,
       }));
 
-      // change error ตาม field
       setFormErrors((prev) => ({
         ...prev,
         [field]: false,

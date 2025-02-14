@@ -4,7 +4,6 @@ import React, { useState } from 'react';
 import { CiGlobe, CiInstagram, CiLocationOn, CiMail, CiPhone } from 'react-icons/ci';
 import { useSession } from 'next-auth/react';
 import Swal from 'sweetalert2'
-import writeFileSyncLib from '@/lib/read-file';
 import Link from 'next/link';
 
 const contactInfo = {
@@ -42,7 +41,6 @@ const ContactPage = () => {
                 title: "ส่งข้อความแล้ว🥳",
                 text: "ขอบคุณสำหรับข้อความนะครับ ปัจจุบันผมยังไม่รับงานนะครับ ไว้มีโอกาสค่อยมาร่วมงานกันนะ🥰"
             })
-            writeFileSyncLib('json/contact-msg.json', data)
             setFirstName("");
             setLastName("");
             setEmail("");
