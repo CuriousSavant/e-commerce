@@ -44,10 +44,11 @@ const CreateUserForm: React.FC<CreateUserFormProps> = ({ formOpen, setFormOpen, 
         if (!users.lastname) newErrors.lastname = "จำเป็นต้องกรองนามสกุล";
 
         if (!users.email) newErrors.email = "กรุณากรอกอีเมล";
-        else if (!/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(users.email)) newErrors.email = "อีเมลไม่ถูกต้อง";
+        else if (!/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(users.email))
+            newErrors.email = "อีเมลไม่ถูกต้อง";
 
         if (!users.password) newErrors.password = "จำเป็นต้องกรอกรหัสผ่าน"
-        else if (users.password.length <= 8) newErrors.password = "รหัสผ่านต้องมีความยาวเกิน 8 ตัว";
+        else if (users.password.length !== 8) newErrors.password = "รหัสผ่านต้องมีความยาว 8 ตัวขึ้นไป";
 
         if (!users.confirmPassword) newErrors.confirmPassword = "จำเป็นต้องกรอกยันยินรหัสผ่าน";
 

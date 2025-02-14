@@ -1,3 +1,4 @@
+"use client"
 import { Delete, Edit } from "@mui/icons-material";
 import { Avatar, Box, Chip, IconButton, Skeleton, TableCell, TableRow, Typography } from "@mui/material";
 import { User } from "@/types/user";

@@ -1,3 +1,5 @@
+"use client"
+
 import { Box, IconButton, Typography } from '@mui/material';
 import { BiArrowBack } from 'react-icons/bi';
 

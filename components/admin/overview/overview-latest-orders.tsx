@@ -1,3 +1,5 @@
+"use client"
+
 import { Box, Card, CardContent, Typography, Table, TableContainer, Button, TableBody, TableRow, TableCell, Skeleton } from "@mui/material";
 import { Order } from "@/types/order";
 import axios from "axios";

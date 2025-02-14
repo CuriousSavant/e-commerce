@@ -1,3 +1,5 @@
+"use client"
+
 import { TableHead, TableRow, TableCell } from "@mui/material";
 
 const UsersTableHead = () => {

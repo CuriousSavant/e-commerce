@@ -1,3 +1,4 @@
+"use client"
 import { TableCell, TableHead, TableRow } from "@mui/material"
 
 const LatestOrderHeader = () => {

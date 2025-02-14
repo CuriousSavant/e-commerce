@@ -1,3 +1,5 @@
+"use client"
+
 import { Card, CardContent, Typography, Box, Button } from "@mui/material";
 import { ShoppingCart, Person, Inventory, ArrowCircleRight, LocalShipping, ContentPaste } from "@mui/icons-material";
 

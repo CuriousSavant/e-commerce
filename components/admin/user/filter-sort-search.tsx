@@ -1,3 +1,5 @@
+"use client"
+
 import { Role, SortType } from '@/types/components/filter-sort';
 import { Search } from '@mui/icons-material';
 import {

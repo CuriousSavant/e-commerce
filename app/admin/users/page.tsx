@@ -16,7 +16,7 @@ export default function Users() {
   const [loading, setLoading] = useState<boolean>(true);
 
   const [formOpen, setFormOpen] = useState<boolean>(false);
-
+  
   const fetchUsers = async () => {
     setLoading(true);
     try {

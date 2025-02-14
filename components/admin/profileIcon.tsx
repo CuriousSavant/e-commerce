@@ -1,6 +1,8 @@
+"use client"
+
 import React, { useEffect, useState } from 'react'
 import { Box, Typography, Avatar, IconButton, Tooltip, Menu, Divider, MenuItem } from '@mui/material';
-import { BiCog, BiLogOut, BiUser } from 'react-icons/bi';
+import { BiLogOut, BiUser } from 'react-icons/bi';
 import { useRouter } from 'next/navigation';
 import { signOut, useSession } from 'next-auth/react';
 

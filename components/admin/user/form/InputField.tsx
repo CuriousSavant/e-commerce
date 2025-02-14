@@ -1,3 +1,4 @@
+"use client"
 import { fieldProps } from "@/types/components/create-user-form";
 import { Grid, SelectChangeEvent, TextField } from "@mui/material";
 

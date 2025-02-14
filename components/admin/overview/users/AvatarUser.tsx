@@ -1,3 +1,5 @@
+"use client"
+
 import { User } from "@/types/user";
 import { Box, Typography, Avatar, Skeleton } from "@mui/material";
 import { FC } from "react";

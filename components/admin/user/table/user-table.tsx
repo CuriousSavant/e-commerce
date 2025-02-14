@@ -1,3 +1,5 @@
+"use client"
+
 import { Table, TableContainer, TableBody, Paper, Box, Typography, TableCell, TableRow } from "@mui/material";
 import UsersTableHead from "./user-table-head";
 import UsersTableRow from "./user-table-row";

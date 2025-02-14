@@ -1,3 +1,5 @@
+"use client"
+
 import { Button, TextField, Box, IconButton, InputAdornment } from '@mui/material';
 import { FiEye, FiEyeOff } from 'react-icons/fi';
 import React, { SetStateAction, useState } from 'react';

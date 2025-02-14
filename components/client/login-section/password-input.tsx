@@ -1,3 +1,5 @@
+"use client"
+
 import { useState } from 'react';
 import { TextField, IconButton, InputAdornment } from '@mui/material';
 import { MdVisibility, MdVisibilityOff } from 'react-icons/md';

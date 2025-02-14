@@ -49,22 +49,20 @@ export async function POST(req: Request) {
     const { firstname, lastname, email, phone, birthday, role, password, confirmPassword } =
       await req.json();
 
-    console.log(firstname, lastname, email, phone, birthday, role, password, confirmPassword)
-
     const existingUser = await prisma.user.findUnique({
       where: { email },
     });
 
     if (existingUser) {
       return NextResponse.json(
-        { error: "Email already exists" },
+        { error: "มีผู้ใช้นี้อยู่แล้ว" },
         { status: 400 }
       );
     }
 
     if (password !== confirmPassword) {
       return NextResponse.json(
-        { error: "Passwords do not match" },
+        { error: "รหัสผ่านไม่ตรงกัน" },
         { status: 400 }
       );
     }
@@ -94,7 +92,6 @@ export async function POST(req: Request) {
 
     return NextResponse.json(user, { status: 201 });
   } catch (error) {
-    console.error("Error creating user:", error);
     return NextResponse.json({ error: "Error creating user" }, { status: 500 });
   }
 }

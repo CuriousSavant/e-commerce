@@ -1,3 +1,5 @@
+"use client"
+
 import { User } from "@/types/user";
 import { Box, Card, CardContent, Typography, Button, Avatar, AvatarGroup } from "@mui/material";
 import axios from "axios";

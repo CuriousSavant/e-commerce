@@ -1,3 +1,4 @@
+"use client"
 import { Order } from "@/types/order";
 import { Skeleton, TableCell, TableRow, Typography } from "@mui/material";
 import { format } from 'date-fns'
