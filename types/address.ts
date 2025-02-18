@@ -1,7 +1,7 @@
 export interface Address {
   id?: number;
   fullName: string;
-  phoneNumber: string;
+  phone: string;
   address: string;
   subDistrict: string;
   district: string;

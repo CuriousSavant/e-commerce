@@ -11,6 +11,9 @@ const theme = () =>
         main: "#635bff",
         dark: "#27293d", // eml in dashboard
       },
+      success: {
+        main: "#00ff99",
+      }
     },
     typography: {
       fontFamily: `"Noto Sans Thai", sans-serif`,

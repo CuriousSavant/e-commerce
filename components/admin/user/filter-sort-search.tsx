@@ -44,8 +44,8 @@ const FilterSortSearch: React.FC<ITrinity> = ({
                         placeholder="Search by id, name, email"
                         sx={{ bgcolor: "secondary.dark", borderRadius: 2, border: "2px solid #4F4F4F" }}
                         onChange={(e) => setSearchQuery(e.target.value)}
-                        value={searchQuery}
-                        inputProps={{
+                        value={searchQuery || ""}
+                        InputProps={{
                             sx: {
                                 "&::placeholder": {
                                     color: "#C2C2C2",
@@ -53,16 +53,12 @@ const FilterSortSearch: React.FC<ITrinity> = ({
                                     fontSize: 14,
                                 },
                                 color: "white"
-                            }
-                        }}
-                        slotProps={{
-                            input: {
-                                startAdornment: (
-                                    <InputAdornment position="start">
-                                        <Search sx={{ color: "#c2c2c2", fontSize: 22 }} />
-                                    </InputAdornment>
-                                ),
-                            }
+                            },
+                            startAdornment: (
+                                <InputAdornment position="start" >
+                                    <Search sx={{ color: "#c2c2c2", fontSize: 22 }} />
+                                </InputAdornment>
+                            )
                         }}
                     />
                 </Box>
@@ -102,7 +98,7 @@ const FilterSortSearch: React.FC<ITrinity> = ({
             <Button variant="contained" color="primary" onClick={() => setFormOpen(!formOpen)}>
                 Create +
             </Button>
-        </Box>
+        </Box >
     )
 }
 

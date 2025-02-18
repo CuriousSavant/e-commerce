@@ -52,6 +52,8 @@ const Navbar = () => {
         setDrawerOpen(open);
     };
 
+    console.log(isDialogOpen)
+
     return (
         <>
             <AppBar
@@ -105,8 +107,9 @@ const Navbar = () => {
                             link.title === "ออกจากระบบ" || link.title === "คำสั่งซื้อ" ? null : (
                                 <MuiLink
                                     key={index}
-                                    component={NextLink}
-                                    href={link.href || "#"}
+                                    component={Button}
+                                    // href={link.href || "#"}
+                                    onClick={() => setIsDialogOpen(!isDialogOpen)}
                                     sx={{
                                         textDecoration: "none",
                                         color: "gray",

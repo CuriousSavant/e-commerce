@@ -10,7 +10,7 @@ import {
 } from "@mui/material";
 import { SlLocationPin } from "react-icons/sl";
 import useAddress from "@/hooks/useAddress";
-import FormAddress from '@/components/checkout/form-address'
+import FormAddress from "./form-address";
 import { useRouter } from 'next/navigation'
 
 const AddAddress = () => {
@@ -92,7 +92,7 @@ const AddAddress = () => {
                 defaultAddress.map((address) => (
                     <Card key={address.id} variant="outlined" sx={{ position: "relative" }}>
                         <CardContent>
-                            <Typography variant="body1">{address.fullName} - {address.phoneNumber}</Typography>
+                            <Typography variant="body1">{address.fullName} - {address.phone}</Typography>
                             <Typography variant="body2" color="text.secondary">
                                 {address.address}, {address.subDistrict}, {address.district},{" "}
                                 {address.province} - {address.postalCode}

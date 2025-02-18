@@ -1,3 +1,5 @@
+import { Address } from "../address";
+
 export interface fieldProps {
     lable?: string;
     type?: string;
@@ -8,13 +10,12 @@ export interface fieldProps {
     helperText?: string;
 };
 
-export interface CreateUserStateProps {
+export interface UserFormStateProps {
+    id?: number;
     firstname: string;
     lastname: string;
     email: string;
-    phone: string;
-    birthday: string;
     role: string;
     password: string;
-    confirmPassword: string;
+    confirmPassword?: string;
 };

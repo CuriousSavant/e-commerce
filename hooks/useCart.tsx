@@ -1,4 +1,3 @@
-// commit นี้เจอปัฯหาที่เราต้องการให้ จำนวณของ product มันยังอยู่เหมือนเดิมเมื่อไปหน้าอื่น ใน case นี้คือเราทำการเพิ่มจำนวณสิรค้าที่เราต้องการแล้้ว และ เมื่อเรากดชำระเงินที่มันจะเป็นหน้า checkout แล้วจำนวณ item มันจะหาย(นี้คือ ตอนที่ยังไม่มีการ save ลง localStorage ไว้)
 'use client'
 import { useEffect, useState } from 'react';
 import axios from 'axios';

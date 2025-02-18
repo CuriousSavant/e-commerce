@@ -65,6 +65,7 @@ function AuthModal({ onClose }: { onClose: () => void }) {
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         e.preventDefault()
         const { name, value } = e.target;
+
         setFormData((prev) => ({
             ...prev,
             [name]: value

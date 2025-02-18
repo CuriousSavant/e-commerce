@@ -1,17 +1,21 @@
 "use client"
-
-import { Table, TableContainer, TableBody, Paper, Box, Typography, TableCell, TableRow } from "@mui/material";
+import { Table, TableContainer, TableBody, Paper, Typography, TableCell, TableRow } from "@mui/material";
 import UsersTableHead from "./user-table-head";
 import UsersTableRow from "./user-table-row";
 import React from "react";
-import { User } from "@prisma/client";
+import { User } from "@/types/user";
 
 export type TUsersTable = {
-    users: User[];
+    userList: User[];
     loading?: boolean;
+    startEditing: (user: User) => void;
 }
 
-const UsersTable: React.FC<TUsersTable> = ({ users, loading }) => {
+const UsersTable: React.FC<TUsersTable> = ({
+    userList,
+    loading,
+    startEditing,
+}) => {
     return (
         <TableContainer component={Paper} sx={{ bgcolor: "secondary.dark", borderRadius: "6px" }}>
             <Table>
@@ -19,10 +23,13 @@ const UsersTable: React.FC<TUsersTable> = ({ users, loading }) => {
                 <TableBody>
                     {loading
                         ? Array.from({ length: 5 }).map((_, i) => (
-                            <UsersTableRow key={i} loading />
+                            <UsersTableRow key={i} loading startEditing={startEditing} />
                         ))
-                        : users.length > 0 ? users?.map((user) => (
-                            <UsersTableRow key={user.id} user={user as any} />
+                        : userList.length > 0 ? userList?.map((user) => (
+                            <UsersTableRow key={user.id}
+                                user={user as User}
+                                startEditing={startEditing}
+                            />
                         )) : (
                             <TableRow>
                                 <TableCell colSpan={7} sx={{ borderBottom: 0, height: 160 }}>

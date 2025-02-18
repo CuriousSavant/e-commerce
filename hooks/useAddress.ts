@@ -30,7 +30,7 @@ const useAddress = (): UseAddressReturn => {
 
   const [formData, setFormData] = useState<Address>({
     fullName: "",
-    phoneNumber: "",
+    phone: "",
     address: "",
     subDistrict: "",
     district: "",
@@ -172,7 +172,7 @@ const useAddress = (): UseAddressReturn => {
   const handleClose = () => {
     setFormData({
       fullName: "",
-      phoneNumber: "",
+      phone: "",
       address: "",
       subDistrict: "",
       district: "",

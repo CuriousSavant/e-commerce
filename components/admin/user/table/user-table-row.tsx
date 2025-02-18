@@ -1,20 +1,22 @@
 "use client"
 import { Delete, Edit } from "@mui/icons-material";
-import { Avatar, Box, Chip, IconButton, Skeleton, TableCell, TableRow, Typography } from "@mui/material";
+import { Avatar, Box, IconButton, Skeleton, TableCell, TableRow, Typography } from "@mui/material";
 import { User } from "@/types/user";
 import { format } from "date-fns";
+import React from "react";
 
 export type TUsersTableRow = {
     user?: User;
     loading?: boolean;
+    startEditing: (user: User) => void;
 }
 
-const UsersTableRow: React.FC<TUsersTableRow> = ({ loading, user }) => {
+const UsersTableRow: React.FC<TUsersTableRow> = ({ loading, user, startEditing }) => {
     return (
         <TableRow>
             {/* User Id */}
             <TableCell sx={{ color: "white", px: 3, borderBottom: "1px solid #50575E" }}>
-                {loading ? <Skeleton width={40}/> : user?.id}
+                {loading ? <Skeleton width={40} /> : user?.id}
             </TableCell>
 
             {/* User Info */}
@@ -34,7 +36,7 @@ const UsersTableRow: React.FC<TUsersTableRow> = ({ loading, user }) => {
                                 {user?.firstname?.charAt(0)}
                             </Avatar>
                             <Box ml={1}>
-                                <Typography>
+                                <Typography className="w-[230px] line-clamp-1">
                                     {`${user?.firstname} ${user?.lastname ? user.lastname : ""}`}
                                 </Typography>
                                 <Typography sx={{ color: "#BABABA", fontSize: "12px" }}>
@@ -56,9 +58,9 @@ const UsersTableRow: React.FC<TUsersTableRow> = ({ loading, user }) => {
                 {loading ? <Skeleton width={120} /> : user?.createdAt ? format(user?.createdAt, 'dd/MM/yyyy HH:mm') : "-"}
             </TableCell>
 
-            {/* Status */}
+            {/* Order */}
             <TableCell sx={{ color: "white", px: 3, borderBottom: "1px solid #50575E" }}>
-                {loading ? <Skeleton width={80} height={30} /> : <Chip color="success" label={"Online"} />}
+                {loading ? <Skeleton width={80} height={30} /> : "3"}
             </TableCell>
 
             {/* Role */}
@@ -75,7 +77,7 @@ const UsersTableRow: React.FC<TUsersTableRow> = ({ loading, user }) => {
                     </Box>
                 ) : (
                     <>
-                        <IconButton size="small">
+                        <IconButton size="small" onClick={() => startEditing(user!!)}>
                             <Edit sx={{ color: "#1B6AF9" }} />
                         </IconButton>
                         <IconButton size="small">
