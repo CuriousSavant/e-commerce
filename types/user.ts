@@ -1,5 +1,5 @@
 import { Order, Wishlist, Cart } from "@prisma/client";
-import { Interface } from "node:readline";
+import { Address } from "./address";
 
 export interface User {
 	id: number;
@@ -12,10 +12,13 @@ export interface User {
 	emailVerified?: Date | null;
 	birthday?: string;
 	phone?: string;
-	address?: string;
+	// address?: string;
+
+	address: Address[];
 	orders: Order[];
 	cart: Cart[];
 	wishlist: Wishlist[];
+
 	createdAt: Date;
 	updatedAt: Date;
 }

@@ -17,6 +17,9 @@ export async function GET(req: Request) {
         },
         orderBy: {
           createdAt: sortOrder as SortType,
+        },
+        include: {
+          address: true,
         }
       });
       return NextResponse.json(users, { status: 200 });
@@ -35,6 +38,9 @@ export async function GET(req: Request) {
           { email: { contains: query.toLowerCase() } },
           ...(isNumeric ? [{ id: Number(query) }] : [])
         ]
+      },
+      include: {
+        address: true,
       }
     });
 
@@ -67,15 +73,6 @@ export async function POST(req: Request) {
       );
     }
 
-    // if (!firstname || !email || !password || !confirmPassword) {
-    //   return NextResponse.json(
-    //     {
-    //       msg: "จำเป็นต้องกรอกข้อมูลให้ครบ",
-    //     },
-    //     { status: 400 }
-    //   );
-    // }
-
     const hashedPassword = await bcrypt.hash(password, 10);
 
     const user = await prisma.user.create({
@@ -84,7 +81,7 @@ export async function POST(req: Request) {
         lastname,
         email: email.toLowerCase(),
         phone: phone,
-        dateOfBirth: birthday,
+        birthday: birthday,
         role: role || "member",
         password: hashedPassword,
       },

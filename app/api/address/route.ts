@@ -26,8 +26,6 @@ export const POST = async (req: Request) => {
     isDefault,
   } = await req.json();
 
-  console.log("Hello world");
-
   try {
     const createData = await prisma.address.create({
       data: {

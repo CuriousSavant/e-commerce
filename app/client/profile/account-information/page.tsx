@@ -15,7 +15,7 @@ const AccountInformation = () => {
     lastName: '',
     email: '',
     phone: '',
-    dateOfBirth: ''
+    birthday: ''
   });
   const [errors, setErrors] = useState<{ [key: string]: string }>({});
 
@@ -39,7 +39,7 @@ const AccountInformation = () => {
             lastName: user.lastname || '',
             email: user.email || '',
             phone: user.phone || '',
-            dateOfBirth: user.dateOfBirth ? new Date(user.dateOfBirth).toISOString().slice(0, 10) : ''
+            birthday: user.birthday ? new Date(user.birthday).toISOString().slice(0, 10) : ''
           });
         });
     }
@@ -171,8 +171,8 @@ const AccountInformation = () => {
                 label="วันที่เกิด"
                 variant="standard"
                 type="date"
-                name="dateOfBirth"
-                value={userDetails.dateOfBirth}
+                name="birthday"
+                value={userDetails.birthday}
                 onChange={handleInputChange}
                 InputLabelProps={{
                   shrink: true,

@@ -52,8 +52,6 @@ const Navbar = () => {
         setDrawerOpen(open);
     };
 
-    console.log(isDialogOpen)
-
     return (
         <>
             <AppBar

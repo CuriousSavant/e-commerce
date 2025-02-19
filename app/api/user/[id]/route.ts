@@ -27,37 +27,22 @@ export async function GET(
   }
 }
 
-export async function PUT(req: Request) {
+export async function PUT(req: Request, { params }: { params: { id: string } }) {
   try {
     const {
-      id,
       firstname,
-      email,
-      password,
-      currentPassword,
       lastname,
-      phone,
-      dateOfBirth,
+      email,
+      role,
+      password,
     } = await req.json();
 
     const user = await prisma.user.findUnique({
-      where: { id: Number(id) },
+      where: { id: Number(params.id) },
     });
 
     if (!user) {
       return NextResponse.json({ error: "User Not Found" }, { status: 404 });
-    }
-
-    const isCurrentPasswordValid = await bcrypt.compare(
-      currentPassword,
-      user.password
-    );
-
-    if (!isCurrentPasswordValid) {
-      return NextResponse.json(
-        { error: "รหัสผ่านปัจจุบันไม่ถูกต้อง" },
-        { status: 400 }
-      );
     }
 
     const updatedUser = await prisma.user.update({
@@ -66,8 +51,7 @@ export async function PUT(req: Request) {
         firstname,
         lastname,
         email,
-        phone,
-        dateOfBirth: dateOfBirth ? new Date(dateOfBirth) : null,
+        role,
         password: password ? await bcrypt.hash(password, 10) : user.password,
       },
     });

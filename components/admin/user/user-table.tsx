@@ -1,14 +1,15 @@
 "use client"
 import { Table, TableContainer, TableBody, Paper, Typography, TableCell, TableRow } from "@mui/material";
-import UsersTableHead from "./user-table-head";
-import UsersTableRow from "./user-table-row";
+import UsersTableHead from "./table/user-table-head";
+import UsersTableRow from "./table/user-table-row";
 import React from "react";
 import { User } from "@/types/user";
+import { Address } from "@/types/address";
 
 export type TUsersTable = {
     userList: User[];
     loading?: boolean;
-    startEditing: (user: User) => void;
+    startEditing: (user: User, address?: Address) => void;
 }
 
 const UsersTable: React.FC<TUsersTable> = ({

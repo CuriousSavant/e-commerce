@@ -71,7 +71,7 @@ model User {
   image         String?
   role          String    @default("member")
   emailVerified DateTime?
-  dateOfBirth   String?
+  birthday      String?
   phone         String?
   createdAt     DateTime  @default(now())
   updatedAt     DateTime  @updatedAt
@@ -185,7 +185,7 @@ model Address {
 }
 
 model Brands {
-  id    Int    @id @default(autoincrement())
+  id    Int     @id @default(autoincrement())
   name  String
   image String?
 

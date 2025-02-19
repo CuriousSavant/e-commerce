@@ -3,12 +3,13 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { Box, SelectChangeEvent, Typography, } from '@mui/material';
 import { User } from '@/types/user';
-import UsersTable from '@/components/admin/user/table/user-table';
+import UsersTable from '@/components/admin/user/user-table';
 import FilterSortSearch from '@/components/admin/user/filter-sort-search';
 import { SortType, Role } from '@/types/components/filter-sort';
-import CreateUserForm from '@/components/admin/user/form/create-user-form';
+import CreateUserForm from '@/components/admin/user/create-user-form';
 import { UserFormStateProps } from '@/types/components/create-user-form';
 import { Address } from '@/types/address';
+import { debounce } from "lodash";
 
 export default function Users() {
   const [searchQuery, setSearchQuery] = useState<string>(''); // search
@@ -45,10 +46,10 @@ export default function Users() {
   const fetchUsers = async () => {
     setLoading(true);
     try {
-      await axios.get(`/api/user?sortOrder=${sortOrder}&query=${searchQuery}&role=${role}`)
-        .then((res) => { setUserList(res.data) })
+      const res = await axios.get(`/api/user?sortOrder=${sortOrder}&query=${searchQuery}&role=${role}`)
+      setUserList(res.data);
     } catch (err) {
-      console.error(err);
+      console.error("Error fetching users: " + err);
     } finally {
       setLoading(false);
     }
@@ -56,7 +57,9 @@ export default function Users() {
 
   // เรียกใช้ fetchUsers เมื่อค่าใน dep มีการเปลี่ยนแปลง
   useEffect(() => {
-    fetchUsers();
+    const delayedFetch = debounce(fetchUsers, 500);
+    delayedFetch(); // delay เพื่อลดการเรียก api ที่ไม่จำเป็น
+    return () => delayedFetch.cancel();
   }, [sortOrder, searchQuery, role])
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement> | SelectChangeEvent) => {
@@ -79,8 +82,6 @@ export default function Users() {
       setAddressForm((prev) => ({ ...prev, [name]: value }));
     }
 
-    console.log(userForm)
-
     setErrors((prev) => ({ ...prev, [name]: "" })); // ล้าง error เมื่อผู้ใข้กำลังพิมพ์
   };
 
@@ -100,86 +101,95 @@ export default function Users() {
 
     if (!userForm.confirmPassword) newErrors.confirmPassword = "จำเป็นต้องกรอกยันยันรหัสผ่าน";
 
-    if (userForm.password !== userForm.confirmPassword) {
-      newErrors.confirmPassword = "รหัสผ่านไม่ตรงกัน"
-      newErrors.password = "รหัสผ่านไม่ตรงกัน"
-    };
+    if (!editingId) {
+      if (userForm.password !== userForm.confirmPassword) {
+        newErrors.confirmPassword = "รหัสผ่านไม่ตรงกัน"
+        newErrors.password = "รหัสผ่านไม่ตรงกัน"
+      };
+    }
 
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0; // คีนค่า true เมื่อไม่มี error
+  }
+
+  const handleReset = () => {
+    setUserForm({
+      firstname: "",
+      lastname: "",
+      email: "",
+      role: "member",
+      password: "",
+      confirmPassword: "",
+    });
+    setAddressForm({
+      fullName: "",
+      phone: "",
+      address: "",
+      subDistrict: "",
+      district: "",
+      province: "",
+      postalCode: "",
+    });
+    setFormOpen(!formOpen);
+    setEditingId(null);
+    fetchUsers();
   }
 
   const handleSignUp = async () => {
     if (!validateForm()) return; // เช็คว่า validateForm คืนค่ามาเป็น false ไหม
 
     if (!editingId) {
-      // await axios.post("/api/user", userForm).then(() => {
-      // setUserForm({
-      //   firstname: "",
-      //   lastname: "",
-      //   email: "",
-      //   role: "member",
-      //   password: "",
-      //   confirmPassword: "",
-      // })
-      // setFormOpen(!formOpen)
-      // fetchUsers();
-      // })
+      await Promise.all([ // ใช้ Promise.all เพื่อลดการใช้ await ซ้ำๆ
+        axios.post("/api/user", userForm),
+        axios.post("/api/address", addressForm),
+      ]);
     } else {
-      axios.put("/api/user", userForm).then(() => {
-        setUserForm({
-          firstname: "",
-          lastname: "",
-          email: "",
-          role: "member",
-          password: "",
-          confirmPassword: "",
-        })
-        setFormOpen(!formOpen)
-        fetchUsers();
-      })
+      await Promise.all([
+        axios.put(`/api/user/${editingId}`, userForm),
+        axios.put("/api/address", addressForm),
+      ]);
     }
+    handleReset();
   };
 
-  const handleDeleteUser = (customerId: number) => {
-    if (!customerId) return;
+  const handleDeleteUser = async (userId: number) => {
+    if (!userId) return;
     try {
-      axios.delete(`/api/user/${customerId}`).then(() => {
-        setUserList((prev) => prev.filter((user) => user.id !== customerId))
-      }).catch(err => {
-        console.error(err)
-      })
+      await axios.delete(`/api/user/${userId}`)
+      setUserList((prev) => prev.filter((user) => user.id !== userId))
     } catch (err) {
       console.error(err)
     }
   }
 
-  const startEditing = (user: User) => {
+  const startEditing = (user: User, address?: Address) => {
     setEditingId(user.id || 0)
     setFormOpen(true)
     setUserForm({
       firstname: user.firstname,
       lastname: user.lastname || "",
       email: user.email,
-      password: user.password,
+      password: "",
       role: user.role,
     })
-    console.log("from editingid function: ", editingId)
-    console.log("from editingid function: ", formOpen)
-    console.log("from editingid function: ", userForm)
-    // setAddressForm({
-    //   fullName: user.fullNae,
-    //   lastname: user.lastname || "",
-    //   email: user.email,
-    //   password: user.password,
-    //   role: user.role,
-    //   confirmPassword: user.confirmPassword,
-    // })
+    if (address) {
+      setAddressForm({
+        fullName: address.fullName || "",
+        phone: address.phone || "",
+        address: address.address || "",
+        subDistrict: address.subDistrict || "",
+        district: address.district || "",
+        province: address.province || "",
+        postalCode: address.postalCode || "",
+      });
+    }
   }
 
-  console.log("from นอกfunction: ", editingId)
-  console.log("from นอกfunction: ", formOpen)
-  console.log("from นอกfunction: ", userForm)
+  console.log("editingId: ", editingId)
+  console.log("formOpen: ", formOpen)
+  console.log("userForm Object: ", userForm)
+
+  console.log("addressForm Object: ", addressForm)
 
   return (
     <Box sx={{ bgcolor: "primary.dark", minHeight: "100vh", py: 2, px: 6 }}>
