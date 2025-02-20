@@ -58,7 +58,7 @@ const UserInfoFields: React.FC<UserInfoFieldsProps> = ({
             error={!!errors[field.name]}
             helperText={errors[field.name] || ""}
             InputLabelProps={{ style: { color: "#C0C0C0" } }}
-            sx={{ bgcolor: "#27293D", input: { color: "white" } }}
+            sx={{ bgcolor: "#27293D", borderRadius: 2, input: { color: "white" } }}
             InputProps={{
               endAdornment:
                 field.name === "password" || field.name === "confirmPassword" ? (

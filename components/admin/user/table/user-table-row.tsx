@@ -4,12 +4,11 @@ import { Avatar, Box, IconButton, Skeleton, TableCell, TableRow, Typography } fr
 import { User } from "@/types/user";
 import { format } from "date-fns";
 import React from "react";
-import { Address } from "@/types/address";
 
 export type TUsersTableRow = {
     user?: User;
     loading?: boolean;
-    startEditing: (user: User, address: Address) => void;
+    startEditing: (user: User) => void;
 }
 
 const UsersTableRow: React.FC<TUsersTableRow> = ({ loading, user, startEditing }) => {
@@ -78,9 +77,7 @@ const UsersTableRow: React.FC<TUsersTableRow> = ({ loading, user, startEditing }
                     </Box>
                 ) : (
                     <>
-                        <IconButton size="small"
-                            // onClick={() => startEditing()}
-                        >
+                        <IconButton size="small" onClick={() => startEditing(user as User)}>
                             <Edit sx={{ color: "#1B6AF9" }} />
                         </IconButton>
                         <IconButton size="small">

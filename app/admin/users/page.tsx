@@ -8,7 +8,6 @@ import FilterSortSearch from '@/components/admin/user/filter-sort-search';
 import { SortType, Role } from '@/types/components/filter-sort';
 import CreateUserForm from '@/components/admin/user/create-user-form';
 import { UserFormStateProps } from '@/types/components/create-user-form';
-import { Address } from '@/types/address';
 import { debounce } from "lodash";
 
 export default function Users() {
@@ -29,16 +28,6 @@ export default function Users() {
     role: "member",
     password: "",
     confirmPassword: "",
-  });
-
-  const [addressForm, setAddressForm] = useState<Address>({
-    fullName: "",
-    phone: "",
-    address: "",
-    subDistrict: "",
-    district: "",
-    province: "",
-    postalCode: "",
   });
 
   const [errors, setErrors] = useState<{ [key: string]: string }>({});
@@ -65,23 +54,7 @@ export default function Users() {
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement> | SelectChangeEvent) => {
     let { name, value } = e.target;
 
-    // เช็ค format สำหรับค่าที่ส่งมาจาก form address
-    if (name === "phone") {
-      value = value.replace(/\D/g, "");
-      if (value.length > 3) value = `${value.slice(0, 3)} ${value.slice(3, 6)} ${value.slice(6, 10)}`;
-    }
-
-    // ให้ใส่ค่าได้ไม่เกิน 5 ตัว และต้องเป็นตัวเลขเท่า่นั้น
-    if (name === "postalCode" && !/^\d*$/.test(value)) return;
-    if (name === "postalCode" && value.length > 5) return;
-
-    // เช็คว่าค่า name เป็นของ userForm หรือ addressForm
-    if (Object.keys(userForm).includes(name)) {
-      setUserForm((prev) => ({ ...prev, [name]: value }));
-    } else if (Object.keys(addressForm).includes(name)) {
-      setAddressForm((prev) => ({ ...prev, [name]: value }));
-    }
-
+    setUserForm((prev) => ({ ...prev, [name]: value }));
     setErrors((prev) => ({ ...prev, [name]: "" })); // ล้าง error เมื่อผู้ใข้กำลังพิมพ์
   };
 
@@ -96,12 +69,15 @@ export default function Users() {
     else if (!/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(userForm.email))
       newErrors.email = "อีเมลไม่ถูกต้อง";
 
-    if (!userForm.password) newErrors.password = "จำเป็นต้องกรอกรหัสผ่าน"
-    else if (userForm.password.length < 8) newErrors.password = "รหัสผ่านต้องมีความยาวอย่างน้อย 8 ตัว";
+    if (userForm.password && userForm.password.length < 8) {
+      newErrors.password = "รหัสผ่านต้องมีความยาวอย่างน้อย 8 ตัว";
+    }
 
-    if (!userForm.confirmPassword) newErrors.confirmPassword = "จำเป็นต้องกรอกยันยันรหัสผ่าน";
+    if (!editingId) { // ถ้าไม่ได้ทำการแก้ไขข้อมูล
+      if (!userForm.password) newErrors.password = "จำเป็นต้องกรอกรหัสผ่าน"
 
-    if (!editingId) {
+      if (!userForm.confirmPassword) newErrors.confirmPassword = "จำเป็นต้องกรอกยันยันรหัสผ่าน";
+
       if (userForm.password !== userForm.confirmPassword) {
         newErrors.confirmPassword = "รหัสผ่านไม่ตรงกัน"
         newErrors.password = "รหัสผ่านไม่ตรงกัน"
@@ -121,15 +97,6 @@ export default function Users() {
       password: "",
       confirmPassword: "",
     });
-    setAddressForm({
-      fullName: "",
-      phone: "",
-      address: "",
-      subDistrict: "",
-      district: "",
-      province: "",
-      postalCode: "",
-    });
     setFormOpen(!formOpen);
     setEditingId(null);
     fetchUsers();
@@ -138,16 +105,24 @@ export default function Users() {
   const handleSignUp = async () => {
     if (!validateForm()) return; // เช็คว่า validateForm คืนค่ามาเป็น false ไหม
 
+    let payload = {
+      firstname: userForm.firstname,
+      lastname: userForm.lastname,
+      email: userForm.email,
+      role: userForm.role,
+    } as any;
+
+    if (userForm.password) { // ถ้ามีการกรอกรหัสผ่าน
+      payload.password = userForm.password;
+    }
+
     if (!editingId) {
-      await Promise.all([ // ใช้ Promise.all เพื่อลดการใช้ await ซ้ำๆ
-        axios.post("/api/user", userForm),
-        axios.post("/api/address", addressForm),
-      ]);
-    } else {
-      await Promise.all([
-        axios.put(`/api/user/${editingId}`, userForm),
-        axios.put("/api/address", addressForm),
-      ]);
+      await axios.post("/api/user",
+        { ...payload, confirmPassword: userForm.confirmPassword } // เพิ่ม confirmPassword เข้าไปใน payload
+      )
+    }
+    else {
+      await axios.put(`/api/user/${editingId}`, payload)
     }
     handleReset();
   };
@@ -162,7 +137,7 @@ export default function Users() {
     }
   }
 
-  const startEditing = (user: User, address?: Address) => {
+  const startEditing = (user: User) => {
     setEditingId(user.id || 0)
     setFormOpen(true)
     setUserForm({
@@ -172,29 +147,12 @@ export default function Users() {
       password: "",
       role: user.role,
     })
-    if (address) {
-      setAddressForm({
-        fullName: address.fullName || "",
-        phone: address.phone || "",
-        address: address.address || "",
-        subDistrict: address.subDistrict || "",
-        district: address.district || "",
-        province: address.province || "",
-        postalCode: address.postalCode || "",
-      });
-    }
   }
-
-  console.log("editingId: ", editingId)
-  console.log("formOpen: ", formOpen)
-  console.log("userForm Object: ", userForm)
-
-  console.log("addressForm Object: ", addressForm)
 
   return (
     <Box sx={{ bgcolor: "primary.dark", minHeight: "100vh", py: 2, px: 6 }}>
       <Typography variant="h5" mb={2} fontWeight={800} gutterBottom>
-        {formOpen ? 'Create User' : (editingId ? "Update User" : "Users")}
+        {formOpen ? (editingId ? "Update User" : "Create User") : "Users"}
       </Typography>
 
       {formOpen ? (
@@ -203,7 +161,7 @@ export default function Users() {
           editingId={editingId}
           errors={errors}
           userForm={userForm}
-          addressForm={addressForm}
+          setErrors={setErrors}
           setFormOpen={setFormOpen}
           setEditingId={setEditingId}
           handleChange={handleChange}

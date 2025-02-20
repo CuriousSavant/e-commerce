@@ -1,6 +1,6 @@
 'use client'
 import React from 'react';
-import ProductForm from '@/components/admin/product/productForm';
+import ProductForm from '@/components/admin/product/product-form';
 import { IconButton } from '@mui/material';
 import { BiArrowBack } from 'react-icons/bi';
 import { useRouter } from 'next/navigation';

@@ -4,12 +4,11 @@ import UsersTableHead from "./table/user-table-head";
 import UsersTableRow from "./table/user-table-row";
 import React from "react";
 import { User } from "@/types/user";
-import { Address } from "@/types/address";
 
 export type TUsersTable = {
     userList: User[];
     loading?: boolean;
-    startEditing: (user: User, address?: Address) => void;
+    startEditing: (user: User) => void;
 }
 
 const UsersTable: React.FC<TUsersTable> = ({
@@ -18,7 +17,16 @@ const UsersTable: React.FC<TUsersTable> = ({
     startEditing,
 }) => {
     return (
-        <TableContainer component={Paper} sx={{ bgcolor: "secondary.dark", borderRadius: "6px" }}>
+        <TableContainer
+            component={Paper}
+            sx={{
+                bgcolor: "secondary.dark",
+                borderRadius: "6px",
+                overflowX: "auto",
+                width: "100%",
+                display: "block",
+                maxWidth: "100%",
+            }}>
             <Table>
                 <UsersTableHead />
                 <TableBody>

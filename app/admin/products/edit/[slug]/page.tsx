@@ -1,5 +1,5 @@
 'use client'
-import ProductForm from '@/components/admin/product/productForm';
+import ProductForm from '@/components/admin/product/product-form';
 import { IconButton } from '@mui/material';
 import { useParams, useRouter } from 'next/navigation';
 import React from 'react';

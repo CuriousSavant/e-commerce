@@ -39,6 +39,7 @@ export async function PUT(req: Request, { params }: { params: { id: string } }) 
 
     const user = await prisma.user.findUnique({
       where: { id: Number(params.id) },
+      select: { password: true }, // เนี่องจาก prisma ไม่สามารถเอา password ออกได้ จึงใช้ select เพื่อเอา password ออกมาด้วย
     });
 
     if (!user) {
@@ -46,7 +47,7 @@ export async function PUT(req: Request, { params }: { params: { id: string } }) 
     }
 
     const updatedUser = await prisma.user.update({
-      where: { id: user.id },
+      where: { id: Number(params.id) },
       data: {
         firstname,
         lastname,
