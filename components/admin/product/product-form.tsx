@@ -1,30 +1,46 @@
 'use client';
 import React, { useState, useEffect } from 'react';
-import { BiUpload } from 'react-icons/bi';
 import axios from 'axios';
-import { redirect } from 'next/navigation';
-import { CgClose } from 'react-icons/cg';
 import { Category } from '@/types/product';
-import { Button, TextField, Select, MenuItem, InputLabel, FormControl, FormGroup, Box, Typography } from '@mui/material';
-import { useRouter } from 'next/navigation';
+import ProductInfoFields from './form/product-info-fields';
 
 interface SlugProps {
     slug?: string | string[];
 }
 
-const ProductForm: React.FC<SlugProps> = ({ slug }) => {
-    const [name, setName] = useState<string>('');
-    const [desc, setDesc] = useState<string>('');
-    const [imageUrl, setImageUrl] = useState<string[]>([]);
-    const [price, setPrice] = useState<number>(0);
-    const [brand, setBrand] = useState<string>('');
-    const [stock, setStock] = useState<number>(0);
-    const [goToProduct, setGoToProduct] = useState<boolean>(false);
+export type fieldsProps = {
+    label: string;
+    name?: string;
+    type: string;
+    fullWidth?: boolean;
+    multiline?: boolean;
+    rows?: number;
+    options?: string[];
+}
 
-    const [categoryId, setCategoryId] = useState<number | null>(null);
+const ProductForm: React.FC<SlugProps> = ({ slug }) => {
+    const [productForm, setProductForm] = useState({
+        productName: "",
+        productDesc: "",
+        price: 0,
+        brand: "",
+        stock: 0,
+        categoryId: null,
+    })
+
+    const [imageUrl, setImageUrl] = useState<string[]>([]);
     const [categories, setCategories] = useState<Category[]>([]);
 
-    const router = useRouter()
+    const [loadingImage, setLoadingImage] = useState<boolean>(false);
+
+    const [selectedImage, setSelectedImage] = useState<string | null>(null);
+    const [deletedImage, setDeletedImage] = useState<string | null>(null);
+    const [deletedIndex, setDeletedIndex] = useState<number | null>(null);
+    const [snackbarOpen, setSnackbarOpen] = useState(false);
+
+    const handleChange = (e: any) => {
+        setProductForm({ ...productForm, [e.target.name]: e.target.value });
+    }
 
     useEffect(() => {
         axios.get('/api/categories').then((res) => setCategories(res.data));
@@ -34,30 +50,35 @@ const ProductForm: React.FC<SlugProps> = ({ slug }) => {
         if (slug) {
             axios.get(`/api/product/${slug}`).then((res) => {
                 const product = res.data;
-                setName(product.title);
-                setDesc(product.description);
-                setImageUrl(product.image || []);
-                setPrice(product.price);
-                setBrand(product.brand);
-                setStock(product.stock);
-                setCategoryId(product.categoryId);
+                setProductForm({
+                    productName: product.title,
+                    productDesc: product.description,
+                    price: product.price,
+                    brand: product.brand,
+                    stock: product.stock,
+                    categoryId: product.categoryId,
+                })
             });
         }
     }, [slug]);
 
     const handleResetState = () => {
-        setName('');
-        setDesc('');
-        setImageUrl([]);
-        setPrice(0);
-        setBrand('');
-        setStock(10);
+        setProductForm({
+            productName: "",
+            productDesc: "",
+            price: 0,
+            brand: "",
+            stock: 0,
+            categoryId: null,
+        });
     };
 
-    const handleuploadImage = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const handleUploadImage = async (e: React.ChangeEvent<HTMLInputElement>) => {
         e.preventDefault();
         const file = e.target?.files?.[0];
         if (!file) return;
+
+        setLoadingImage(true);
 
         const formData = new FormData();
         formData.append('file', file);
@@ -68,25 +89,41 @@ const ProductForm: React.FC<SlugProps> = ({ slug }) => {
             setImageUrl([...imageUrl, response.data.secure_url]);
         } catch (error) {
             console.error('Image upload error:', error);
+        } finally {
+            setLoadingImage(false);
         }
     };
 
     const handleRemoveImage = (index: number) => {
         const updatedImages = [...imageUrl];
-        updatedImages.splice(index, 1);
+        const removedImage = updatedImages.splice(index, 1)[0]; // เก็บรูปที่ถูกลบ
         setImageUrl(updatedImages);
+        setDeletedImage(removedImage);
+        setDeletedIndex(index);
+        setSnackbarOpen(true);
+    };
+
+    const handleUndoDelete = () => {
+        if (deletedImage !== null && deletedIndex !== null) {
+            const updatedImages = [...imageUrl];
+            updatedImages.splice(deletedIndex, 0, deletedImage); // คืนรูปกลับที่เดิม
+            setImageUrl(updatedImages);
+            setDeletedImage(null);
+            setDeletedIndex(null);
+        }
+        setSnackbarOpen(false);
     };
 
     const handleCreateProductAndUpload = async (e: React.FormEvent) => {
         e.preventDefault();
         const productData = {
-            title: name,
-            description: desc,
+            title: productForm.productName,
+            description: productForm.productDesc,
             image: imageUrl,
-            price: price,
-            brand: brand,
-            stock: stock,
-            categoryId: categoryId,
+            price: productForm.price,
+            brand: productForm.brand,
+            stock: productForm.stock,
+            categoryId: productForm.categoryId,
         };
 
         try {
@@ -97,20 +134,15 @@ const ProductForm: React.FC<SlugProps> = ({ slug }) => {
                 // add product
                 await axios.post('/api/product', productData);
             }
-            setGoToProduct(true);
             handleResetState();
         } catch (error) {
             console.error(error);
         }
     };
 
-    if (goToProduct) {
-        return redirect('/arc/admin/products');
-    }
-
     const properties: any[] = [];
-    if (categoryId) {
-        let selCatInfo = categories.find((cat) => cat.id === categoryId);
+    if (productForm.categoryId) {
+        let selCatInfo = categories.find((cat) => cat.id === productForm.categoryId);
         if (selCatInfo) {
             properties.push(...(selCatInfo?.properties || []));
             while (selCatInfo?.parentId) {
@@ -120,167 +152,22 @@ const ProductForm: React.FC<SlugProps> = ({ slug }) => {
         }
     }
 
+    const formFields: fieldsProps[] = [
+        { label: 'Product Name', name: "productName", type: "text", fullWidth: true },
+        { label: 'Description', name: "productDesc", type: "text", multiline: true, rows: 4, fullWidth: true },
+        { label: "Upload Image", type: "file" },
+        { label: 'Category', name: "category", type: "select", options: ["Category 1", "Category 2"] },
+        { label: 'Price', name: "price", type: "number" },
+        { label: 'Brand', name: "brand", type: "select", options: ["Brand A", "Brand B"] },
+        { label: 'Stock', name: "stock", type: "number" },
+    ];
+
     return (
-        <form className="flex flex-col w-full border border-[#ddd] px-6 py-4 rounded-lg gap-3.5" onSubmit={handleCreateProductAndUpload}>
-            <div>
-                <Typography variant='subtitle1' fontWeight={600}>Basic information</Typography>
-            </div>
-            {/* product name */}
-            <FormGroup>
-                <TextField
-                    label="Product Name"
-                    variant="outlined"
-                    onChange={(e) => setName(e.target.value)}
-                    value={name}
-                    size='small'
-                    autoFocus
-                    required
-                />
-            </FormGroup>
-
-            {/* select category */}
-            <FormGroup>
-                <FormControl fullWidth size='small'>
-                    <InputLabel>Category</InputLabel>
-                    <Select
-                        onChange={(e) => {
-                            const selectedId = Number(e.target.value);
-                            setCategoryId(selectedId);
-                        }}
-                        value={categoryId || ''}
-                        label="Category"
-                    >
-                        <MenuItem value="">UnCategorized</MenuItem>
-                        {categories.map((cat) => (
-                            <MenuItem key={cat.id} value={cat.id}>
-                                {cat.name}
-                            </MenuItem>
-                        ))}
-                    </Select>
-                </FormControl>
-            </FormGroup>
-
-            {/* select properties */}
-            {properties.length > 0 && properties.map((cateItem, index) => {
-                return (
-                    <FormGroup key={index} className="mb-3">
-                        <Typography variant="body1" sx={{ mb: 1 }}>{cateItem.name}</Typography>
-                        <TextField
-                            key={cateItem.value}
-                            value={cateItem.value}
-                            size='small'
-                            label='properties value'
-                        >
-                            {cateItem.value}
-                        </TextField>
-                    </FormGroup>
-                );
-            })}
-
-            {/* select image */}
-            <FormGroup>
-                <div className="flex flex-wrap gap-2 w-full">
-                    <Button
-                        variant="outlined"
-                        component="label"
-                        color="primary"
-                        sx={{
-                            p: { xs: 1, md: 3 },
-                            border: "1px solid #ddd",
-                            color: "black",
-                        }}
-                        startIcon={<BiUpload />}
-
-                    >
-                        Upload Image
-                        <input
-                            id="input-file"
-                            type="file"
-                            className="hidden"
-                            onChange={handleuploadImage}
-                        />
-                    </Button>
-                    {!!imageUrl.length &&
-                        imageUrl.map((image, index) => {
-                            return (
-                                <div key={index} className="relative">
-                                    <img src={image} className="h-20 rounded-md" alt="uploaded product" />
-                                    <button
-                                        type='button'
-                                        className="absolute top-0 right-0 text-red-500 p-0.5"
-                                        onClick={() => handleRemoveImage(index)}
-                                    >
-                                        <CgClose />
-                                    </button>
-                                </div>
-                            )
-                        })}
-                </div>
-            </FormGroup>
-
-            {/* description */}
-            <FormGroup>
-                <TextField
-                    label="Description"
-                    variant="outlined"
-                    size='small'
-                    multiline
-                    rows={4}
-                    onChange={(e) => setDesc(e.target.value)}
-                    value={desc}
-                    required
-                />
-            </FormGroup>
-
-            {/* price product */}
-            <FormGroup>
-                <TextField
-                    label="Price"
-                    variant="outlined"
-                    type="number"
-                    onChange={(e) => setPrice(Number(e.target.value))}
-                    size='small'
-                    value={price}
-                    required
-                />
-            </FormGroup>
-
-            {/* brand */}
-            <FormGroup>
-                <TextField
-                    label="Brand"
-                    variant="outlined"
-                    onChange={(e) => setBrand(e.target.value)}
-                    size='small'
-                    value={brand}
-                />
-            </FormGroup>
-
-            {/* stock */}
-            <FormGroup>
-                <TextField
-                    label="Stock"
-                    variant="outlined"
-                    type="number"
-                    onChange={(e) => setStock(Number(e.target.value))}
-                    size='small'
-                    value={stock}
-                    required
-                />
-            </FormGroup>
-            {/* Actions */}
-            <Box className="flex gap-2">
-                <Button type="submit" variant="contained" color="primary" className="py-2">
-                    Save Product
-                </Button>
-                <Button
-                    variant="outlined"
-                    color="primary"
-                    onClick={() => router.push("/arc/admin/products")}
-                >
-                    Cancel
-                </Button>
-            </Box>
+        <form className="flex flex-col w-full mx-auto rounded-lg text-white gap-5">
+            <ProductInfoFields {...{
+                formFields, handleChange, handleRemoveImage, handleUndoDelete, handleUploadImage, imageUrl,
+                loadingImage, productForm, selectedImage, setSelectedImage, snackbarOpen, setSnackbarOpen, properties
+            }} />
         </form>
     );
 };

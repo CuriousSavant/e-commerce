@@ -95,7 +95,7 @@ const FilterSortSearch: React.FC<ITrinity> = ({
             </Box>
 
             {/* Create a User BTN */}
-            <Button variant="contained" color="primary" onClick={() => setFormOpen(!formOpen)}>
+            <Button variant="contained" sx={{ bgcolor: "primary.main" }} onClick={() => setFormOpen(!formOpen)}>
                 Create +
             </Button>
         </Box >

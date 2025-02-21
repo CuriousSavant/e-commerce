@@ -31,7 +31,7 @@ const UsersTable: React.FC<TUsersTable> = ({
                 <UsersTableHead />
                 <TableBody>
                     {loading
-                        ? Array.from({ length: 5 }).map((_, i) => (
+                        ? Array.from({ length: 10 }).map((_, i) => (
                             <UsersTableRow key={i} loading startEditing={startEditing} />
                         ))
                         : userList.length > 0 ? userList?.map((user) => (
