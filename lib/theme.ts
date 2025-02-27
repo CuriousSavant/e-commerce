@@ -35,7 +35,7 @@ const theme = () =>
       },
       MuiButton: {
         styleOverrides: {
-          root: { borderRadius: "8px" }
+          root: { borderRadius: "4px" }
         }
       },
       MuiTableCell: {

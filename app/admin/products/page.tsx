@@ -1,51 +1,82 @@
 'use client'
-import React, { useState } from "react";
-import { Box, Typography, Breadcrumbs, TablePagination } from "@mui/material";
-import { AiOutlineHome } from "react-icons/ai";
-import Link from "next/link";
-import { Product } from "@/types/product";
+import React from "react";
+import { Box, Typography, TablePagination, Button } from "@mui/material";
 import ProductTable from "@/components/admin/product/product-table";
-import ProductForm from "@/components/admin/product/product-form";
+import ProductForm from "@/components/admin/product/form/product-form";
+import { MdDelete } from "react-icons/md";
+import FilterSortSearchProduct from "@/components/admin/product/filter-sort-search-product";
+import { useProducts } from "@/hooks/useProducts";
+import { usePagination } from "@/hooks/usePagination";
+import { useImageUpload } from "@/hooks/useImageUpload";
 
 const Products = () => {
-    const [products, setProducts] = useState<Product[]>([]);
-    const [page, setPage] = useState(0);
-    const [rowsPerPage, setRowsPerPage] = useState(10);
-    const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('asc');
-    const [editingId, setEditingId] = useState<number | null>(null);
 
-    const [formOpen, setFormOpen] = useState<boolean>(true);
+    const {
+        categories, fetchProducts, formOpen,
+        handleResetState, productForm,
+        products, setFormOpen, setProductForm,
+        setProducts, slug, sortOrder,
+        startEditing, toggleSortOrder,
+        handleCreateProductAndUpdate,
+        query, selectItem, setQuery, setSelectItem,
+        categoryFilter, priceFilter, setCategoryFilter,
+        setPriceFilter, setStatusFilter, statusFilter,
+        setSlug,
+    } = useProducts();
 
-    const handleChangePage = (e: React.MouseEvent<HTMLButtonElement> | null, newPage: number) => {
-        setPage(newPage);
-    };
+    const {
+        handleChangePage,
+        handleChangeRowsPerPage,
+        page,
+        rowsPerPage,
+    } = usePagination();
 
-    const handleChangeRowsPerPage = (e: React.ChangeEvent<HTMLInputElement>) => {
-        setRowsPerPage(parseInt(e.target.value, 10));
-        setPage(0);
-    };
-
-    const toggleSortOrder = () => {
-        setSortOrder((prev) => (prev === 'asc' ? 'desc' : 'asc'));
-    };
+    const {
+        handleRemoveImage, handleUndoDelete,
+        handleUploadImage, imageUrl,
+        loadingImage, selectedImage,
+        setSelectedImage, setSnackbarOpen, snackbarOpen,
+        setImageUrl,
+    } = useImageUpload();
 
     return (
         <Box sx={{ py: 2, px: 6 }}>
             {/* Header */}
-            <Box
-                sx={{ display: "flex", justifyContent: "space-between", alignItems: "center", mb: 1 }}>
-                <Box>
-                    <Typography variant="h5" sx={{ fontWeight: "bold" }}>
-                        {formOpen ? (editingId ? "Edit Product" : "Add Product") : "Products"}
-                    </Typography>
-                    <Breadcrumbs aria-label="breadcrumb">
-                        <Link color="inherit" href="/arc/admin">
-                            <AiOutlineHome />
-                        </Link>
-                        <Typography sx={{ color: 'text.primary' }}>Products</Typography>
-                    </Breadcrumbs>
-                </Box>
+            <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center", mb: 1 }}>
+                {selectItem.length > 0 ? (
+                    <>
+                        <Typography variant="h5" fontWeight={"bold"}>{selectItem.length} Selected</Typography>
+                        <Button
+                            color="error"
+                            variant="contained"
+                            size="medium"
+                            sx={{ textTransform: "none", display: "flex", alignItems: "center" }}>
+                            <MdDelete size={20} color="#fff" />
+                            <Typography variant="button" fontWeight={"bold"} sx={{ ml: 1 }}>
+                                Delete
+                                ({selectItem.length > 0 ? selectItem.length : ""})
+                            </Typography>
+                        </Button>
+                    </>
+                ) : <Typography variant="h5" fontWeight={'bold'}>{formOpen ? (slug ? "Edit Product" : "Add Product") : "Products"}</Typography>}
             </Box>
+
+            {!formOpen ? ( // ถ้าเปิด form อยู่ให้ปิด
+                <FilterSortSearchProduct
+                    sortOrder={sortOrder}
+                    toggleSortOrder={toggleSortOrder}
+                    formOpen={formOpen}
+                    setFormOpen={setFormOpen}
+                    setQuery={setQuery}
+                    query={query}
+                    categoryFilter={categoryFilter}
+                    setCategoryFilter={setCategoryFilter}
+                    setStatusFilter={setStatusFilter}
+                    statusFilter={statusFilter}
+                    priceFilter={priceFilter}
+                    setPriceFilter={setPriceFilter}
+                />
+            ) : null}
 
             {!formOpen ? (
                 <>
@@ -57,6 +88,10 @@ const Products = () => {
                         setProducts={setProducts}
                         sortOrder={sortOrder}
                         toggleSortOrder={toggleSortOrder}
+                        selectItem={selectItem}
+                        setSelectItem={setSelectItem}
+                        startEditing={startEditing}
+                        fetchProducts={fetchProducts}
                     />
 
                     <TablePagination
@@ -70,11 +105,16 @@ const Products = () => {
                     />
                 </>
             ) : (
-                <ProductForm />
+                <ProductForm {...{
+                    productForm, setProductForm, slug, handleCreateProductAndUpdate,
+                    handleRemoveImage, handleUndoDelete, handleUploadImage, imageUrl,
+                    loadingImage, selectedImage, setSelectedImage, snackbarOpen,
+                    setSnackbarOpen, startEditing, formOpen, setFormOpen, setSlug,
+                    setImageUrl,
+                }} />
             )}
         </Box>
     );
 };
 
 export default Products;
-

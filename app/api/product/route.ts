@@ -4,53 +4,42 @@ import slugify from "slugify";
 
 export async function GET(req: Request) {
   try {
-    const url = new URL(req.url);
-    const sortOrder = url.searchParams.get("sortOrder") || "desc";
-    const sortBy = url.searchParams.get("sortBy") || "createdAt";
-    const search = url.searchParams.get("search");
-    const categoryId = url.searchParams.get("categoryId");
+    const url = new URL(req.url).searchParams;
+    const query = url.get("q");
+    const sortOrder = url.get("sortOrder") || "desc";
+    const status = url.get("status");
+    const categoryId = url.get("categoryId");
+    const price = url.get("price");
 
     // Validate sortOrder
     if (!["asc", "desc"].includes(sortOrder)) {
       throw new Error("Invalid sortOrder value");
     }
 
-    // Validate sortBy
-    const allowedSortByFields = [
-      "createdAt",
-      "updatedAt",
-      "lowPrice",
-      "highPrice",
-    ];
-    if (!allowedSortByFields.includes(sortBy)) {
-      throw new Error("Invalid sortBy value");
-    }
-
     // Build filters
     const whereClause: any = {};
+    let orderByClause: any = { createdAt: sortOrder }
+
     let products;
 
-    if (categoryId) {
-      whereClause.categoryId = Number(categoryId);
+    if (query) whereClause.title = { contains: query.trim() };
+    if (categoryId) whereClause.categoryId = Number(categoryId);
+    if (price) {
+      if (price === "low-high") orderByClause = { price: "asc" };
+      else if (price === "high-low") orderByClause = { price: "desc" };
+      else orderByClause;
     }
 
-    if (search) {
-      whereClause.title = {
-        contains: search.toLowerCase(),
-      };
+    if (status && status !== 'all') {
+      whereClause.status = status.toLowerCase() === "active" ? "ACTIVE" : "INACTIVE";
     }
+    console.log("where:", whereClause, "orderBy:", orderByClause)
 
-    // Determine orderBy
-    const orderBy =
-      sortBy === "lowPrice"
-        ? { price: "asc" }
-        : sortBy === "highPrice"
-        ? { price: "desc" }
-        : { [sortBy]: sortOrder };
-
-    if (!search && !categoryId) {
+    if (!query && !categoryId && !status) {
       products = await prisma.product.findMany({
-        orderBy: orderBy as any,
+        orderBy: {
+          createdAt: sortOrder,
+        } as any,
         include: {
           category: {
             include: {
@@ -59,12 +48,12 @@ export async function GET(req: Request) {
           },
           properties: true,
         },
-      });
+      })
     } else {
       // Fetch products
       products = await prisma.product.findMany({
         where: whereClause,
-        orderBy: orderBy as any,
+        orderBy: orderByClause,
         include: {
           category: {
             include: {
@@ -76,17 +65,17 @@ export async function GET(req: Request) {
       });
     }
 
-    // Fallback for no products
-    if (products.length === 0) {
-      const fallbackProducts = await prisma.product.findMany({
-        orderBy: { [sortBy]: sortOrder },
-        include: {
-          category: true,
-          properties: true,
-        },
-      });
-      return NextResponse.json(fallbackProducts);
-    }
+    // เมื่อผู้ใช้ search แต่หาสินค้าที่ตรงกับ query ที่ส่งมาไม่ได้จะทำการคืนสินค้าเริ่มต้นไปให้
+    // if (products.length === 0) {
+    //   const fallbackProducts = await prisma.product.findMany({
+    //     orderBy: { createdAt: sortOrder } as any,
+    //     include: {
+    //       category: true,
+    //       properties: true,
+    //     },
+    //   });
+    //   return NextResponse.json(fallbackProducts);
+    // }
 
     return NextResponse.json(products);
   } catch (error: any) {
@@ -105,13 +94,11 @@ export const POST = async (req: Request) => {
       brand,
       stock,
       categoryId,
-      feature,
-      properties,
     } = await req.json();
 
     const slug = slugify(title, { lower: true, strict: true });
 
-    const dataCreate = await prisma.product.create({
+    const createProduct = await prisma.product.create({
       data: {
         title,
         description,
@@ -121,21 +108,10 @@ export const POST = async (req: Request) => {
         stock,
         categoryId,
         slug,
-        feature: {
-          create: feature.map((item: any) => ({
-            desctiption: item.description,
-          })),
-        },
-        properties: {
-          create: properties.map((item: any) => ({
-            name: item.name,
-            value: item.value,
-          })),
-        },
       },
     });
 
-    return NextResponse.json(dataCreate);
+    return NextResponse.json(createProduct);
   } catch (err) {
     console.error(err);
     return NextResponse.json({ msgErr: err, status: 500 });

@@ -1,5 +1,3 @@
-import { Address } from "../address";
-
 export interface fieldProps {
     lable?: string;
     type?: string;

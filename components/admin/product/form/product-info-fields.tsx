@@ -1,48 +1,82 @@
 'use client';
-import React from 'react';
+import React, { FormEvent, useState } from 'react';
 import { BiUpload } from 'react-icons/bi';
 import { Button, TextField, Select, MenuItem, InputLabel, FormControl, Box, Typography, Grid, Modal, IconButton, Snackbar } from '@mui/material';
-import { Close } from '@mui/icons-material';
-import { fieldsProps } from '../product-form';
+import { ArrowBack, Close } from '@mui/icons-material';
+import { useRouter } from 'next/navigation';
+import { fieldsProps } from './product-form';
 
 interface ProductInfoFielsProps {
     formFields: fieldsProps[];
     loadingImage: boolean;
-    handleUploadImage: (e: any) => void;
+    snackbarOpen: boolean;
+    productForm: ProductFormStateProps;
     imageUrl: string[];
+    selectedImage: string | null;
+    slug: string | null;
+    handleUploadImage: (e: React.ChangeEvent<HTMLInputElement>) => void;
     setSelectedImage: React.Dispatch<React.SetStateAction<string | null>>;
     handleRemoveImage: (index: number) => void;
-    selectedImage: string | null;
     handleUndoDelete: () => void;
-    snackbarOpen: boolean;
-    handleChange: (e: any) => void;
-    productForm: { productName: string, productDesc: string, price: number, brand: string, stock: number, categoryId: number | null };
     setSnackbarOpen: React.Dispatch<React.SetStateAction<boolean>>;
+    handleCreateProductAndUpdate: (e: React.FormEvent<HTMLFormElement>) => void;
+    setProductForm: React.Dispatch<React.SetStateAction<ProductFormStateProps>>;
 }
 
 const ProductInfoFields: React.FC<ProductInfoFielsProps> = ({
     formFields,
-    handleChange,
-    handleRemoveImage,
-    handleUndoDelete,
-    handleUploadImage,
     imageUrl,
     loadingImage,
     productForm,
     selectedImage,
-    setSelectedImage,
     snackbarOpen,
+    slug,
+    setSelectedImage,
+    handleRemoveImage,
+    handleUndoDelete,
+    handleUploadImage,
     setSnackbarOpen,
+    handleCreateProductAndUpdate,
+    setProductForm,
 }) => {
+    const [errors, setErrors] = useState<{ [key: string]: string }>({});
+
+    const handleChange = (e: any) => {
+        const { name, value } = e.target;
+        setProductForm({ ...productForm, [name]: name === "price" || name === "stock" ? Number(value) : value });
+        setErrors({ ...errors, [name]: '' });
+    }
+
+    const validateForm = () => {
+        const errors: { [key: string]: string } = {};
+
+        if (!productForm.productName) errors.productName = 'ต้องกรอกชื่อสินค้า';
+        if (!productForm.productDesc) errors.productDesc = 'ต้องกรอกคำอธิบายสินค้า';
+        if (!productForm.price) errors.price = 'ต้องกรอกราคาสินค้า';
+        if (!productForm.stock) errors.stock = 'ต้องกรอกจำนวนสินค้าในสต๊อก';
+
+        setErrors(errors);
+
+        return Object.keys(errors).length === 0;
+    }
+
+    const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
+        e.preventDefault();
+
+        if (validateForm()) {
+            handleCreateProductAndUpdate(e);
+        }
+    }
+
     return (
-        <>
+        <form onSubmit={handleSubmit}>
             <Grid container spacing={2}>
                 {formFields.map((field: any, index: number) => (
                     <Grid item xs={12} md={field.fullWidth || field.type === "file" ? 12 : 6} key={index}>
                         {field.type === "file" ? ( // ปุ่มอัพโหลดรูปภาพ
                             <div className='flex items-center flex-wrap gap-2'>
                                 <Box mr={2}>
-                                    <Typography variant="body1" fontWeight={500} className="mb-2">{field.lable}</Typography>
+                                    <Typography variant="body1" fontWeight={500} className="mb-2">{field.label}</Typography>
                                     <Button variant="outlined" component="label" sx={{ bgcolor: "secondary.dark" }} className="text-white border border-[#4a4a5c] hover:border-[#6f6f85] w-[200px] h-[60px]">
                                         {loadingImage ? 'Uploading...' : <BiUpload size={20} />}
                                         <input type="file" hidden onChange={handleUploadImage} />
@@ -98,9 +132,10 @@ const ProductInfoFields: React.FC<ProductInfoFielsProps> = ({
                                     fullWidth
                                     multiline={field.multiline || false}
                                     rows={field.rows || 1}
+                                    error={!!errors[field.name || '']}
+                                    helperText={errors[field.name || '']}
                                     InputLabelProps={{ style: { color: "#C0C0C0" } }}
                                     sx={{ bgcolor: "secondary.dark", borderRadius: 2, border: "1px solid #4a4a5c", input: { color: "white" }, "& .MuiInputBase-root": { color: "white" } }}
-                                    required
                                 />
                             </>
                         )}
@@ -108,21 +143,22 @@ const ProductInfoFields: React.FC<ProductInfoFielsProps> = ({
                 ))}
             </Grid>
 
-            <Button type="submit" variant="contained" sx={{ bgcolor: "primary.main" }} fullWidth className="py-2 rounded-lg">
-                Add Product
+            <Button type="submit" variant="contained" sx={{ bgcolor: "primary.main" }} className="mt-10 rounded-lg px-14">
+                {slug ? "แก้ไขสินค้า" : "เพิ่มสินค้า"}
             </Button>
             <Snackbar
                 open={snackbarOpen}
                 autoHideDuration={3000}
                 onClose={() => setSnackbarOpen(false)}
                 message="ลบรูปภาพแล้ว"
+                color='white'
                 action={
                     <Button color="secondary" size="small" onClick={handleUndoDelete}>
                         Undo
                     </Button>
                 }
             />
-        </>
+        </form>
     )
 }
 

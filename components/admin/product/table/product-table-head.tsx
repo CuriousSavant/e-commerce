@@ -13,21 +13,22 @@ const ProductTableHead: React.FC<ProductTableHeadProps> = ({
 }) => {
     return (
         <TableHead>
-            <TableRow>
-                <TableCell padding="checkbox" size="small" sx={{ pt: 1.5 }}>
+            <TableRow sx={{ bgcolor: "secondary.dark" }}>
+                <TableCell padding="checkbox" size="small" sx={{ pt: 1.5, borderBottom: "1px solid #50575E" }}>
                     <Checkbox
                         indeterminate={selected.length > 0 && selected.length < products.length}
                         checked={products.length > 0 && selected.length === products.length}
                         onChange={handleSelectAllClick}
+                        sx={{
+                            color: "#c0c0c0",
+                            "&.Mui-checked": { color: "primary.main" },
+                            "&.MuiCheckbox-indeterminate": { color: "primary.main" }
+                        }}
                     />
                 </TableCell>
-                <TableCell size="small" sx={{ pt: 1.5, whiteSpace: "pre", color: "white" }}>Product ID</TableCell>
-                <TableCell size="small" sx={{ pt: 1.5, color: "white" }}>Name</TableCell>
-                <TableCell size="small" sx={{ pt: 1.5, color: "white" }}>Category</TableCell>
-                <TableCell size="small" sx={{ pt: 1.5, color: "white" }}>Stock</TableCell>
-                <TableCell size="small" sx={{ pt: 1.5, color: "white" }}>Price</TableCell>
-                <TableCell size="small" sx={{ pt: 1.5, color: "white" }}>Status</TableCell>
-                <TableCell size="small" sx={{ pt: 1.5, color: "white" }}>Actions</TableCell>
+                {["หมายเลขสินค้า", "ชื่อ", "หมวดหมู่", "ราคา", "สถานะ", "สต็อก", "Actions"].map((headCell) => (
+                    <TableCell key={headCell} sx={{ pt: 1.5, color: "white", borderBottom: "1px solid #50575E" }}>{headCell}</TableCell>
+                ))}
             </TableRow>
         </TableHead>
     )

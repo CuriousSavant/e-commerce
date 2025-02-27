@@ -1,27 +1,23 @@
 'use client'
-import React, { SetStateAction, useEffect, useState } from 'react'
-import {
-    Table,
-    TableContainer,
-    Typography,
-    Box,
-    Toolbar,
-    Button,
-} from "@mui/material"
-import { MdDelete } from "react-icons/md";
-import axios from "axios";
+import React, { SetStateAction } from 'react'
+import { Table, TableBody, TableContainer, Toolbar } from "@mui/material"
 import { Product } from "@/types/product";
-import Swal from 'sweetalert2'
 import ProductTableHead from './table/product-table-head';
 import ProductTableRow from './table/product-table-row';
+import Swal from 'sweetalert2';
+import axios from 'axios';
 
 interface RowPageProps {
     products: Product[];
-    setProducts: React.Dispatch<SetStateAction<Product[]>>;
     page: number;
     rowsPerPage: number;
     sortOrder: 'asc' | 'desc';
+    selectItem: string[];
     toggleSortOrder: () => void;
+    setProducts: React.Dispatch<SetStateAction<Product[]>>;
+    setSelectItem: React.Dispatch<React.SetStateAction<string[]>>
+    startEditing: (product: any) => void;
+    fetchProducts: () => void;
 }
 
 const ProductTable: React.FC<RowPageProps> = ({
@@ -31,23 +27,11 @@ const ProductTable: React.FC<RowPageProps> = ({
     setProducts,
     sortOrder,
     toggleSortOrder,
+    selectItem,
+    setSelectItem,
+    startEditing,
+    fetchProducts,
 }) => {
-    const [selectItem, setSelectItem] = useState<string[]>([]);
-
-    const fetchProducts = () => {
-        try {
-            axios.get(`/api/product?sortOrder=${sortOrder}`).then((res) => {
-                setProducts(res.data)
-            });
-        } catch (err) {
-            console.error(err)
-        }
-    };
-
-    useEffect(() => {
-        fetchProducts();
-    }, [sortOrder]);
-
     const handleSelectAllClick = (event: React.ChangeEvent<HTMLInputElement>) => {
         if (event.target.checked) { // ถ้ามีการเลือกทั้งหมด
             const allItems = products.map((product) => product.slug);
@@ -95,6 +79,8 @@ const ProductTable: React.FC<RowPageProps> = ({
         });
     };
 
+    const isSelected = (slug: string) => selectItem.indexOf(slug) !== -1;
+
     const handleAllDelete = () => {
         Swal.fire({
             title: "คุณแน่ใจหรือไม่?",
@@ -119,7 +105,7 @@ const ProductTable: React.FC<RowPageProps> = ({
                             "success"
                         );
                     })
-                    .catch((error) => {
+                    .catch(() => {
                         Swal.fire(
                             "Error!",
                             "Some items could not be deleted. Please try again.",
@@ -130,58 +116,39 @@ const ProductTable: React.FC<RowPageProps> = ({
         });
     }
 
-    const isSelected = (slug: string) => selectItem.indexOf(slug) !== -1;
-
     return (
-        <Toolbar>
-            <TableContainer
-                sx={{
-                    overflowX: "auto",
-                    width: "100%",
-                    display: "block",
-                    maxWidth: "100%",
-                    border: "1px solid #ddd",
-                    borderRadius: "10px",
-                }}
-            >
-                <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center", px: 2, py: 1, minHeight: 64 }}>
-                    {selectItem.length > 0 ? (
-                        <>
-                            <Typography variant="h5">{selectItem.length} Selected</Typography>
-                            <Button
-                                variant='contained'
-                                color='error'
-                                size='large'
-                                onClick={() => handleAllDelete()}
-                                sx={{
-                                    textTransform: "none",
-                                    borderColor: "#D1D5DB",
-                                }}
-                            >
-                                <MdDelete color="#fff" />
-                            </Button>
-                        </>
-                    ) : (
-                        <Typography variant="h5">Products</Typography>
-                    )}
-                </Box>
-                <Table size="small">
-                    <ProductTableHead
-                        handleSelectAllClick={handleSelectAllClick}
-                        products={products}
-                        selected={selectItem}
-                    />
-                    <ProductTableRow
-                        handleClick={handleClick}
-                        handleDeleteProduct={handleDeleteProduct}
-                        isSelected={isSelected}
-                        page={page}
-                        products={products}
-                        rowsPerPage={rowsPerPage}
-                    />
-                </Table>
-            </TableContainer>
-        </Toolbar>
+        <TableContainer
+            sx={{
+                overflowX: "auto",
+                width: "100%",
+                display: "block",
+                maxWidth: "100%",
+                borderRadius: "10px",
+            }}
+        >
+            <Table size="small">
+                <ProductTableHead
+                    handleSelectAllClick={handleSelectAllClick}
+                    products={products}
+                    selected={selectItem}
+                />
+                <TableBody sx={{ bgcolor: "secondary.dark" }}>
+                    {products.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((product, index) => {
+                        const selectedRow = isSelected(product.slug!!);
+                        return (
+                            <ProductTableRow
+                                key={index}
+                                handleClick={handleClick}
+                                handleDeleteProduct={handleDeleteProduct}
+                                product={product}
+                                startEditing={startEditing}
+                                selectedRow={selectedRow}
+                            />
+                        );
+                    })}
+                </TableBody>
+            </Table>
+        </TableContainer>
     )
 }
 

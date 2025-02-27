@@ -11,6 +11,8 @@ export interface Product {
   slug: string;
   properties: Propertie;
   category: Category;
+  status: 'ACTIVE' | 'INACTIVE';
+  
   feature: Feature[]
   categoryId: number | null;
   createdAt?: Date;

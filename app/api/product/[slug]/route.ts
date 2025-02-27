@@ -51,17 +51,17 @@ export const PUT = async (
         categoryId,
         brand,
         stock,
-        feature: {
-          create: feature.map((item: any) => ({
-            desctiption: item.description,
-          })),
-        },
-        properties: {
-          create: properties.map((item: any) => ({
-            name: item.name,
-            value: item.value,
-          })),
-        },
+        // feature: {
+        //   create: feature.map((item: any) => ({
+        //     desctiption: item.description,
+        //   })),
+        // },
+        // properties: {
+        //   create: properties.map((item: any) => ({
+        //     name: item.name,
+        //     value: item.value,
+        //   })),
+        // },
       },
       where: { slug: params.slug },
     });
