@@ -1,6 +1,6 @@
 'use client'
 import React, { SetStateAction } from 'react'
-import { Table, TableBody, TableContainer, Toolbar } from "@mui/material"
+import { Table, TableBody, TableContainer } from "@mui/material"
 import { Product } from "@/types/product";
 import ProductTableHead from './table/product-table-head';
 import ProductTableRow from './table/product-table-row';
@@ -11,11 +11,10 @@ interface RowPageProps {
     products: Product[];
     page: number;
     rowsPerPage: number;
-    sortOrder: 'asc' | 'desc';
     selectItem: string[];
-    toggleSortOrder: () => void;
+    loading: boolean;
     setProducts: React.Dispatch<SetStateAction<Product[]>>;
-    setSelectItem: React.Dispatch<React.SetStateAction<string[]>>
+    setSelectItem: React.Dispatch<React.SetStateAction<string[]>>;
     startEditing: (product: any) => void;
     fetchProducts: () => void;
 }
@@ -25,12 +24,11 @@ const ProductTable: React.FC<RowPageProps> = ({
     rowsPerPage,
     products,
     setProducts,
-    sortOrder,
-    toggleSortOrder,
     selectItem,
     setSelectItem,
     startEditing,
     fetchProducts,
+    loading,
 }) => {
     const handleSelectAllClick = (event: React.ChangeEvent<HTMLInputElement>) => {
         if (event.target.checked) { // ถ้ามีการเลือกทั้งหมด
@@ -133,19 +131,31 @@ const ProductTable: React.FC<RowPageProps> = ({
                     selected={selectItem}
                 />
                 <TableBody sx={{ bgcolor: "secondary.dark" }}>
-                    {products.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((product, index) => {
-                        const selectedRow = isSelected(product.slug!!);
-                        return (
+                    {loading ?
+                        Array.from({ length: 6 }).map((_, index) => (
                             <ProductTableRow
                                 key={index}
+                                loading={loading}
                                 handleClick={handleClick}
                                 handleDeleteProduct={handleDeleteProduct}
-                                product={product}
                                 startEditing={startEditing}
-                                selectedRow={selectedRow}
                             />
-                        );
-                    })}
+                        )) : (
+                            products.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((product, index) => {
+                                const selectedRow = isSelected(product.slug!!);
+                                return (
+                                    <ProductTableRow
+                                        key={index}
+                                        loading={loading}
+                                        handleClick={handleClick}
+                                        handleDeleteProduct={handleDeleteProduct}
+                                        product={product}
+                                        startEditing={startEditing}
+                                        selectedRow={selectedRow}
+                                    />
+                                );
+                            })
+                        )}
                 </TableBody>
             </Table>
         </TableContainer>

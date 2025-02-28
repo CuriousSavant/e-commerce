@@ -1,5 +1,5 @@
 'use client';
-import CartProduct from '@/components/section/cart-product';
+import CartProduct from '@/components/client/section/cart-product';
 import React, { useEffect } from 'react';
 import { useSearchContext } from '@/app/context/ProductSearchContext';
 import { Skeleton } from '@mui/material';

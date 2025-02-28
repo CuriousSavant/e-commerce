@@ -112,6 +112,7 @@ function AuthModal({ onClose }: { onClose: () => void }) {
         }
 
         try {
+            console.log("formData: ", formData);
             await axios.post('/api/user', formData);
             await handleLogin(formData.email, formData.password);
 

@@ -32,7 +32,7 @@ const FilterSortSearchProduct: React.FC<FilterSortSearchProductProps> = ({
                     {/* Search Input */}
                     <TextField
                         size="small"
-                        placeholder="Search by name, category"
+                        placeholder="Search by name"
                         sx={{ bgcolor: "secondary.dark", borderRadius: 2, border: "1px solid #4F4F4F", width: "340px" }}
                         onChange={(e) => setQuery(e.target.value)}
                         value={query || ""}

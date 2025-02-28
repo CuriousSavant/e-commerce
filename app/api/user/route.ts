@@ -2,6 +2,7 @@ import prisma from "@/lib/prisma";
 import { NextResponse } from "next/server";
 import bcrypt from "bcrypt";
 import { SortType } from "@/types/components/filter-sort";
+import { last } from "lodash";
 
 export async function GET(req: Request) {
   try {
@@ -52,7 +53,7 @@ export async function GET(req: Request) {
 
 export async function POST(req: Request) {
   try {
-    const { firstname, lastname, email, phone, birthday, role, password, confirmPassword } =
+    const { userName, lastName, email, phone, birthday, role, password, confirmPassword } =
       await req.json();
 
     const existingUser = await prisma.user.findUnique({
@@ -73,12 +74,14 @@ export async function POST(req: Request) {
       );
     }
 
+    console.log(userName, lastName, email, phone, birthday, role, password, confirmPassword)
+
     const hashedPassword = await bcrypt.hash(password, 10);
 
     const user = await prisma.user.create({
       data: {
-        firstname,
-        lastname,
+        firstname: userName,
+        lastname: lastName,
         email: email.toLowerCase(),
         phone: phone,
         birthday: birthday,

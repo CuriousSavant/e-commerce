@@ -21,7 +21,7 @@ const Products = () => {
         query, selectItem, setQuery, setSelectItem,
         categoryFilter, priceFilter, setCategoryFilter,
         setPriceFilter, setStatusFilter, statusFilter,
-        setSlug,
+        setSlug, loading, setLoading,
     } = useProducts();
 
     const {
@@ -83,11 +83,10 @@ const Products = () => {
                     {/* Product Table */}
                     <ProductTable
                         page={page}
+                        loading={loading}
                         products={products}
                         rowsPerPage={rowsPerPage}
                         setProducts={setProducts}
-                        sortOrder={sortOrder}
-                        toggleSortOrder={toggleSortOrder}
                         selectItem={selectItem}
                         setSelectItem={setSelectItem}
                         startEditing={startEditing}

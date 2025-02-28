@@ -33,7 +33,6 @@ export async function GET(req: Request) {
     if (status && status !== 'all') {
       whereClause.status = status.toLowerCase() === "active" ? "ACTIVE" : "INACTIVE";
     }
-    console.log("where:", whereClause, "orderBy:", orderByClause)
 
     if (!query && !categoryId && !status) {
       products = await prisma.product.findMany({

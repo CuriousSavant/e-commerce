@@ -14,8 +14,10 @@ export const useProducts = () => {
 
     const [query, setQuery] = useState<string>('');
     const [categoryFilter, setCategoryFilter] = useState<string>('all');
-    const [statusFilter, setStatusFilter] = useState<string>('all')
-    const [priceFilter, setPriceFilter] = useState<string>('all')
+    const [statusFilter, setStatusFilter] = useState<string>('all');
+    const [priceFilter, setPriceFilter] = useState<string>('all');
+
+    const [loading, setLoading] = useState<boolean>(true);
 
     const { imageUrl } = useImageUpload();
 
@@ -29,23 +31,25 @@ export const useProducts = () => {
     });
 
     const fetchProducts = () => {
-        axios
-        .get(`/api/product?q=${query}&sortOrder=${sortOrder}&status=${statusFilter}&price=${priceFilter}`)
+        setLoading(true)
+        axios.get(`/api/product?q=${query}&sortOrder=${sortOrder}&status=${statusFilter}&price=${priceFilter}`)
             .then((res) => setProducts(res.data))
-            .catch((err) => console.error(err));
+            .catch((err) => console.error(err))
+            .finally(() => setLoading(false))
     };
 
     const fetchCategories = () => {
         axios.get('/api/categories')
             .then((res) => setCategories(res.data))
-            .catch((err) => console.error(err));
+            .catch((err) => console.error(err))
     };
 
     // ดึง สินค้า จาก API
     useEffect(() => {
-        const delayedFetch = debounce(fetchProducts, 500);
-        delayedFetch(); // delay เพื่อลดการเรียก api ที่ไม่จำเป็น
-        return () => delayedFetch.cancel();
+        // const delayedFetch = debounce(fetchProducts, 500);
+        // delayedFetch(); // delay เพื่อลดการเรียก api ที่ไม่จำเป็น
+        // return () => delayedFetch.cancel();
+        fetchProducts();
     }, [sortOrder, query, statusFilter, priceFilter])
 
     // ดึง หมวดหมู่ จาก API
@@ -55,7 +59,6 @@ export const useProducts = () => {
 
     const toggleSortOrder = () => {
         setSortOrder((prev) => (prev === 'asc' ? 'desc' : 'asc'));
-        console.log(sortOrder)
     };
 
     const properties: any[] = [];
@@ -133,6 +136,6 @@ export const useProducts = () => {
         handleCreateProductAndUpdate, setQuery,
         setSelectItem, categoryFilter, setCategoryFilter,
         statusFilter, setStatusFilter, priceFilter,
-        setPriceFilter, setSlug,
+        setPriceFilter, setSlug, loading, setLoading,
     };
 };
