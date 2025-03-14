@@ -3,6 +3,7 @@ import axios from "axios";
 import { Category, Product } from "@/types/product";
 import { useImageUpload } from "./useImageUpload";
 import { debounce } from "lodash";
+import Swal from 'sweetalert2'
 
 export const useProducts = () => {
     const [products, setProducts] = useState<Product[]>([]); // เก็บสินค้าที่ดึงมาจาก API
@@ -19,7 +20,12 @@ export const useProducts = () => {
 
     const [loading, setLoading] = useState<boolean>(true);
 
-    const { imageUrl } = useImageUpload();
+    const {
+        imageUrl, setImageUrl, handleUploadImage,
+        loadingImage, selectedImage, setSelectedImage,
+        setSnackbarOpen, snackbarOpen, deletedImage,
+        deletedIndex, setDeletedImage, setDeletedIndex,
+    } = useImageUpload();
 
     const [productForm, setProductForm] = useState<ProductFormStateProps>({ // state สำหรับ form create user
         productName: "",
@@ -46,10 +52,9 @@ export const useProducts = () => {
 
     // ดึง สินค้า จาก API
     useEffect(() => {
-        // const delayedFetch = debounce(fetchProducts, 500);
-        // delayedFetch(); // delay เพื่อลดการเรียก api ที่ไม่จำเป็น
-        // return () => delayedFetch.cancel();
-        fetchProducts();
+        const delayedFetch = debounce(fetchProducts, 500);
+        delayedFetch(); // delay เพื่อลดการเรียก api ที่ไม่จำเป็น
+        return () => delayedFetch.cancel();
     }, [sortOrder, query, statusFilter, priceFilter])
 
     // ดึง หมวดหมู่ จาก API
@@ -61,17 +66,17 @@ export const useProducts = () => {
         setSortOrder((prev) => (prev === 'asc' ? 'desc' : 'asc'));
     };
 
-    const properties: any[] = [];
-    if (productForm.categoryId) {
-        let selCatInfo = categories.find((cat) => cat.id === productForm.categoryId);
-        if (selCatInfo) {
-            properties.push(...(selCatInfo?.properties || []));
-            while (selCatInfo?.parentId) {
-                const parentCat = categories.find((cat) => cat.id === selCatInfo?.parentId);
-                selCatInfo = parentCat;
-            }
-        }
-    }
+    // const properties: any[] = [];
+    // if (productForm.categoryId) {
+    //     let selCatInfo = categories.find((cat) => cat.id === productForm.categoryId);
+    //     if (selCatInfo) {
+    //         properties.push(...(selCatInfo?.properties || []));
+    //         while (selCatInfo?.parentId) {
+    //             const parentCat = categories.find((cat) => cat.id === selCatInfo?.parentId);
+    //             selCatInfo = parentCat;
+    //         }
+    //     }
+    // }
 
     const startEditing = (product: Product) => {
         setProductForm({
@@ -82,6 +87,7 @@ export const useProducts = () => {
             stock: product.stock,
             categoryId: product.categoryId,
         });
+        setImageUrl(product.image || []);
         setSlug(product.slug);
         setFormOpen(true);
     };
@@ -97,6 +103,7 @@ export const useProducts = () => {
         });
         setSlug(null);
         setFormOpen(false);
+        fetchProducts();
     };
 
     const handleCreateProductAndUpdate = async (e: React.FormEvent) => {
@@ -125,6 +132,84 @@ export const useProducts = () => {
         }
     };
 
+    const handleDeleteProduct = async (slug: string, productName: string) => {
+        try {
+            const result = await Swal.fire({
+                title: "คุณแน่ใจหรือไม่?",
+                text: `คุณต้องการลบสินค้าชิ้นนี้ใช่ไหม: ${productName}`,
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonText: "ใช่, ต้องการลบสินค้าชิ้นนี้",
+                cancelButtonText: "ยกเลิก",
+                confirmButtonColor: "#ed1616",
+            });
+
+            if (result.isConfirmed) {
+                await axios.delete(`/api/product/${slug}`)
+                setProducts((prev) => prev.filter((product) => product.slug !== slug))
+                Swal.fire("ลบแล้ว!", "สินค้าชื้นนี้ถูกลบไปแล้ว", "success");
+            }
+        } catch (err) {
+            console.error(err)
+            Swal.fire("เกิดข้อผิดพลาด!", "เกิดข้อผิดพลาด ไม่สามารถลบสินค้าชื้นนี้ได้", "error");
+        }
+    }
+
+    const handleAllDelete = () => {
+        Swal.fire({
+            title: "คุณแน่ใจหรือไม่?",
+            text: `คุณต้องการลบ ${selectItem.length} รายการที่เลือกหรือไม่?`,
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonText: "ใช่, ลบรายการเหล่านี้!",
+            cancelButtonText: "ยกเลิก",
+            confirmButtonColor: "#ed1616",
+        }).then((result) => {
+            if (result.isConfirmed) {
+                axios.delete(`/api/product/`, { data: { slugs: selectItem } }).catch((error) => console.error(error))
+                    // วิธีส่งข้อมูลที่ต้องการลบไปหลายตัว เนื่องจาก params รับค่าได้แค่ตัวเดียว
+                    .then(() => {
+                        setProducts((prev) => prev.filter(p => !selectItem.includes(p.slug)))
+                        fetchProducts();
+                        setSelectItem([]);
+                    }).then(() => {
+                        Swal.fire(
+                            "Deleted!",
+                            `${selectItem.length} items have been deleted.`,
+                            "success"
+                        );
+                    })
+                    .catch(() => {
+                        Swal.fire(
+                            "Error!",
+                            "Some items could not be deleted. Please try again.",
+                            "error"
+                        )
+                    });
+            }
+        });
+    }
+
+    const handleRemoveImage = (index: number) => {
+        const updatedImages = [...imageUrl];
+        const removedImage = updatedImages.splice(index, 1)[0]; // เก็บรูปที่ถูกลบ
+        setImageUrl(updatedImages);
+        setDeletedImage(removedImage);
+        setDeletedIndex(index);
+        setSnackbarOpen(true);
+    };
+
+    const handleUndoDelete = () => {
+        if (deletedImage !== null && deletedIndex !== null) {
+            const updatedImages = [...imageUrl];
+            updatedImages.splice(deletedIndex, 0, deletedImage); // คืนรูปกลับที่เดิม
+            setImageUrl(updatedImages);
+            setDeletedImage(null);
+            setDeletedIndex(null);
+        }
+        setSnackbarOpen(false);
+    };
+
     return {
         products, setProducts,
         categories,
@@ -137,5 +222,9 @@ export const useProducts = () => {
         setSelectItem, categoryFilter, setCategoryFilter,
         statusFilter, setStatusFilter, priceFilter,
         setPriceFilter, setSlug, loading, setLoading,
+        handleAllDelete, handleDeleteProduct, imageUrl,
+        setImageUrl, handleRemoveImage, handleUndoDelete,
+        handleUploadImage, loadingImage, selectedImage, setSelectedImage,
+        setSnackbarOpen, snackbarOpen, deletedImage,
     };
 };

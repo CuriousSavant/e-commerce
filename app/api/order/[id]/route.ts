@@ -1,12 +1,12 @@
 import { NextRequest, NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
-import { StatusOrder } from "@prisma/client";
+import { STATUS_ORDER } from "@prisma/client";
 
 export async function GET(
   req: NextRequest,
   { params }: { params: { id: string } }
 ) {
-  const orderId = params.id;
+  const orderId = Number(params.id);
   const { searchParams } = new URL(req.url);
   const userId = searchParams.get("userId");
 
@@ -18,7 +18,7 @@ export async function GET(
     const orderItem = await prisma.order.findMany({
       where: { id: orderId },
       include: {
-        orderItems: {
+        items: {
           include: {
             product: true,
           },
@@ -31,8 +31,8 @@ export async function GET(
     }
 
     return NextResponse.json(orderItem);
-  } catch (error: any) {
-    return NextResponse.json({ error: error.message }, { status: 500 });
+  } catch (error) {
+    return NextResponse.json({ msg: "Failed to fetch order", error: error }, { status: 500 });
   }
 }
 
@@ -40,22 +40,75 @@ export async function PUT(
   request: Request,
   { params }: { params: { id: string } }
 ) {
-  const orderId = params.id;
-  const { status } = await request.json();
+  const orderId = Number(params.id);
+  const { status, addressId, items } = await request.json();
 
   try {
-    if (!Object.values(StatusOrder).includes(status)) {
+    if (!Object.values(STATUS_ORDER).includes(status)) {
       return NextResponse.json({ error: "Invalid status" }, { status: 400 });
     }
 
-    const order = await prisma.order.update({
+    // ตรวจสอบว่าสินค้ามีอยู่หรือไม่
+    if (!Array.isArray(items)) {
+      return NextResponse.json({ error: "Invalid items format" }, { status: 400 });
+    }
+
+    // อัพเดทสถานะ และ ที่หมายเลขที่อยู่
+    await prisma.order.update({
       where: { id: orderId },
-      data: { status },
+      data: {
+        status,
+        addressId,
+      },
     });
 
-    return NextResponse.json(order);
-  } catch (error: any) {
-    return NextResponse.json({ error: error.message }, { status: 500 });
+    // ดึงสินค้าปัจจุบันใน OrderItem
+    const existingOrderItems = await prisma.orderItem.findMany({
+      where: { orderId },
+    });
+
+    // แปลงเป็น Map เพื่อง่ายต่อการตรวจสอบ
+    const existingItemsMap = new Map(existingOrderItems.map(item => [item.productId, item]));
+
+    // เตรียมรายการสินค้าใหม่
+    const updatedOrderItems = items.map(async (item: any) => {
+      const productId = item.product.id;
+      const quantity = item.quantity;
+      const price = item.product.price;
+      const total = price * quantity;
+
+      if (existingItemsMap.has(productId)) {
+        // อัปเดตจำนวนสินค้าในคำสั่งซื้อเดิม
+        return prisma.orderItem.update({
+          where: { id: existingItemsMap.get(productId)!.id },
+          data: { quantity, total },
+        });
+      } else {
+        // เพิ่มสินค้าใหม่ลงคำสั่งซื้อ
+        return prisma.orderItem.create({
+          data: {
+            orderId,
+            productId,
+            quantity,
+            price,
+            total,
+          },
+        });
+      }
+    });
+
+    // ลบสินค้าที่ถูกลบออกจากคำสั่งซื้อ
+    const updatedProductIds = new Set(items.map(item => item.product.id));
+    const removedItems = existingOrderItems.filter(item => !updatedProductIds.has(item.productId));
+
+    await Promise.all([
+      ...updatedOrderItems,
+      ...removedItems.map(item => prisma.orderItem.delete({ where: { id: item.id } })),
+    ]);
+
+    return NextResponse.json({ msg: "Order updated successfully" });
+  } catch (error) {
+    return NextResponse.json({ msg: "Failed to update order", error: error }, { status: 500 });
   }
 }
 
@@ -63,7 +116,7 @@ export async function DELETE(
   request: Request,
   { params }: { params: { id: string } }
 ) {
-  const orderId = params.id;
+  const orderId = Number(params.id);
   try {
     await prisma.orderItem.deleteMany({
       where: { orderId: orderId },
@@ -73,7 +126,7 @@ export async function DELETE(
       where: { id: orderId },
     });
     return NextResponse.json({ message: "Order deleted successfully" });
-  } catch (error: any) {
-    return NextResponse.json({ error: error.message }, { status: 500 });
+  } catch (error) {
+    return NextResponse.json({ msg: "Failed to delete order", error: error }, { status: 500 });
   }
 }

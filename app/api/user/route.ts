@@ -2,12 +2,11 @@ import prisma from "@/lib/prisma";
 import { NextResponse } from "next/server";
 import bcrypt from "bcrypt";
 import { SortType } from "@/types/components/filter-sort";
-import { last } from "lodash";
 
 export async function GET(req: Request) {
   try {
     const { searchParams } = new URL(req.url);
-    const query = searchParams.get("query") || "";
+    const query = searchParams.get("query")?.trim() || "";
     const sortOrder = searchParams.get("sortOrder") || "asc";
     const role = searchParams.get("role") || "all";
 
@@ -46,19 +45,21 @@ export async function GET(req: Request) {
     });
 
     return NextResponse.json(users, { status: 200 });
-  } catch (err) {
-    return NextResponse.json({ msg: err }, { status: 500 });
+  } catch (error) {
+    return NextResponse.json({ msg: "Failed to fetch users", error: error }, { status: 500 });
   }
 }
 
 export async function POST(req: Request) {
   try {
-    const { userName, lastName, email, phone, birthday, role, password, confirmPassword } =
+    const { firstname, lastname, email, phone, birthday, role, password, confirmPassword } =
       await req.json();
 
     const existingUser = await prisma.user.findUnique({
       where: { email },
     });
+
+    // console.log(firstname, lastname, email, phone, birthday, role, password, confirmPassword)
 
     if (existingUser) {
       return NextResponse.json(
@@ -68,23 +69,18 @@ export async function POST(req: Request) {
     }
 
     if (password !== confirmPassword) {
-      return NextResponse.json(
-        { error: "รหัสผ่านไม่ตรงกัน" },
-        { status: 400 }
-      );
+      return NextResponse.json({ error: "รหัสผ่านไม่ตรงกัน" }, { status: 400 });
     }
-
-    console.log(userName, lastName, email, phone, birthday, role, password, confirmPassword)
 
     const hashedPassword = await bcrypt.hash(password, 10);
 
     const user = await prisma.user.create({
       data: {
-        firstname: userName,
-        lastname: lastName,
+        firstname,
+        lastname,
         email: email.toLowerCase(),
-        phone: phone,
-        birthday: birthday,
+        phone,
+        birthday,
         role: role || "member",
         password: hashedPassword,
       },
@@ -92,6 +88,6 @@ export async function POST(req: Request) {
 
     return NextResponse.json(user, { status: 201 });
   } catch (error) {
-    return NextResponse.json({ error: "Error creating user" }, { status: 500 });
+    return NextResponse.json({ msg: "Failed to create user", error: error }, { status: 500 });
   }
 }

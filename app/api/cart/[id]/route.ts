@@ -6,11 +6,11 @@ export const GET = async (
   { params }: { params: { id: string } }
 ) => {
   try {
-    const cartProduct = await prisma.cartItem.findUnique({
+    const cartItems = await prisma.cartItem.findUnique({
       where: { id: Number(params.id) },
       include: { product: true },
     });
-    return NextResponse.json(cartProduct);
+    return NextResponse.json(cartItems);
   } catch (err) {
     return NextResponse.json({ msg: err }, { status: 500 });
   }

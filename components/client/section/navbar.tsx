@@ -106,7 +106,7 @@ const Navbar = () => {
                                 <MuiLink
                                     key={index}
                                     component={Button}
-                                    // href={link.href || "#"}
+                                    href={link.href || "#"}
                                     onClick={() => setIsDialogOpen(!isDialogOpen)}
                                     sx={{
                                         textDecoration: "none",

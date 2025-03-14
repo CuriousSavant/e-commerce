@@ -23,97 +23,27 @@ image {
   min-height: 100%;
 }
 
-/* label {
-  @apply block text-base font-medium
-}
-
-input, textarea {
-  @apply outline-none border focus:border-2 focus:border-blue-800 rounded-sm p-2 px-3 w-full bg-white
-}
-
-select {
-  @apply border p-2 rounded-sm outline-none focus:border-2 focus:border-blue-600
-}
-
-table.basic {
-  @apply w-full;
-}
-
-table.basic thead tr td {
-  @apply border bg-gray-200 py-2 px-2 uppercase;
-}
-
-table.basic tr td {
-  @apply border border-gray-200 py-2 px-2;
-}
-
-table.basic tbody tr:hover {
-  @apply transition duration-150 bg-gray-200
-} */
-
-/* base property elm for button */
-/* button {
-  @apply py-1 px-3 transition duration-200 ease-in-out text-white flex items-center rounded-sm
-} */
-
-/* primary btn */
-/* button.primary {
-  @apply bg-primaryBtn hover:bg-primaryBtnHover
-} */
-
-/* edit btn */
-/* button.edit {
-  @apply border border-gray-300 text-neutral-600
-} */
-
-/* delete btn */
-/* button.del {
-  @apply bg-red-200 text-red-500 hover:bg-red-500 hover:text-white
-} */
-
-/* cancel btn */
-/* button.cancel {
-  @apply bg-gray-500
-} */
-
-/* Link elm */
-/* a {
-  @apply py-1.5 px-3 inline-flex rounded-sm text-white items-center
-}
-
-a.edit {
-  @apply border border-gray-300 text-neutral-600
-}
-
-a.primary {
-  @apply bg-primaryBtn hover:bg-primaryBtnHover
-}
-
-a.del {
-  @apply bg-red-200 text-red-500 hover:bg-red-500 hover:text-white
-} */
-
 ::-webkit-scrollbar {
-    width: 8px; /* ความกว้างในแนวนอน */
-    height: 10px; /* ความกว้างในแนวตั้ง */
-}
-
-::-webkit-scrollbar-thumb {
-    background-color: #888;
-    border-radius: 4px;
-    border: 2px solid transparent;
-    background-clip: content-box;
-}
-
-::-webkit-scrollbar-thumb:hover {
-    background-color: #555;
+  width: 8px;
 }
 
 ::-webkit-scrollbar-track {
-    background-color: #f1f1f1;
-    border-radius: 4px;
+  background: #1e1e2f;
+  border-radius: 10px;
 }
 
-::-webkit-scrollbar-track:hover {
-    background-color: #e0e0e0;
+::-webkit-scrollbar-thumb {
+  background: #4a4a6a;
+  border-radius: 10px; 
+  border: 2px solid #1e1e2f;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #63638a;
+}
+
+/* Firefox */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: #4a4a6a #1e1e2f;
 }

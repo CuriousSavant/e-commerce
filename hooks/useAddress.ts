@@ -2,31 +2,41 @@ import { useState, useEffect } from "react";
 import axios from "axios";
 import { Address } from "@/types/address";
 
-interface UseAddressReturn {
-  allAddress: Address[];
-  formData: Address;
-  formErrors: { [key: string]: boolean };
-  loading: boolean;
-  isEditMode: boolean;
-  isFormOpen: boolean;
-  setIsFormOpen: (open: boolean) => void;
-  handleChange: (
-    field: string
-  ) => (e: React.ChangeEvent<HTMLInputElement>) => void;
-  handleSubmit: (e: React.FormEvent<HTMLFormElement>) => void;
-  handleEdit: (address: Address) => void;
-  handleDelete: (id: number) => void;
-  handleClose: () => void;
-  handleSetDefaultAddress: (addressId: number) => void;
-  defaultAddress: Address[];
-}
+// interface UseAddressReturn {
+//   allAddress: Address[];
+//   formData: Address;
+//   formErrors: { [key: string]: boolean };
+//   loading: boolean;
+//   isEditMode: boolean;
+//   isFormOpen: boolean;
+//   setIsFormOpen: (open: boolean) => void;
+//   handleChange: (
+//     field: string
+//   ) => (e: React.ChangeEvent<HTMLInputElement>) => void;
+//   handleSubmit: (e: React.FormEvent<HTMLFormElement>) => void;
+//   handleEdit: (address: Address) => void;
+//   handleDelete: (id: number) => void;
+//   handleClose: () => void;
+//   handleSetDefaultAddress: (addressId: number) => void;
+//   defaultAddress: Address;
+// }
 
-const useAddress = (): UseAddressReturn => {
+const useAddress = () => {
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [loading, setLoading] = useState(false);
   const [allAddress, setAllAddress] = useState<Address[]>([]);
   const [isEditMode, setIsEditMode] = useState(false);
-  const [defaultAddress, setDefaultAddress] = useState<Address[]>([]);
+  const [defaultAddress, setDefaultAddress] = useState<Address>({
+    fullName: "",
+    phone: "",
+    address: "",
+    subDistrict: "",
+    district: "",
+    province: "",
+    postalCode: "",
+    type: "",
+    isDefault: false,
+  });
 
   const [formData, setFormData] = useState<Address>({
     fullName: "",
@@ -42,7 +52,7 @@ const useAddress = (): UseAddressReturn => {
 
   const [formErrors, setFormErrors] = useState<{ [key: string]: boolean }>({
     fullName: false,
-    phoneNumber: false,
+    phone: false,
     address: false,
     subDistrict: false,
     district: false,
@@ -55,7 +65,7 @@ const useAddress = (): UseAddressReturn => {
     try {
       axios.get("/api/address").then((res) => {
         setAllAddress(res.data);
-        setDefaultAddress(res.data.filter((i: Address) => i.isDefault));
+        setDefaultAddress(res.data.find((i: Address) => i.isDefault));
       });
     } catch (err) {
       console.error("Error fetching addresses:", err);
@@ -71,7 +81,7 @@ const useAddress = (): UseAddressReturn => {
       // ให้ใส่ค่าไม่เกิน 5 ตัว
       if (field === "postalCode" && value.length > 5) return;
       // format phoneNumber
-      if (field === "phoneNumber") {
+      if (field === "phone") {
         value = value.replace(/\D/g, "");
         if (value.length <= 3) value = value;
         else if (value.length <= 6)
@@ -114,8 +124,8 @@ const useAddress = (): UseAddressReturn => {
         hasError = true;
       }
 
-      if (key === "phoneNumber" && !/^\d{3} \d{3} \d{4}$/.test(value)) {
-        // ถ้า key phoneNumber ไม่เท่ากับ format( 012 345 678 ) ให้ error
+      if (key === "phone" && !/^\d{3} \d{3} \d{4}$/.test(value)) {
+        // ถ้า key phoneNumber ไม่เท่ากับ format( 012 345 6789 ) ให้ error
         errors[key] = true;
         hasError = true;
       }
@@ -182,7 +192,7 @@ const useAddress = (): UseAddressReturn => {
     });
     setFormErrors({
       fullName: false,
-      phoneNumber: false,
+      phone: false,
       address: false,
       subDistrict: false,
       district: false,

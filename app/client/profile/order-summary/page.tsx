@@ -73,10 +73,10 @@ const OrderSummary = () => {
     setTabIndex(newValue);
   };
 
-  const handleCancelOrder = async (orderId: string) => {
+  const handleCancelOrder = async (orderId: number, productName: string) => {
     try {
       const result = await Swal.fire({
-        title: `คุณต้องการยกเลิกสินค้าหมายเลขนี้ใช่ไหม #${orderId}`,
+        title: `คุณต้องการยกเลิกสินค้าหมายเลขนี้ใช่ไหม #${productName}`,
         icon: "warning",
         showCancelButton: true,
         confirmButtonText: "ใช่",

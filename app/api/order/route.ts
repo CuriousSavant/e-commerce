@@ -1,27 +1,33 @@
 import { NextRequest, NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
-import { StatusOrder } from "@prisma/client";
+import { STATUS_ORDER } from "@prisma/client";
 
 export async function GET(req: NextRequest) {
-  // const { searchParams } = new URL(req.url);
-  // const userId = searchParams.get("userId");
+  const { searchParams } = new URL(req.url);
+  const query = searchParams.get("q")?.trim();
+  const sortOrder = searchParams.get("sortOrder") || "asc";
+  const filterStatus = searchParams.get("filterStatus");
 
-  // if (!userId) {
-  //   return NextResponse.json({ msg: "UserId is required" }, { status: 400 });
-  // }
+  let whereClause: any = {};
+
+  if (filterStatus && filterStatus !== 'all') whereClause.status = filterStatus.toUpperCase();
+  if (query) whereClause.orderId = { contains: query, mode: "insensitive" };
 
   try {
     const orders = await prisma.order.findMany({
-      // where: { userId: Number(userId) },
+      where: whereClause,
+      orderBy: { createdAt: sortOrder } as any,
       include: {
-        orderItems: {
+        items: {
           include: { product: true },
         },
+        user: true,
+        address: true,
       },
     });
     return NextResponse.json(orders);
-  } catch (err: any) {
-    return NextResponse.json({ msg: err }, { status: 500 });
+  } catch (error) {
+    return NextResponse.json({ msg: "Failed to fetch orders", error: error }, { status: 500 });
   }
 }
 
@@ -32,7 +38,7 @@ function generateOrderId(): string {
 }
 
 export async function POST(request: Request) {
-  const { userId, orderItems, totalAmount } = await request.json();
+  const { userId, orderItems, totalAmount, addressId } = await request.json();
 
   if (!Array.isArray(orderItems) || orderItems.length === 0) {
     return NextResponse.json(
@@ -46,12 +52,12 @@ export async function POST(request: Request) {
     const result = await prisma.$transaction(async (tx) => {
       const order = await tx.order.create({
         data: {
-          id: generateOrderId(),
+          orderId: generateOrderId(),
           userId,
-          status: StatusOrder.PENDING,
-          orderDate: new Date(),
-          totalAmount,
-          orderItems: {
+          status: STATUS_ORDER.PENDING,
+          total: totalAmount,
+          addressId,
+          items: {
             create: await Promise.all(
               orderItems.map(
                 async (item: { productId: number; quantity: number }) => {
@@ -65,18 +71,17 @@ export async function POST(request: Request) {
                     );
                   }
 
-                  // Reserve stock (reduce stock temporarily)
+                  // ลดสต๊อกชั่วคราว
                   await tx.product.update({
                     where: { id: item.productId },
                     data: { stock: product.stock - item.quantity },
                   });
 
                   return {
-                    id: generateOrderId(),
                     productId: item.productId,
                     quantity: item.quantity,
                     price: product.price,
-                    totalPrice: product.price * item.quantity,
+                    total: product.price * item.quantity,
                   };
                 }
               )
@@ -99,10 +104,8 @@ export async function POST(request: Request) {
     });
 
     return NextResponse.json(result);
-  } catch (err: any) {
-    console.error(err);
-
-    // Rollback stock adjustment if there's an error
+  } catch (error) {
+    // คืนจำนวนใน stock คืนหากโดยยกเลิก หรือ มีข้อผิดพลาด
     await Promise.all(
       orderItems.map(async (item: { productId: number; quantity: number }) => {
         const product = await prisma.product.findUnique({
@@ -118,6 +121,6 @@ export async function POST(request: Request) {
       })
     );
 
-    return NextResponse.json({ error: err.message }, { status: 500 });
+    return NextResponse.json({ msg: "Failed to create order", error: error }, { status: 500 });
   }
 }

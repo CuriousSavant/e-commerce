@@ -27,11 +27,7 @@ export async function GET(
 
     return NextResponse.json(wishlistItem);
   } catch (error) {
-    console.error(error);
-    return NextResponse.json(
-      { error: "ไม่สามารถดึงข้อมูลรายการโปรดได้" },
-      { status: 500 }
-    );
+    return NextResponse.json({ msg: "Failed to fetch wishlist", error: error }, { status: 500 });
   }
 }
 
@@ -62,11 +58,7 @@ export async function PUT(
 
     return NextResponse.json(updatedItem);
   } catch (error) {
-    console.error(error);
-    return NextResponse.json(
-      { error: "ไม่สามารถแก้ไขรายการโปรดได้" },
-      { status: 500 }
-    );
+    return NextResponse.json({ msg: "Failed to update wishlist", error: error }, { status: 500 });
   }
 }
 
@@ -91,10 +83,6 @@ export async function DELETE(
       { status: 200 }
     );
   } catch (error) {
-    console.error("Error deleting wishlist item:", error);
-    return NextResponse.json(
-      { error: "Internal Server Error" },
-      { status: 500 }
-    );
+    return NextResponse.json({ msg: "Failed to delete wishlist", error: error }, { status: 500 });
   }
 }

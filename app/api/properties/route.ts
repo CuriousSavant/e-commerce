@@ -5,8 +5,8 @@ export const GET = async () => {
   try {
     const propertery = await prisma.properties.findMany();
     return NextResponse.json(propertery);
-  } catch (err) {
-    return NextResponse.json({ msg: err }, { status: 500 });
+  } catch (error) {
+    return NextResponse.json({ msg: "Failed to fetch properties", error: error }, { status: 500 });
   }
 };
 
@@ -20,7 +20,7 @@ export const POST = async (req: Request) => {
       },
     });
     return NextResponse.json(createProperty);
-  } catch (err) {
-    return NextResponse.json({ msg: err }, { status: 500 });
+  } catch (error) {
+    return NextResponse.json({ msg: "Failed to create properties", error: error }, { status: 500 });
   }
 };

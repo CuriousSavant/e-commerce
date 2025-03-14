@@ -36,30 +36,10 @@ export const useImageUpload = () => {
         }
     };
 
-    const handleRemoveImage = (index: number) => {
-        const updatedImages = [...imageUrl];
-        const removedImage = updatedImages.splice(index, 1)[0]; // เก็บรูปที่ถูกลบ
-        setImageUrl(updatedImages);
-        setDeletedImage(removedImage);
-        setDeletedIndex(index);
-        setSnackbarOpen(true);
-    };
-
-    const handleUndoDelete = () => {
-        if (deletedImage !== null && deletedIndex !== null) {
-            const updatedImages = [...imageUrl];
-            updatedImages.splice(deletedIndex, 0, deletedImage); // คืนรูปกลับที่เดิม
-            setImageUrl(updatedImages);
-            setDeletedImage(null);
-            setDeletedIndex(null);
-        }
-        setSnackbarOpen(false);
-    };
-
     return {
         imageUrl, loadingImage, selectedImage, snackbarOpen,
         setSelectedImage, setSnackbarOpen,
-        handleUploadImage, handleRemoveImage, handleUndoDelete,
-        setImageUrl,
+        handleUploadImage, setImageUrl, setDeletedImage,
+        setDeletedIndex, deletedImage, deletedIndex,
     };
 };

@@ -32,7 +32,7 @@ export interface Category {
   name: string;
   parent: number | null;
   parentId: number | null;
-  properties: Propertie[]
+  status: 'ACTIVE' | 'INACTIVE';
   product: Product;
   createdAt?: Date;
   updatedAt?: Date;

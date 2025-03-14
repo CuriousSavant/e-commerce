@@ -18,7 +18,7 @@ import { useRouter } from 'next/navigation';
 interface OrderListProps {
     order: Order;
     formatStatus: (status: string) => { label: string, color: string };
-    handleCancelOrder: (orderId: string, productName: string) => void;
+    handleCancelOrder: (orderId: number, productName: string) => void;
 }
 
 const OrderList: React.FC<OrderListProps> = ({
@@ -73,7 +73,7 @@ const OrderList: React.FC<OrderListProps> = ({
                             วันที่สั่งซื้อ
                         </Typography>
                         <Typography fontWeight="600">
-                            {format(new Date(order.orderDate), "dd MMM yyyy, HH:mm")}
+                            {format(new Date(order.createdAt), "dd MMM yyyy, HH:mm")}
                         </Typography>
                     </Box>
                     <Chip
@@ -96,7 +96,7 @@ const OrderList: React.FC<OrderListProps> = ({
             </Box>
 
             {/* Product Items */}
-            {order.orderItems.map((citem) => (
+            {order.items.map((citem) => (
                 <Card
                     key={citem.product.id}
                     variant="outlined"
@@ -162,7 +162,7 @@ const OrderList: React.FC<OrderListProps> = ({
                                     color="primary"
                                     sx={{ fontSize: "1rem" }}
                                 >
-                                    ฿{citem.totalPrice.toLocaleString("th-TH")}
+                                    ฿{citem.total.toLocaleString("th-TH")}
                                 </Typography>
                             </Box>
                         </Box>
@@ -180,7 +180,7 @@ const OrderList: React.FC<OrderListProps> = ({
                         fontWeight="bold"
                         fontSize={'18px'}
                     >
-                        ฿{order.totalAmount.toLocaleString('th-TH')}
+                        ฿{order.total.toLocaleString('th-TH')}
                     </Typography>
                 </Box>
                 <Box>
@@ -189,16 +189,16 @@ const OrderList: React.FC<OrderListProps> = ({
                         variant="outlined"
                         color="error"
                         size='small'
-                        onClick={() => handleCancelOrder(order.id,
-                            order.orderItems.filter((item) => item.product.title).filter((item) => item.product.title).join(', ')
-                        )}
+                        // onClick={() => handleCancelOrder(order.id,
+                            // order.items.filter((item) => item.product.title).filter((item) => item.product.title).join(', ')
+                        // )}
                     >
                         ยกเลิกคำสั่งซื้อ
                     </Button>}
                     {order.status === 'COMPLETED' as any && <Button
                         variant="outlined"
                         size='small'
-                        onClick={() => router.push(`/client/${order.orderItems.filter((item) => item).map(order => order.product.slug)}`)}
+                        // onClick={() => router.push(`/client/${order.items.filter((item) => item).map(order => order.product.slug)}`)}
                     >
                         สั่งซื้ออีกครั้ง
                     </Button>}

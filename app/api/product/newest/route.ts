@@ -11,7 +11,6 @@ export async function GET() {
         })
         return NextResponse.json(products)
     } catch (error) {
-        console.error('Error fetching newest products:', error)
-        return NextResponse.json({ status: 500, statusText: 'Internal server error' })
+        return NextResponse.json({ msg: "Failed to fetch newest products", error: error }, { status: 500 })
     }
 }

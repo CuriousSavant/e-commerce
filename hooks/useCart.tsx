@@ -6,6 +6,7 @@ import { CartItem } from '@/types/cart';
 import Swal from 'sweetalert2'
 import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
+import useAddress from './useAddress';
 
 type CartQuantities = Record<number, number>;
 
@@ -17,6 +18,8 @@ const useCart = () => {
     const [loading, setLoading] = useState<boolean>(false)
 
     const { data: session } = useSession()
+    const { defaultAddress } = useAddress();
+
     const router = useRouter()
 
     useEffect(() => {
@@ -154,7 +157,7 @@ const useCart = () => {
                 quantity: itemQuantities[item.productId],
             }));
 
-            axios.post('/api/order', { userId: session?.user.id, orderItems, totalAmount: cartTotalPrice, }).then(() => {
+            axios.post('/api/order', { userId: session?.user.id, orderItems, totalAmount: cartTotalPrice, addressId: defaultAddress.id }).then(() => {
                 Swal.fire({
                     icon: "success",
                     title: "ทำการสั่งซื้อเรียบร้อยแล้ว🥳",

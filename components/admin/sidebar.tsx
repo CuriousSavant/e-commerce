@@ -14,7 +14,6 @@ const SidebarMenu: React.FC = () => {
         { text: "Categories", icon: <Category />, href: "/admin/categories" },
         { text: "Brands", icon: <Storefront />, href: "/admin/brands" },
         { text: "Orders", icon: <ShoppingCart />, href: "/admin/orders" },
-        { text: "Admin", icon: <AdminPanelSettings />, href: "/admin/admins" },
     ]
 
     const linkStyles = (path: string) => {

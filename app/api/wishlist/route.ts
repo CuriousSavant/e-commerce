@@ -18,11 +18,7 @@ export async function GET(request: Request) {
 
     return NextResponse.json(wishlistItems);
   } catch (error) {
-    console.error(error);
-    return NextResponse.json(
-      { error: "ไม่สามารถดึงข้อมูลรายการโปรดได้" },
-      { status: 500 }
-    );
+    return NextResponse.json({ msg: "Failed to fetch wishlist", error: error }, { status: 500 });
   }
 }
 
@@ -57,10 +53,7 @@ export async function POST(request: Request) {
     });
 
     return NextResponse.json(wishlistItem, { status: 201 });
-  } catch (error: any) {
-    return NextResponse.json(
-      { error: "Failed to add to wishlist" },
-      { status: 500 }
-    );
+  } catch (error) {
+    return NextResponse.json({ msg: "Failed to create wishlist", error: error }, { status: 500 });
   }
 }

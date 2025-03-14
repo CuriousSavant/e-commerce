@@ -7,27 +7,33 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-enum StatusProduct {
+enum STATUS_PRODUCT {
   ACTIVE
   INACTIVE
 }
 
+enum STATUS_ORDER {
+  PENDING
+  COMPLETED
+  CANCELED
+}
+
 model Product {
-  id          Int           @id @default(autoincrement())
+  id          Int            @id @default(autoincrement())
   title       String
-  description String?       @db.VarChar(555)
+  description String?        @db.VarChar(555)
   image       Json?
   price       Float
   brand       String?
-  stock       Int           @default(0)
+  stock       Int            @default(0)
   categoryId  Int?
-  slug        String?       @unique
-  category    Category?     @relation(fields: [categoryId], references: [id])
-  status      StatusProduct @default(ACTIVE)
+  slug        String?        @unique
+  status      STATUS_PRODUCT @default(ACTIVE)
 
   createdAt DateTime @default(now())
   updatedAt DateTime @default(now()) @updatedAt
 
+  category   Categories?  @relation(fields: [categoryId], references: [id])
   feature    Feature[]
   orderItem  OrderItem[]
   cartItem   CartItem[]
@@ -46,17 +52,18 @@ model Feature {
   updatedAt   DateTime @updatedAt
 }
 
-model Category {
-  id         Int       @id @default(autoincrement())
+model Categories {
+  id         Int            @id @default(autoincrement())
   name       String
   categortId Int?
   parentId   Int?
-  parent     Category? @relation("CategoryToCategory", fields: [parentId], references: [id])
+  parent     Categories?    @relation("CategoriesToCategories", fields: [parentId], references: [id])
+  status     STATUS_PRODUCT @default(ACTIVE)
 
   product   Product[]
-  children  Category[] @relation("CategoryToCategory")
-  createdAt DateTime   @default(now())
-  updatedAt DateTime   @updatedAt
+  children  Categories[] @relation("CategoriesToCategories")
+  createdAt DateTime     @default(now())
+  updatedAt DateTime     @updatedAt
 }
 
 model Properties {
@@ -108,39 +115,38 @@ model Account {
 }
 
 model Order {
-  id         String      @id
-  userId     Int
-  status     StatusOrder @default(PENDING)
-  total      Float       @default(0.0)
-  orderItems OrderItem[]
-  user       User        @relation(fields: [userId], references: [id], onDelete: Cascade)
-  createdAt  DateTime    @default(now())
-  updatedAt  DateTime    @updatedAt
+  id        Int          @id @default(autoincrement())
+  userId    Int
+  status    STATUS_ORDER @default(PENDING)
+  total     Float        @default(0.0)
+  orderId   String       @unique
+  createdAt DateTime     @default(now())
+  updatedAt DateTime     @updatedAt
+
+  addressId Int?
+  items     OrderItem[]
+  address   Address?    @relation(fields: [addressId], references: [id], onDelete: SetNull)
+  user      User        @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@map("orders")
 }
 
 model OrderItem {
-  id         String @id
-  orderId    String
-  productId  Int
-  quantity   Int    @default(1)
-  price      Float
-  totalPrice Float  @default(0.0)
+  id       Int   @id @default(autoincrement())
+  quantity Int   @default(1)
+  price    Float
+  total    Float @default(0.0)
 
-  order   Order   @relation(fields: [orderId], references: [id], onDelete: Cascade) // ผูกกับ Order
-  product Product @relation(fields: [productId], references: [id], onDelete: Cascade) // ผูกกับ Product
+  orderId   Int
+  productId Int
+
+  order   Order   @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  product Product @relation(fields: [productId], references: [id], onDelete: Cascade)
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
   @@map("order_items")
-}
-
-enum StatusOrder {
-  PENDING
-  COMPLETED
-  CANCELLED
 }
 
 model Cart {
@@ -160,7 +166,7 @@ model CartItem {
   cart      Cart    @relation(fields: [cartId], references: [id], onDelete: Cascade)
   product   Product @relation(fields: [productId], references: [id], onDelete: Cascade)
 
-  @@map("cart_item") // ชื่อตารางในฐานข้อมูล
+  @@map("cart_item")
 }
 
 model Wishlist {
@@ -168,14 +174,14 @@ model Wishlist {
   userId    Int
   productId Int
 
-  user    User    @relation(fields: [userId], references: [id], onDelete: Cascade) // ผูกกับ User
-  product Product @relation(fields: [productId], references: [id], onDelete: Cascade) // ผูกกับ Product
+  user    User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  product Product @relation(fields: [productId], references: [id], onDelete: Cascade)
 }
 
 model Address {
   id          Int     @id @default(autoincrement())
   fullName    String
-  phoneNumber String
+  phone       String
   address     String
   subDistrict String
   district    String
@@ -184,10 +190,12 @@ model Address {
   isDefault   Boolean @default(false)
   type        String?
   userId      Int
-  user        User    @relation(fields: [userId], references: [id])
+
+  user User @relation(fields: [userId], references: [id])
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+  Order     Order[]
 }
 
 model Brands {
@@ -196,5 +204,5 @@ model Brands {
   image String?
 
   createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt()
+  updatedAt DateTime @default(now()) @updatedAt
 }

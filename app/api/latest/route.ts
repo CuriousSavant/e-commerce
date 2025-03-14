@@ -1,4 +1,4 @@
-    import { NextResponse } from 'next/server';
+import { NextResponse } from 'next/server';
 import { PrismaClient } from '@prisma/client';
 
 const prisma = new PrismaClient();
@@ -14,7 +14,6 @@ export async function GET() {
 
     return NextResponse.json(latestProducts);
   } catch (error) {
-    console.error('Error fetching latest products:', error);
-    return NextResponse.json({ error: 'Failed to fetch latest products' }, { status: 500 });
+    return NextResponse.json({ msg: "Failed to fetch latest products", error: error }, { status: 500 });
   }
 }

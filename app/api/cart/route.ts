@@ -1,5 +1,5 @@
 import prisma from "@/lib/prisma";
-import { NextRequest, NextResponse } from "next/server";
+import { NextFetchEvent, NextRequest, NextResponse } from "next/server";
 
 export async function GET(req: NextRequest) {
   const { searchParams } = new URL(req.url);
@@ -9,7 +9,7 @@ export async function GET(req: NextRequest) {
     return NextResponse.json({ msg: "UserId is required" }, { status: 400 });
   }
   try {
-    const cartItem = await prisma.cartItem.findMany({
+    const cartItems = await prisma.cartItem.findMany({
       where: {
         cart: {
           userId: Number(userId),
@@ -20,7 +20,7 @@ export async function GET(req: NextRequest) {
       },
     });
 
-    return NextResponse.json(cartItem);
+    return NextResponse.json(cartItems);
   } catch (err) {
     return NextResponse.json({ msg: err }, { status: 500 });
   }
@@ -34,17 +34,27 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: "Invalid data" }, { status: 400 });
     }
 
+    const user = await prisma.user.findUnique({
+      where: {
+        id: userId
+      },
+    })
+
+    if (!user) {
+      return NextResponse.json({ msg: "Not Found User" }, { status: 404 })
+    }
+
     let cart = await prisma.cart.findFirst({
       where: { userId },
     });
 
-    if (!cart) {
+    if (!cart || cart === null) {
       cart = await prisma.cart.create({
         data: { userId },
       });
     }
 
-    const cartItem = await prisma.cartItem.create({
+    const create_cartItem = await prisma.cartItem.create({
       data: {
         cartId: cart.id,
         productId,
@@ -52,7 +62,7 @@ export async function POST(req: Request) {
       },
     });
 
-    return NextResponse.json(cartItem, { status: 201 });
+    return NextResponse.json(create_cartItem, { status: 201 });
   } catch (err) {
     return NextResponse.json({ msg: err }, { status: 500 });
   }

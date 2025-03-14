@@ -34,7 +34,7 @@ export const config = {
   matcher: [
     "/client/profile/:path*",
     "/client/cart",
-    "/arc/admin/:path*",
+    "/admin/:path*",
     "/api/:path*",
   ],
 };

@@ -12,7 +12,7 @@ export const GET = async () => {
       take: 10,
     });
     return NextResponse.json(randomProduct);
-  } catch (err) {
-    return NextResponse.json({ err }, { status: 500 });
+  } catch (error) {
+    return NextResponse.json({ msg: "Failed to fetch random product", error: error }, { status: 500 });
   }
 };

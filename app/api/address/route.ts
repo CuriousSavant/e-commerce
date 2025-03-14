@@ -5,10 +5,10 @@ import { NextResponse } from "next/server";
 
 export const GET = async () => {
   try {
-    const data = await prisma.address.findMany();
-    return NextResponse.json(data);
-  } catch (err) {
-    return NextResponse.json({ msg: err }, { status: 500 });
+    const address = await prisma.address.findMany();
+    return NextResponse.json(address);
+  } catch (error) {
+    return NextResponse.json({ msg: "Failed to fetch address", error: error }, { status: 500 });
   }
 };
 
@@ -16,7 +16,7 @@ export const POST = async (req: Request) => {
   const session = await getServerSession(authOptions);
   const {
     fullName,
-    phoneNumber,
+    phone,
     address,
     subDistrict,
     district,
@@ -24,13 +24,14 @@ export const POST = async (req: Request) => {
     postalCode,
     type,
     isDefault,
+    userId,
   } = await req.json();
 
   try {
-    const createData = await prisma.address.create({
+    const create_address = await prisma.address.create({
       data: {
         fullName,
-        phoneNumber,
+        phone,
         address,
         subDistrict,
         district,
@@ -38,11 +39,11 @@ export const POST = async (req: Request) => {
         postalCode,
         type,
         isDefault,
-        userId: Number(session?.user?.id),
+        userId: session?.user.role === "admin" ? userId : session?.user.id,
       },
     });
-    return NextResponse.json(createData);
-  } catch (err) {
-    return NextResponse.json({ msg: err }, { status: 500 });
+    return NextResponse.json(create_address);
+  } catch (error) {
+    return NextResponse.json({ msg: "Failed to create address", error: error }, { status: 500 });
   }
 };

@@ -8,12 +8,12 @@ export const GET = async (
   { params }: { params: { id: string } }
 ) => {
   try {
-    const data = await prisma.address.findUnique({
+    const address = await prisma.address.findUnique({
       where: { id: Number(params.id) },
     });
-    return NextResponse.json(data);
-  } catch (err) {
-    return NextResponse.json({ msg: err }, { status: 500 });
+    return NextResponse.json(address);
+  } catch (error) {
+    return NextResponse.json({ msg: "Failed to fetch address", error: error }, { status: 500 });
   }
 };
 
@@ -24,7 +24,7 @@ export const PUT = async (
   const session = await getServerSession(authOptions);
   const {
     fullName,
-    phoneNumber,
+    phone,
     address,
     subDistrict,
     district,
@@ -49,10 +49,10 @@ export const PUT = async (
       });
     }
 
-    const updateData = await prisma.address.update({
+    const update_address = await prisma.address.update({
       data: {
         fullName,
-        phoneNumber,
+        phone,
         address,
         subDistrict,
         district,
@@ -65,11 +65,11 @@ export const PUT = async (
       where: { id: Number(params.id) },
     });
 
-    return NextResponse.json(updateData);
+    return NextResponse.json(update_address);
   } catch (err) {
     console.error(err);
     return NextResponse.json(
-      { msg: "เกิดข้อผิดพลาดในการอัปเดตที่อยู่" },
+      { msg: "Failed to update address" },
       { status: 500 }
     );
   }
@@ -80,11 +80,11 @@ export const DELETE = async (
   { params }: { params: { id: string } }
 ) => {
   try {
-    const deleteData = await prisma.address.delete({
+    const delete_address = await prisma.address.delete({
       where: { id: Number(params.id) },
     });
-    return NextResponse.json(deleteData);
-  } catch (err) {
-    return NextResponse.json({ msg: err }, { status: 500 });
+    return NextResponse.json(delete_address);
+  } catch (error) {
+    return NextResponse.json({ msg: "Failed to delete address",error: error }, { status: 500 });
   }
 };

@@ -16,10 +16,9 @@ export const GET = async (
     });
 
     return NextResponse.json(product);
-  } catch (err) {
-    console.error(err);
+  } catch (error) {
     return NextResponse.json(
-      { msgErr: "An error occurred", error: err },
+      { msg: "Failed to fetch products", error: error },
       { status: 500 }
     );
   }
@@ -37,8 +36,6 @@ export const PUT = async (
     categoryId,
     brand,
     stock,
-    feature,
-    properties,
   } = await req.json();
 
   try {
@@ -51,24 +48,13 @@ export const PUT = async (
         categoryId,
         brand,
         stock,
-        // feature: {
-        //   create: feature.map((item: any) => ({
-        //     desctiption: item.description,
-        //   })),
-        // },
-        // properties: {
-        //   create: properties.map((item: any) => ({
-        //     name: item.name,
-        //     value: item.value,
-        //   })),
-        // },
       },
       where: { slug: params.slug },
     });
     return NextResponse.json(updateProduct);
-  } catch (err) {
+  } catch (error) {
     return NextResponse.json(
-      { msgErr: "Update product fail!", error: err },
+      { msg: "Failed to update product", error: error },
       { status: 500 }
     );
   }
@@ -83,12 +69,9 @@ export const DELETE = async (
       where: { slug: params.slug },
     });
     return NextResponse.json(deleteRow);
-  } catch (err) {
+  } catch (error) {
     return NextResponse.json(
-      {
-        msg: "An error occurred",
-        error: err,
-      },
+      { msg: "Failed to delete product", error: error },
       { status: 500 }
     );
   }

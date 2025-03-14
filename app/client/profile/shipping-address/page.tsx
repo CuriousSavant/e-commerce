@@ -67,7 +67,7 @@ const ShippingAddress = () => {
                 secondary={
                   <Box>
                     <Typography variant="body2" component="span">
-                      เบอร์โทร: {address.phoneNumber}
+                      เบอร์โทร: {address.phone}
                     </Typography>
                     <Typography variant="body2" component="span">
                       รายละเอียดที่อยู่: {`${address.address}, ${address.subDistrict}, ${address.district}, ${address.province} ${address.postalCode}`}

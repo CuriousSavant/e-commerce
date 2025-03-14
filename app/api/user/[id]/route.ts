@@ -23,20 +23,20 @@ export async function GET(
 
     return NextResponse.json(userUnique, { status: 200 });
   } catch (error) {
-    return NextResponse.json({ msg: error }, { status: 500 });
+    return NextResponse.json({ msg: "Failed to fetch users", error: error }, { status: 500 });
   }
 }
 
 export async function PUT(req: Request, { params }: { params: { id: string } }) {
-  try {
-    const {
-      firstname,
-      lastname,
-      email,
-      role,
-      password,
-    } = await req.json();
+  const {
+    firstname,
+    lastname,
+    email,
+    role,
+    password,
+  } = await req.json();
 
+  try {
     const user = await prisma.user.findUnique({
       where: { id: Number(params.id) },
       select: { password: true }, // เนี่องจาก prisma ไม่สามารถเอา password ออกได้ จึงใช้ select เพื่อเอา password ออกมาด้วย
@@ -59,10 +59,7 @@ export async function PUT(req: Request, { params }: { params: { id: string } }) 
 
     return NextResponse.json(updatedUser, { status: 200 });
   } catch (error) {
-    return NextResponse.json(
-      { error: "เกิดข้อผิดพลาดในการอัปเดตข้อมูลผู้ใช้" },
-      { status: 500 }
-    );
+    return NextResponse.json({ msg: "Failed to update user", error: error }, { status: 500 });
   }
 }
 
@@ -85,6 +82,6 @@ export const DELETE = async (
 
     return NextResponse.json({ msg: "User Deleted" }, { status: 200 });
   } catch (error) {
-    return NextResponse.json({ msg: error }, { status: 500 });
+    return NextResponse.json({ msg: "Failed to delete user", error: error }, { status: 500 });
   }
 };

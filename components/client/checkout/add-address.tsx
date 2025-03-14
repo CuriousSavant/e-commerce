@@ -19,10 +19,10 @@ const AddAddress = () => {
         isFormOpen,
         formData,
         formErrors,
+        defaultAddress,
         handleChange,
         handleSubmit,
         handleClose,
-        defaultAddress
     } = useAddress();
 
     const router = useRouter()
@@ -41,7 +41,7 @@ const AddAddress = () => {
                     <SlLocationPin size={28} />
                     ที่อยู่จัดส่ง
                 </Typography>
-                {defaultAddress.length > 0 && (
+                {defaultAddress && (
                     <Button size="small" onClick={() => router.push('/client/profile/shipping-address')}>
                         <Typography variant="subtitle2" sx={{ fontSize: "14px" }}>
                             จัดการที่อยู่จัดส่ง
@@ -49,7 +49,7 @@ const AddAddress = () => {
                     </Button>
                 )}
             </Box>
-            {defaultAddress.length === 0 ? (
+            {!defaultAddress ? (
                 <Card variant="outlined">
                     {loading ? (
                         <Box
@@ -89,20 +89,18 @@ const AddAddress = () => {
                     )}
                 </Card>
             ) : (
-                defaultAddress.map((address) => (
-                    <Card key={address.id} variant="outlined" sx={{ position: "relative" }}>
-                        <CardContent>
-                            <Typography variant="body1">{address.fullName} - {address.phone}</Typography>
-                            <Typography variant="body2" color="text.secondary">
-                                {address.address}, {address.subDistrict}, {address.district},{" "}
-                                {address.province} - {address.postalCode}
-                            </Typography>
-                        </CardContent>
-                        <Box position={'absolute'} top={10} right={10}>
-                            <Button onClick={() => router.push('/client/profile/shipping-address')} size="small">เปลี่ยน</Button>
-                        </Box>
-                    </Card>
-                ))
+                <Card key={defaultAddress.id} variant="outlined" sx={{ position: "relative" }}>
+                    <CardContent>
+                        <Typography variant="body1">{defaultAddress.fullName} - {defaultAddress.phone}</Typography>
+                        <Typography variant="body2" color="text.secondary">
+                            {defaultAddress.address}, {defaultAddress.subDistrict}, {defaultAddress.district},{" "}
+                            {defaultAddress.province} - {defaultAddress.postalCode}
+                        </Typography>
+                    </CardContent>
+                    <Box position={'absolute'} top={10} right={10}>
+                        <Button onClick={() => router.push('/client/profile/shipping-address')} size="small">เปลี่ยน</Button>
+                    </Box>
+                </Card>
             )}
 
             {/* form สำหรับจัดการ */}

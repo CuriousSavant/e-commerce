@@ -15,8 +15,8 @@ export const GET = async (
     }
 
     return NextResponse.json(properties);
-  } catch (err) {
-    return NextResponse.json({ msg: err }, { status: 500 });
+  } catch (error) {
+    return NextResponse.json({ msg: "Failed to fetch properties", error: error }, { status: 500 });
   }
 };
 
@@ -29,7 +29,7 @@ export const DELETE = async (
       where: { id: Number(params.id) },
     });
     return NextResponse.json(deletePropertiesField);
-  } catch (err) {
-    return NextResponse.json({ msg: err }, { status: 500 });
+  } catch (error) {
+    return NextResponse.json({ msg: "Failed to delete properties", error: error }, { status: 500 });
   }
 };

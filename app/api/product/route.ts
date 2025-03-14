@@ -5,7 +5,7 @@ import slugify from "slugify";
 export async function GET(req: Request) {
   try {
     const url = new URL(req.url).searchParams;
-    const query = url.get("q");
+    const query = url.get("q")?.trim();
     const sortOrder = url.get("sortOrder") || "desc";
     const status = url.get("status");
     const categoryId = url.get("categoryId");
@@ -17,12 +17,12 @@ export async function GET(req: Request) {
     }
 
     // Build filters
-    const whereClause: any = {};
+    let whereClause: any = {};
     let orderByClause: any = { createdAt: sortOrder }
 
     let products;
 
-    if (query) whereClause.title = { contains: query.trim() };
+    if (query) whereClause.title = { contains: query, mode: "insensitive" };
     if (categoryId) whereClause.categoryId = Number(categoryId);
     if (price) {
       if (price === "low-high") orderByClause = { price: "asc" };
@@ -30,9 +30,7 @@ export async function GET(req: Request) {
       else orderByClause;
     }
 
-    if (status && status !== 'all') {
-      whereClause.status = status.toLowerCase() === "active" ? "ACTIVE" : "INACTIVE";
-    }
+    if (status && status !== 'all') whereClause.status = status.toLowerCase() === "active" ? "ACTIVE" : "INACTIVE";
 
     if (!query && !categoryId && !status) {
       products = await prisma.product.findMany({
@@ -64,22 +62,10 @@ export async function GET(req: Request) {
       });
     }
 
-    // เมื่อผู้ใช้ search แต่หาสินค้าที่ตรงกับ query ที่ส่งมาไม่ได้จะทำการคืนสินค้าเริ่มต้นไปให้
-    // if (products.length === 0) {
-    //   const fallbackProducts = await prisma.product.findMany({
-    //     orderBy: { createdAt: sortOrder } as any,
-    //     include: {
-    //       category: true,
-    //       properties: true,
-    //     },
-    //   });
-    //   return NextResponse.json(fallbackProducts);
-    // }
-
     return NextResponse.json(products);
-  } catch (error: any) {
+  } catch (error) {
     console.error(error);
-    return NextResponse.json({ msg: error.message }, { status: 500 });
+    return NextResponse.json({ msg: "Failed to fetch products", error: error }, { status: 500 });
   }
 }
 
@@ -111,9 +97,8 @@ export const POST = async (req: Request) => {
     });
 
     return NextResponse.json(createProduct);
-  } catch (err) {
-    console.error(err);
-    return NextResponse.json({ msgErr: err, status: 500 });
+  } catch (error) {
+    return NextResponse.json({ msg: "Failed to create product", error: error, status: 500 });
   }
 };
 
@@ -128,7 +113,7 @@ export const DELETE = async (req: Request) => {
       });
       return NextResponse.json(deleteMaryProduct);
     }
-  } catch (err) {
-    return NextResponse.json({ msg: err }, { status: 500 });
+  } catch (error) {
+    return NextResponse.json({ msg: "Failed to delete products", error: error }, { status: 500 });
   }
 };

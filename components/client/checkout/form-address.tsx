@@ -61,9 +61,9 @@ const FormAddress: React.FC<FormAddressProps> = ({
                             label="หมายเลขโทรศัพท์"
                             className="col-span-2 md:col-span-1"
                             value={formData.phone}
-                            error={formErrors.phoneNumber}
-                            helperText={formErrors.phoneNumber ? "กรุณากรอกหมายเลขโทรศัพท์" : ""}
-                            onChange={handleChange("phoneNumber")}
+                            error={formErrors.phone}
+                            helperText={formErrors.phone ? "กรุณากรอกหมายเลขโทรศัพท์" : ""}
+                            onChange={handleChange("phone")}
                         />
                         <TextField
                             size="small"
@@ -71,7 +71,7 @@ const FormAddress: React.FC<FormAddressProps> = ({
                             value={formData.address}
                             rows={4}
                             multiline
-                            className="col-span-2"
+                            className="col-span-2 text-black"
                             placeholder="12/123 อาคาร/ถนน...."
                             error={formErrors.address}
                             helperText={formErrors.address ? "กรุณากรอกที่อยู่" : ""}

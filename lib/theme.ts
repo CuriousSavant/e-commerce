@@ -13,7 +13,7 @@ const theme = () =>
       },
       success: {
         main: "#00ff99",
-      }
+      },
     },
     typography: {
       fontFamily: `"Noto Sans Thai", sans-serif`,

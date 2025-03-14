@@ -1,16 +1,14 @@
 'use client'
 import React from "react";
 import { Box, Typography, TablePagination, Button } from "@mui/material";
-import ProductTable from "@/components/admin/product/product-table";
-import ProductForm from "@/components/admin/product/form/product-form";
+import ProductTable from "@/components/admin/products/product-table";
+import ProductForm from "@/components/admin/products/form/product-form";
 import { MdDelete } from "react-icons/md";
-import FilterSortSearchProduct from "@/components/admin/product/filter-sort-search-product";
+import FilterSortSearchProduct from "@/components/admin/products/filter-sort-search-product";
 import { useProducts } from "@/hooks/useProducts";
 import { usePagination } from "@/hooks/usePagination";
-import { useImageUpload } from "@/hooks/useImageUpload";
 
 const Products = () => {
-
     const {
         categories, fetchProducts, formOpen,
         handleResetState, productForm,
@@ -21,7 +19,11 @@ const Products = () => {
         query, selectItem, setQuery, setSelectItem,
         categoryFilter, priceFilter, setCategoryFilter,
         setPriceFilter, setStatusFilter, statusFilter,
-        setSlug, loading, setLoading,
+        setSlug, loading, setLoading, handleAllDelete,
+        handleDeleteProduct, imageUrl, setImageUrl,
+        deletedImage, handleRemoveImage, handleUndoDelete,
+        handleUploadImage, loadingImage, selectedImage,
+        setSelectedImage, setSnackbarOpen, snackbarOpen,
     } = useProducts();
 
     const {
@@ -31,17 +33,8 @@ const Products = () => {
         rowsPerPage,
     } = usePagination();
 
-    const {
-        handleRemoveImage, handleUndoDelete,
-        handleUploadImage, imageUrl,
-        loadingImage, selectedImage,
-        setSelectedImage, setSnackbarOpen, snackbarOpen,
-        setImageUrl,
-    } = useImageUpload();
-
     return (
         <Box sx={{ py: 2, px: 6 }}>
-            {/* Header */}
             <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center", mb: 1 }}>
                 {selectItem.length > 0 ? (
                     <>
@@ -58,7 +51,7 @@ const Products = () => {
                             </Typography>
                         </Button>
                     </>
-                ) : <Typography variant="h5" fontWeight={'bold'}>{formOpen ? (slug ? "Edit Product" : "Add Product") : "Products"}</Typography>}
+                ) : <Typography variant="h5" fontWeight={'bold'}>{formOpen ? (slug ? "แก้ไขสินค้า" : "เพิ่มสินค้า") : "สินค้าทั้งหมด"}</Typography>}
             </Box>
 
             {!formOpen ? ( // ถ้าเปิด form อยู่ให้ปิด
@@ -86,11 +79,11 @@ const Products = () => {
                         loading={loading}
                         products={products}
                         rowsPerPage={rowsPerPage}
-                        setProducts={setProducts}
                         selectItem={selectItem}
                         setSelectItem={setSelectItem}
                         startEditing={startEditing}
-                        fetchProducts={fetchProducts}
+                        handleAllDelete={handleAllDelete}
+                        handleDeleteProduct={handleDeleteProduct}
                     />
 
                     <TablePagination

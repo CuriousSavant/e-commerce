@@ -5,7 +5,7 @@ export async function DELETE(
   request: Request,
   { params }: { params: { id: string } }
 ) {
-  const orderId = params.id;
+  const orderId = Number(params.id);
 
   try {
     await prisma.orderItem.deleteMany({

@@ -33,13 +33,13 @@ const OrderDetail = () => {
             </IconButton>
             {orders.map(order => (
                 <>
-                    {order.orderItems.map((item) => (
+                    {order.items.map((item) => (
                         <Box border={'1px solid #ddd'} p={2} borderRadius={2}>
                             <Typography variant="h6" fontSize={{ xs: '1rem', md: '1.25rem' }}>
                                 หมายเลขคำสั่งซื้อ: <span className="text-blue-500">#{item.id}</span>
                             </Typography>
                             <Typography color="gray" fontSize={{ xs: '0.75rem', md: '0.875rem' }} sx={{ mt: 1 }}>
-                                วันที่สั่งซื้อ: {format(new Date(order.orderDate), "dd MMM yyyy, HH:mm")}
+                                วันที่สั่งซื้อ: {format(new Date(order.createdAt), "dd MMM yyyy, HH:mm")}
                             </Typography>
 
                             {/* Order Item */}
@@ -95,7 +95,7 @@ const OrderDetail = () => {
                                                     fontSize={{ xs: '0.875rem', md: '1rem' }}
                                                     color="primary"
                                                 >
-                                                    ฿{item.totalPrice.toLocaleString('th-TH')}
+                                                    ฿{item.total.toLocaleString('th-TH')}
                                                 </Typography>
                                             </Box>
                                         </Box>
@@ -115,7 +115,7 @@ const OrderDetail = () => {
                                     <Stack spacing={1} mt={1}>
                                         <Grid container justifyContent="space-between">
                                             <Typography variant="subtitle2" sx={{ color: "gray" }}>ยอดรวม</Typography>
-                                            <Typography variant="subtitle2">฿{item.totalPrice.toLocaleString('th-TH')}</Typography>
+                                            <Typography variant="subtitle2">฿{item.total.toLocaleString('th-TH')}</Typography>
                                         </Grid>
                                         <Grid container justifyContent="space-between">
                                             <Typography variant="subtitle2" sx={{ color: "gray" }}>ส่วนลด</Typography>
@@ -132,7 +132,7 @@ const OrderDetail = () => {
                                             ยอดสุทธิ
                                         </Typography>
                                         <Typography fontWeight="600" color="primary">
-                                            ${order.totalAmount.toLocaleString('th-TH')}
+                                            ${order.total.toLocaleString('th-TH')}
                                         </Typography>
                                     </Grid>
                                 </CardContent>
