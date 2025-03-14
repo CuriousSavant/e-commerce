@@ -14,7 +14,6 @@ const BrandsTableRow: React.FC<BrandsTableRowProps> = ({
     handleDeleteBrand,
     startEditingBrand,
 }) => {
-
     return (
         <TableRow key={brand?.id}>
             <TableCell sx={{ minWidth: "150px", borderBottom: "1px solid #50575E", color: "white", px: 3 }} size="small">
@@ -24,7 +23,7 @@ const BrandsTableRow: React.FC<BrandsTableRowProps> = ({
                 {loading ? <Skeleton width={40} /> : brand?.name}
             </TableCell>
             <TableCell sx={{ minWidth: "150px", borderBottom: "1px solid #50575E", color: "white", px: 3 }} size="small">
-                {loading ? <Skeleton width={40} /> : brand?.image}
+                {loading ? <Skeleton width={40} /> : <img src={brand?.image || ""} alt={brand?.name} style={{ width: 40, height: 45, borderRadius: "5px", objectFit: "cover", }} />}
             </TableCell>
             <TableCell sx={{ minWidth: "150px", borderBottom: "1px solid #50575E", px: 3 }} size="small">
                 <Box sx={{ display: "flex", gap: 1 }}>

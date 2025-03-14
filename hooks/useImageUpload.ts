@@ -9,6 +9,8 @@ export const useImageUpload = () => {
     const [deletedImage, setDeletedImage] = useState<string | null>(null); // รูปที่ถูกลบ
     const [deletedIndex, setDeletedIndex] = useState<number | null>(null); // ตำแหน่งของรูปที่ถูกลบ
 
+    const [errorImageType, setErrorImagetype] = useState<boolean>(false);
+
     const handleUploadImage = async (e: React.ChangeEvent<HTMLInputElement>) => {
         e.preventDefault();
         const file = e.target.files?.[0];
@@ -19,6 +21,7 @@ export const useImageUpload = () => {
         if (!["image/jpg", "image/png", "image/jpeg"].includes(file.type)) {
             console.error('Invalid file type');
             setLoadingImage(false);
+            setErrorImagetype(true);
             return;
         }
 
@@ -41,5 +44,6 @@ export const useImageUpload = () => {
         setSelectedImage, setSnackbarOpen,
         handleUploadImage, setImageUrl, setDeletedImage,
         setDeletedIndex, deletedImage, deletedIndex,
+        errorImageType,
     };
 };

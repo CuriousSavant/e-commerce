@@ -11,22 +11,21 @@ import FilterSortSearchBrand from '@/components/admin/brands/filter-sort-search-
 const Brands = () => {
     const [brands, setBrands] = useState<Brand[]>([]);
     const [brandName, setBrandName] = useState<string>('');
-    const [image, setImage] = useState<string | null>(null);
     const [dialogOpen, setDialogOpen] = useState<boolean>(false);
     const [editId, setEditId] = useState<number | null>(null);
 
+    const [image, setImage] = useState<string | null>(null);
     const [loading, setLoading] = useState<boolean>(true)
 
     const [query, setQuery] = useState<string>('');
     const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('asc');
-    const [statusFilter, setStatusFilter] = useState<'ALL' | 'ACTIVE' | 'INACTIVE'>('ALL');
 
     // const [page, setPage] = useState<number>(0)
     // const [rowsPerPage, setRowsPerPage] = useState<number>(10)
 
     const fetchBrands = () => {
         setLoading(true);
-        axios.get(`/api/brand?q=${query}&sortOrder=${sortOrder}&status=${statusFilter}`)
+        axios.get(`/api/brand?q=${query}&sortOrder=${sortOrder}`)
             .then((res) => setBrands(res.data))
             .catch((e) => console.error(e))
             .finally(() => setLoading(false));
@@ -34,7 +33,7 @@ const Brands = () => {
 
     useEffect(() => {
         fetchBrands();
-    }, [query, statusFilter, sortOrder]);
+    }, [query, sortOrder]);
 
     const handleCreateBrand = (e: React.FormEvent) => {
         e.preventDefault();
@@ -105,7 +104,7 @@ const Brands = () => {
     return (
         <Box py={2} px={6}>
             <Typography variant="h5" mb={2} fontWeight={700}  >
-                หมวดหมู่
+                แบรนด์
             </Typography>
             <FilterSortSearchBrand {...{
                 query, setQuery, setSortOrder,
@@ -118,6 +117,7 @@ const Brands = () => {
                     brandName, setDialogOpen,
                     setEditId, setBrandName, setImage,
                     handleCreateBrand, image,
+                    loading, setLoading,
                 }}
             />
 

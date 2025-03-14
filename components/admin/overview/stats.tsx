@@ -1,7 +1,5 @@
-"use client"
-
 import { Card, CardContent, Typography, Box, Button } from "@mui/material";
-import { ShoppingCart, Person, Inventory, ArrowCircleRight, LocalShipping, ContentPaste } from "@mui/icons-material";
+import { ShoppingCart, Person, Inventory, ArrowCircleRight, ContentPaste } from "@mui/icons-material";
 
 const stats = [
     { icon: <ShoppingCart sx={{ fontSize: 60, color: "#696E77" }} />, value: "150", label: "จำนวนคำสั่งซื้อใหม่", href: "/admin/orders" },
@@ -15,7 +13,7 @@ export default function Stats() {
         <Box sx={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: 2 }}>
             {stats.map((stat, index) => (
                 <Card key={index} sx={{ backgroundColor: "#27293D", borderRadius: 1 }}>
-                    <CardContent sx={{ display: "flex", justifyContent: "space-between", alignItems: "center"}}>
+                    <CardContent sx={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
                         <Box>
                             <Typography variant="h5" sx={{ color: "white", fontWeight: "700" }}>
                                 {stat.value}

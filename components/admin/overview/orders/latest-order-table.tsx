@@ -29,14 +29,12 @@ const LatestOrderTable: FC<ILatestOrderTable> = ({ order, loading }) => {
                     </TableCell>
                 </>
             ) : (
-                <TableRow>
-                    <TableCell sx={{ borderBottom: "1px solid #50575E" }}>
-                        {order?.id}
-                    </TableCell>
+                <>
+                    <TableCell sx={{ color: "white", borderBottom: "1px solid #50575E" }}>{order?.id}</TableCell>
                     <TableCell sx={{ color: "white", borderBottom: "1px solid #50575E" }}>{format(order!!.createdAt, "dd-MM-yyyy", { locale: th })}</TableCell>
                     <TableCell sx={{ color: "white", borderBottom: "1px solid #50575E" }}>{order?.status}</TableCell>
-                    <TableCell sx={{ color: "white", borderBottom: "1px solid #50575E" }}>{order?.totalAmount}</TableCell>
-                </TableRow>
+                    <TableCell sx={{ color: "white", borderBottom: "1px solid #50575E" }}>{order?.total}</TableCell>
+                </>
             )}
         </TableRow>
     )

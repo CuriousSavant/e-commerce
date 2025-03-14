@@ -66,18 +66,6 @@ export const useProducts = () => {
         setSortOrder((prev) => (prev === 'asc' ? 'desc' : 'asc'));
     };
 
-    // const properties: any[] = [];
-    // if (productForm.categoryId) {
-    //     let selCatInfo = categories.find((cat) => cat.id === productForm.categoryId);
-    //     if (selCatInfo) {
-    //         properties.push(...(selCatInfo?.properties || []));
-    //         while (selCatInfo?.parentId) {
-    //             const parentCat = categories.find((cat) => cat.id === selCatInfo?.parentId);
-    //             selCatInfo = parentCat;
-    //         }
-    //     }
-    // }
-
     const startEditing = (product: Product) => {
         setProductForm({
             productName: product.title,

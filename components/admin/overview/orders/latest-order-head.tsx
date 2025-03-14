@@ -5,10 +5,9 @@ const LatestOrderHeader = () => {
     return (
         <TableHead>
             <TableRow>
-                <TableCell sx={{ color: "white", borderBottom: "1px solid #50575E" }}>หมายเลขคำสั่งซื้อ</TableCell>
-                <TableCell sx={{ color: "white", borderBottom: "1px solid #50575E" }}>เวลา</TableCell>
-                <TableCell sx={{ color: "white", borderBottom: "1px solid #50575E" }}>สถานะ</TableCell>
-                <TableCell sx={{ color: "white", borderBottom: "1px solid #50575E" }}>ยอดรวม</TableCell>
+                {['หมายเลขคำสั่งซื้อ', 'สั่งซื้อเมื่อ', 'สถานะ', 'ยอด'].map((label) => (
+                    <TableCell sx={{ color: "white", borderBottom: "1px solid #50575E" }}>{label}</TableCell>
+                ))}
             </TableRow>
         </TableHead>
     )
