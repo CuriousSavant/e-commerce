@@ -17,7 +17,7 @@ const LayoutSetting = ({ children }: { children: React.ReactNode }) => {
                 <SearchProvider>
                     {/* Reset Css Base */}
                     <CssBaseline />
-                    {/* If we are on a path that starts with /admin, do not display the navbar and footer components */}
+                    {/* เมื่ออยู่ใน path /admin/* จะไม่แสดง components พวกนนี้ */}
                     {!pathname.startsWith('/admin') && <Navbar />}
                     {children}
                     {!pathname.startsWith('/admin') && <Footer />}

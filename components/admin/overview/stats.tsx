@@ -13,11 +13,15 @@ const Stats = () => {
 
     useEffect(() => {
         const fetchAll = async () => {
-            Promise.all([
-                await axios.get('/api/order').then((res) => setOrders(res.data)),
-                await axios.get('/api/user/latest-users').then((res) => setUsers(res.data)),
-                await axios.get('/api/product/latest-product').then((res) => setProducts(res.data)),
-            ])
+            const [ordersRes, usersRes, productsRes] = await Promise.all([
+                axios.get('/api/order'),
+                axios.get('/api/user/latest-users'),
+                axios.get('/api/product/latest-product')
+            ]);
+
+            setOrders(ordersRes.data);
+            setUsers(usersRes.data);
+            setProducts(productsRes.data);
         }
         fetchAll();
     }, [])
@@ -49,9 +53,9 @@ const Stats = () => {
     ];
 
     return (
-        <Box sx={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: 2 }}>
+        <Box sx={{ display: "grid", gridTemplateColumns: { xs: "1fr", sm: "repeat(2, 1fr)", lg: "repeat(4, 1fr)" }, gap: 2, width: "100%" }}>
             {stats.map((stat, index) => (
-                <Card key={index} sx={{ backgroundColor: "#27293D", borderRadius: 1 }}>
+                <Card key={index} sx={{ backgroundColor: "#27293D", borderRadius: 1, display: "flex", flexDirection: "column", justifyContent: "space-between" }}>
                     <CardContent sx={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
                         <Box>
                             <Typography variant="h5" sx={{ color: "white", fontWeight: "700" }}>

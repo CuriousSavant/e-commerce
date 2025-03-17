@@ -1,5 +1,4 @@
 "use client"
-
 import { Box, Card, CardContent, Typography, Table, TableContainer, Button, TableBody, TableRow, TableCell, Skeleton } from "@mui/material";
 import { Order } from "@/types/order";
 import axios from "axios";
@@ -11,37 +10,34 @@ export default function LatestOrders() {
     const [orders, setOrders] = useState<Order[]>([]);
     const [loading, setLoading] = useState<boolean>(true);
 
-    const fetchUsers = async () => {
-        setLoading(true);
-        try {
-            await axios.get('/api/order').then((res) => {
-                setOrders(res.data)
-            });
-        } catch (error) {
-            console.error(error);
-        } finally {
-            setLoading(false);
-        }
-    }
-
     useEffect(() => {
-        fetchUsers();
+        const fetchOrders = async () => {
+            setLoading(true);
+            try {
+                await axios.get('/api/order').then((res) => {
+                    setOrders(res.data)
+                });
+            } catch (error) {
+                console.error(error);
+            } finally {
+                setLoading(false);
+            }
+        }
+
+        fetchOrders();
     }, [])
 
     return (
-        <Card sx={{ bgcolor: "secondary.dark", flex: 2, pb: 0, minHeight: "350px" }}>
+        <Card sx={{ bgcolor: "secondary.dark", flex: 2, pb: 0, minHeight: "350px", overflowX: "auto", width: "100%", maxWidth: "100%" }}>
             <CardContent sx={{ p: 0 }}>
                 <Box display="flex" justifyContent="space-between" alignItems="center" p={2} borderBottom={"1px solid #50575E"}>
                     <Typography variant="h6" color="white">{orders.length > 0 ? `คำสั่งซื้อใหม่ล่าสุด (${orders.length})` : 'คำสั่งซื้อใหม่ล่าสุด'}</Typography>
                     <Button
                         variant="contained"
                         size="small"
-                        sx={{
-                            textTransform: "none",
-                            bgcolor: "primary.main"
-                        }}
+                        sx={{ textTransform: "none", bgcolor: "primary.main" }}
                         href="/admin/orders"
-                    >View All Orders</Button>
+                    >ดูทั้งหมด</Button>
                 </Box>
                 <TableContainer>
                     <Table>

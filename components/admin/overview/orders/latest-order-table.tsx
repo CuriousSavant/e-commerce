@@ -40,9 +40,6 @@ const LatestOrderTable: FC<ILatestOrderTable> = ({ order, loading }) => {
                     <TableCell sx={{ borderBottom: "1px solid #50575E" }} size="small">
                         <Skeleton variant="text" width={50} />
                     </TableCell>
-                    <TableCell sx={{ borderBottom: "1px solid #50575E" }} size="small">
-                        <Skeleton variant="text" width={50} />
-                    </TableCell>
                 </>
             ) : (
                 <>
@@ -62,9 +59,9 @@ const LatestOrderTable: FC<ILatestOrderTable> = ({ order, loading }) => {
                             </Box>
                         </Box>
                     </TableCell>
-                    <TableCell sx={{ color: "white", borderBottom: "1px solid #50575E", px: 2 }}>{format(order!!.createdAt, "dd-MM-yyyy", { locale: th })}</TableCell>
+                    <TableCell sx={{ color: "white", borderBottom: "1px solid #50575E", px: 2, whiteSpace: "pre" }}>{format(order!!.createdAt, "dd-MM-yyyy", { locale: th })}</TableCell>
                     <TableCell sx={{ color: status_orders[order?.status as keyof typeof status_orders] as any, borderBottom: "1px solid #50575E", px: 2 }}>{order?.status}</TableCell>
-                    <TableCell sx={{ color: "white", borderBottom: "1px solid #50575E", px: 2 }}>{order?.total.toLocaleString('th-TH')}</TableCell>
+                    <TableCell sx={{ color: "white", borderBottom: "1px solid #50575E", px: 2 }}>฿{order?.total.toLocaleString('th-TH')}</TableCell>
                 </>
             )}
         </TableRow>

@@ -10,25 +10,23 @@ export default function LatestUsers() {
     const [users, setUsers] = useState<User[]>([]);
     const [loading, setLoading] = useState<boolean>(true);
 
-    const fetchUsers = async () => {
-        setLoading(true);
-        try {
-            await axios.get('/api/user/latest-users').then((res) => {
-                setUsers(res.data);
-            });
-        } catch (error) {
-            console.error(error);
-        } finally {
-            setLoading(false);
-        }
-    }
-
     useEffect(() => {
+        const fetchUsers = async () => {
+            setLoading(true);
+            try {
+                await axios.get('/api/user/latest-users').then((res) => setUsers(res.data));
+            } catch (error) {
+                console.error(error);
+            } finally {
+                setLoading(false);
+            }
+        }
+
         fetchUsers();
     }, [])
 
     return (
-        <Card sx={{ backgroundColor: "secondary.dark", flex: 1, pb: 0, minHeight: "180px" }}>
+        <Card sx={{ backgroundColor: "secondary.dark", flex: 1, pb: 0, minHeight: "180px", width: "100%", maxWidth: "100%" }}>
             <CardContent sx={{ p: 0, height: "100%" }}>
                 <Box display="flex" justifyContent="space-between" alignItems="center" p={2} mb={2} borderBottom={"1px solid #50575E"}>
                     <Typography variant="h6" color="white">
@@ -42,7 +40,7 @@ export default function LatestUsers() {
                             bgcolor: "secondary.main"
                         }}
                         href="/admin/users"
-                    >View All Users</Button>
+                    >ดูทั้งหมด</Button>
                 </Box>
                 <Box display="flex" justifyContent={"center"} alignItems="center" px={1} height={"100%"} flexWrap={"wrap"} gap={2}>
                     {loading ? (

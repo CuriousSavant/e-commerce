@@ -10,10 +10,14 @@ export const metadata: Metadata = {
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
   return (
     <>
-      <NavbarAdmin />
+      <Box sx={{ display: { xs: "none", md: "block" } }}>
+        <NavbarAdmin />
+      </Box>
+
       <Box sx={{ backgroundColor: "#1E1E2F", minHeight: "100vh", display: "flex", color: "white" }}>
-        {/* Sidebar */}
-        <SidebarMenu />
+        <Box sx={{ display: { xs: "none", md: "block" } }}>
+          <SidebarMenu />
+        </Box>
 
         <Box sx={{ ml: { xs: 0, md: "260px", width: "100%" } }}>
           {children}
