@@ -12,10 +12,9 @@ export interface User {
 	emailVerified?: Date | null;
 	birthday?: string;
 	phone?: string;
-	// address?: string;
 
 	address: Address[];
-	orders: Order[];
+	order: Order[];
 	cart: Cart[];
 	wishlist: Wishlist[];
 

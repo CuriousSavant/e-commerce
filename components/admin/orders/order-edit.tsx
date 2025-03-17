@@ -100,8 +100,6 @@ const OrderEdit: React.FC<OrderEditProps> = ({
                 axios.put(`/api/order/${order?.id}`, { status: order?.status, addressId: addressInfo.id, items: updatedItems }),
             ])
 
-            console.log("updatedItems put: ", updatedItems)
-
             // รีเฟรชข้อมูลหลังอัปเดต
             fetchOrders();
             fetchAddressList();

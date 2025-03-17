@@ -67,7 +67,7 @@ const ProductTableRow: React.FC<ProductTableRowProps> = ({
                 </Box>
             </TableCell>
             <TableCell size="small" sx={{ color: "white", borderBottom: "1px solid #50575E" }}>
-                {loading ? <Skeleton width={40} /> : product?.category ? product?.category.name : "ไม่มีหมวดหมู่"}
+                {loading ? <Skeleton width={40} /> : product?.category ? product?.category.name : "-"}
             </TableCell>
             <TableCell size="small" sx={{ color: "white", borderBottom: "1px solid #50575E" }}>
                 {loading ? <Skeleton width={40} /> : `฿${product?.price.toLocaleString('th-TH')}`}
@@ -83,7 +83,7 @@ const ProductTableRow: React.FC<ProductTableRowProps> = ({
                 )}
             </TableCell>
             <TableCell size="small" sx={{ color: "white", borderBottom: "1px solid #50575E" }}>
-                {loading ? <Skeleton width={40} /> : product?.stock}
+                {loading ? <Skeleton width={40} /> : `${product?.stock} ชิ้น`}
             </TableCell>
             <TableCell size="small" sx={{ borderBottom: "1px solid #50575E" }}>
                 <Box display={'flex'} alignItems={'center'}>

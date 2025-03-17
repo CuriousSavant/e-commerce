@@ -15,12 +15,10 @@ export type TUsersTableRow = {
 const UsersTableRow: React.FC<TUsersTableRow> = ({ loading, user, startEditing, handleDeleteUser }) => {
     return (
         <TableRow>
-            {/* User Id */}
             <TableCell sx={{ color: "white", px: 3, borderBottom: "1px solid #50575E" }}>
                 {loading ? <Skeleton width={40} /> : user?.id}
             </TableCell>
 
-            {/* User Info */}
             <TableCell sx={{ color: "white", px: 3, borderBottom: "1px solid #50575E" }}>
                 <Box display="flex" alignItems="center">
                     {loading ? (
@@ -49,27 +47,22 @@ const UsersTableRow: React.FC<TUsersTableRow> = ({ loading, user, startEditing, 
                 </Box>
             </TableCell>
 
-            {/* Phone Number */}
             <TableCell sx={{ color: "white", px: 3, borderBottom: "1px solid #50575E" }}>
                 {loading ? <Skeleton width={80} /> : user?.phone ? user.phone : '-'}
             </TableCell>
 
-            {/* Created At */}
             <TableCell sx={{ color: "white", px: 3, borderBottom: "1px solid #50575E" }}>
                 {loading ? <Skeleton width={120} /> : user?.createdAt ? format(user?.createdAt, 'dd/MM/yyyy HH:mm') : "-"}
             </TableCell>
 
-            {/* Order */}
             <TableCell sx={{ color: "white", px: 3, borderBottom: "1px solid #50575E" }}>
-                {loading ? <Skeleton width={80} height={30} /> : "3"}
+                {loading ? <Skeleton width={80} height={30} /> : user?.order?.length || "-"}
             </TableCell>
 
-            {/* Role */}
             <TableCell sx={{ color: "white", px: 3, borderBottom: "1px solid #50575E" }}>
                 {loading ? <Skeleton width={60} /> : user?.role}
             </TableCell>
 
-            {/* Actions */}
             <TableCell sx={{ borderBottom: "1px solid #50575E" }}>
                 {loading ? (
                     <Box display="flex">

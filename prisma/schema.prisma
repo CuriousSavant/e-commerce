@@ -90,8 +90,8 @@ model User {
   updatedAt     DateTime  @updatedAt
 
   accounts Account[]
-  Order    Order[]
-  Cart     Cart[]
+  order    Order[]
+  cart     Cart[]
   wishlist Wishlist[]
   address  Address[]
 }

@@ -1,14 +1,53 @@
 import { Card, CardContent, Typography, Box, Button } from "@mui/material";
 import { ShoppingCart, Person, Inventory, ArrowCircleRight, ContentPaste } from "@mui/icons-material";
+import { Order } from "@/types/order";
+import { User } from "@/types/user";
+import { Product } from "@/types/product";
+import axios from "axios";
+import { useEffect, useState } from "react";
 
-const stats = [
-    { icon: <ShoppingCart sx={{ fontSize: 60, color: "#696E77" }} />, value: "150", label: "จำนวนคำสั่งซื้อใหม่", href: "/admin/orders" },
-    { icon: <Person sx={{ fontSize: 60, color: "#696E77" }} />, value: "5 คน", label: "ยอดการลงทะเบียน", href: "/admin/users" },
-    { icon: <ContentPaste sx={{ fontSize: 60, color: "#696E77" }} />, value: "18", label: "คำสั่งซื้อรอดำเนินการ", href: "/admin/orders" },
-    { icon: <Inventory sx={{ fontSize: 60, color: "#696E77" }} />, value: "3", label: "สินค้ามาใหม่", href: "/admin/products" },
-];
+const Stats = () => {
+    const [orders, setOrders] = useState<Order[]>([])
+    const [users, setUsers] = useState<User[]>([])
+    const [products, setProducts,] = useState<Product[]>([])
 
-export default function Stats() {
+    useEffect(() => {
+        const fetchAll = async () => {
+            Promise.all([
+                await axios.get('/api/order').then((res) => setOrders(res.data)),
+                await axios.get('/api/user/latest-users').then((res) => setUsers(res.data)),
+                await axios.get('/api/product/latest-product').then((res) => setProducts(res.data)),
+            ])
+        }
+        fetchAll();
+    }, [])
+
+    const stats = [
+        {
+            icon: <ShoppingCart sx={{ fontSize: 60, color: "#696E77" }} />,
+            value: orders.filter(order => order.status === "COMPLETED").length,
+            label: "คำสั่งซื้อสำเร็จ",
+            href: "/admin/orders"
+        },
+        {
+            icon: <Person sx={{ fontSize: 60, color: "#696E77" }} />,
+            value: `${users.length} คน`,
+            label: "ยอดการลงทะเบียน", href: "/admin/users"
+        },
+        {
+            icon: <ContentPaste sx={{ fontSize: 60, color: "#696E77" }} />,
+            value: `${orders.filter(order => order.status === "PENDING").length} คำสั่งซื้อ`,
+            label: "คำสั่งซื้อรอดำเนินการ",
+            href: "/admin/orders"
+        },
+        {
+            icon: <Inventory sx={{ fontSize: 60, color: "#696E77" }} />,
+            value: `${products.length} ชิ้น`,
+            label: "สินค้ามาใหม่",
+            href: "/admin/products"
+        },
+    ];
+
     return (
         <Box sx={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: 2 }}>
             {stats.map((stat, index) => (
@@ -18,7 +57,8 @@ export default function Stats() {
                             <Typography variant="h5" sx={{ color: "white", fontWeight: "700" }}>
                                 {stat.value}
                             </Typography>
-                            <Typography sx={{ color: "#B8B8B8", fontSize: "1rem" }}>{stat.label}</Typography>
+                            <Typography sx={{ color: "#B8B8B8", fontSize: "1rem" }}>{stat.
+                                label}</Typography>
                         </Box>
                         <Box sx={{ color: "#B8B8B8", fontSize: 40 }}>{stat.icon}</Box>
                     </CardContent>
@@ -42,3 +82,5 @@ export default function Stats() {
         </Box>
     )
 }
+
+export default Stats;

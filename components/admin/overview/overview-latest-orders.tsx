@@ -32,7 +32,7 @@ export default function LatestOrders() {
         <Card sx={{ bgcolor: "secondary.dark", flex: 2, pb: 0, minHeight: "350px" }}>
             <CardContent sx={{ p: 0 }}>
                 <Box display="flex" justifyContent="space-between" alignItems="center" p={2} borderBottom={"1px solid #50575E"}>
-                    <Typography variant="h6" color="white">คำสั่งซื้อใหม่ล่าสุด</Typography>
+                    <Typography variant="h6" color="white">{orders.length > 0 ? `คำสั่งซื้อใหม่ล่าสุด (${orders.length})` : 'คำสั่งซื้อใหม่ล่าสุด'}</Typography>
                     <Button
                         variant="contained"
                         size="small"

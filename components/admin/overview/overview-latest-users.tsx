@@ -13,8 +13,8 @@ export default function LatestUsers() {
     const fetchUsers = async () => {
         setLoading(true);
         try {
-            await axios.get('/api/user').then((res) => {
-                setUsers(res.data.slice(0, 8));
+            await axios.get('/api/user/latest-users').then((res) => {
+                setUsers(res.data);
             });
         } catch (error) {
             console.error(error);
@@ -30,10 +30,10 @@ export default function LatestUsers() {
     return (
         <Card sx={{ backgroundColor: "secondary.dark", flex: 1, pb: 0, minHeight: "180px" }}>
             <CardContent sx={{ p: 0, height: "100%" }}>
-
-                {/* Header */}
                 <Box display="flex" justifyContent="space-between" alignItems="center" p={2} mb={2} borderBottom={"1px solid #50575E"}>
-                    <Typography variant="h6" color="white">สมาชิกใหม่ล่าสุด</Typography>
+                    <Typography variant="h6" color="white">
+                        {users.length > 0 ? `สมาชิกใหม่ล่าสุด (${users.length})` : "สมาชิกใหม่ล่าสุด"}
+                    </Typography>
                     <Button
                         variant="contained"
                         size="small"
@@ -44,14 +44,12 @@ export default function LatestUsers() {
                         href="/admin/users"
                     >View All Users</Button>
                 </Box>
-
-                {/* Table */}
                 <Box display="flex" justifyContent={"center"} alignItems="center" px={1} height={"100%"} flexWrap={"wrap"} gap={2}>
                     {loading ? (
                         Array.from({ length: 8 }).map((_, index) => <AvatarUser key={index} loading={true} />)
                     ) : (
                         users.length > 0 ? (
-                            users.map((user, index) => (
+                            users.slice(0, 8).map((user, index) => (
                                 <AvatarUser user={user} loading={loading} key={index} />
                             ))
                         ) : (
@@ -60,7 +58,6 @@ export default function LatestUsers() {
                             </Box>
                         ))}
                 </Box>
-
             </CardContent>
         </Card>
     )

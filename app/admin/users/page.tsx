@@ -20,7 +20,7 @@ export default function Users() {
     fetchUsers, handleChange,
     validateForm, handleReset,
     handleSignUp, handleDeleteUser,
-    startEditing,
+    startEditing, latestUser, setLatestUser,
   } = useUser();
 
   return (

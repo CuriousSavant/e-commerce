@@ -20,6 +20,7 @@ export async function GET(req: Request) {
         },
         include: {
           address: true,
+          order: true,
         }
       });
       return NextResponse.json(users, { status: 200 });
@@ -41,6 +42,7 @@ export async function GET(req: Request) {
       },
       include: {
         address: true,
+        order: true,
       }
     });
 
@@ -63,7 +65,7 @@ export async function POST(req: Request) {
 
     if (existingUser) {
       return NextResponse.json(
-        { error: "มีผู้ใช้นี้อยู่แล้ว" },
+        { msg: "มีผู้ใช้อีเมลนี้แล้ว" },
         { status: 400 }
       );
     }

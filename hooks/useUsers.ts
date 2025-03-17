@@ -9,6 +9,7 @@ import Swal from 'sweetalert2'
 
 const useUser = () => {
     const [userList, setUserList] = useState<User[]>([]);
+    const [latestUser, setLatestUser] = useState<User[]>([]);
 
     const [userForm, setUserForm] = useState<UserFormStateProps>({
         firstname: "",
@@ -31,8 +32,10 @@ const useUser = () => {
     const fetchUsers = async () => {
         setLoading(true);
         try {
-            const res = await axios.get(`/api/user?sortOrder=${sortOrder}&query=${searchQuery}&role=${role}`)
-            setUserList(res.data);
+            Promise.all([
+                await axios.get(`/api/user?sortOrder=${sortOrder}&query=${searchQuery}&role=${role}`).then((res) => setUserList(res.data)),
+                await axios.get(`/api/user/latest-users?sortOrder=${sortOrder}`).then((res) => { setLatestUser(res.data), console.log(res.data) }),
+            ])
         } catch (err) {
             console.error("Error fetching users: " + err);
         } finally {
@@ -169,13 +172,11 @@ const useUser = () => {
         role, setRole,
         loading, setLoading,
         editingId, setEditingId,
-        fetchUsers,
-        handleChange,
-        validateForm,
-        handleReset,
-        handleSignUp,
-        handleDeleteUser,
-        startEditing,
+        fetchUsers, handleChange,
+        validateForm, handleReset,
+        handleSignUp, handleDeleteUser,
+        startEditing, latestUser,
+        setLatestUser,
     }
 }
 

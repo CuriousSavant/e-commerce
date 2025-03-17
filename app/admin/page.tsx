@@ -2,7 +2,6 @@
 import React, { useEffect } from 'react';
 import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
-
 import { Typography, Box } from "@mui/material";
 import Stats from '@/components/admin/overview/stats';
 import LatestOrders from '@/components/admin/overview/overview-latest-orders';
@@ -24,6 +23,7 @@ const AdminPage = () => {
       <Typography variant="h5" mb={2} fontWeight={800} gutterBottom>
         Overview
       </Typography>
+
       <Stats />
 
       <Box display={"flex"} alignItems={"flex-start"} gap={4} mt={4}>

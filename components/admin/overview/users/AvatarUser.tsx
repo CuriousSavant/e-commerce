@@ -1,5 +1,4 @@
 "use client"
-
 import { User } from "@/types/user";
 import { Box, Typography, Avatar, Skeleton } from "@mui/material";
 import { FC } from "react";
@@ -12,8 +11,6 @@ type IAvatarUser = {
 const AvatarUser: FC<IAvatarUser> = ({ user, loading }) => {
     return (
         <Box sx={{ display: "flex", flexDirection: "column", minWidth: "70px" }}>
-
-            {/* โปรไฟล์ผู้ใช้ */}
             {loading ? (
                 <Skeleton variant="circular" width={70} height={70} sx={{ bgcolor: "rgba(255,255,255,0.12)" }} />
             ) : (
@@ -32,8 +29,6 @@ const AvatarUser: FC<IAvatarUser> = ({ user, loading }) => {
                     </Avatar>
                 </>
             )}
-
-            {/* ชื่อผู้ใช้ */}
             {loading ? (
                 <Skeleton width={70} height={20} sx={{ mt: 1, bgcolor: "rgba(255,255,255,0.12)" }} />
             ) : (

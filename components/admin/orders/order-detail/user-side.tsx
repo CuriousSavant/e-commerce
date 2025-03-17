@@ -12,7 +12,7 @@ const UserSide = ({ order }: { order?: Order }) => {
             </Box>
             <CardContent sx={{ p: 1.5, px: 1 }}>
                 <Stack direction="row" spacing={2} alignItems="center">
-                    <Avatar sx={{ width: 56, height: 56 }} />
+                    <Avatar sx={{ width: 56, height: 56 }}>{order?.user.firstname[0]}</Avatar>
                     <Box>
                         <Typography variant="body1" fontWeight={600} sx={{ color: "#ffff" }}>{order?.user.firstname} {order?.user.lastname}</Typography>
                         <Typography variant="body2" sx={{ color: "#c3c3c3" }}>{order?.user.email}</Typography>
