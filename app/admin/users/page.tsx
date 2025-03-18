@@ -24,7 +24,7 @@ export default function Users() {
   } = useUser();
 
   return (
-    <Box sx={{ bgcolor: "primary.dark", minHeight: "100vh", py: 2, px: 6 }}>
+    <Box sx={{ bgcolor: "primary.dark", minHeight: "100vh", py: 2, px: { xs: 3, md: 6 } }}>
       <Typography variant="h5" mb={2} fontWeight={800} gutterBottom>
         {formOpen ? (editingId ? "แก้ไขข้อมูลผู้ใช้" : "สร้างผู้ใช้") : "รายชื่อผู้ใช้ทั้งหมด"}
       </Typography>

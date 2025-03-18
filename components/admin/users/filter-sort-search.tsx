@@ -34,33 +34,31 @@ const FilterSortSearch: React.FC<ITrinity> = ({
     formOpen,
 }) => {
     return (
-        <Box display="flex" justifyContent="space-between" alignItems="center" mb={6}>
-            <Box display={"flex"} gap={2}>
+        <Box display={"flex"} justifyContent="space-between" flexDirection={{ xs: "column", md: "row" }} alignItems="center" mb={6}>
+            <Box display={"flex"} gap={2} flexDirection={{ xs: "column", md: "row" }} width={{ xs: "100%", md: "auto" }}>
                 {/* Search */}
-                <Box>
-                    <TextField
-                        size="small"
-                        placeholder="Search by id, name, email"
-                        sx={{ bgcolor: "secondary.dark", borderRadius: 2, border: "2px solid #4F4F4F" }}
-                        onChange={(e) => setSearchQuery(e.target.value)}
-                        value={searchQuery || ""}
-                        InputProps={{
-                            sx: {
-                                "&::placeholder": {
-                                    color: "#C2C2C2",
-                                    opacity: 1,
-                                    fontSize: 14,
-                                },
-                                color: "white"
+                <TextField
+                    size="small"
+                    placeholder="Search by id, name, email"
+                    sx={{ bgcolor: "secondary.dark", borderRadius: 2, border: "2px solid #4F4F4F" }}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                    value={searchQuery || ""}
+                    InputProps={{
+                        sx: {
+                            "&::placeholder": {
+                                color: "#C2C2C2",
+                                opacity: 1,
+                                fontSize: 14,
                             },
-                            startAdornment: (
-                                <InputAdornment position="start" >
-                                    <Search sx={{ color: "#c2c2c2", fontSize: 22 }} />
-                                </InputAdornment>
-                            )
-                        }}
-                    />
-                </Box>
+                            color: "white",
+                        },
+                        startAdornment: (
+                            <InputAdornment position="start" >
+                                <Search sx={{ color: "#c2c2c2", fontSize: 22 }} />
+                            </InputAdornment>
+                        )
+                    }}
+                />
 
                 {/* Filters By Role */}
                 <Select
@@ -93,7 +91,7 @@ const FilterSortSearch: React.FC<ITrinity> = ({
                 </Select>
             </Box>
 
-            <Button variant="contained" sx={{ bgcolor: "primary.main" }} onClick={() => setFormOpen(!formOpen)}>
+            <Button variant="contained" sx={{ bgcolor: "primary.main", mt: { xs: 4, md: 0 }, alignSelf: "end" }} onClick={() => setFormOpen(!formOpen)}>
                 Create +
             </Button>
         </Box>
