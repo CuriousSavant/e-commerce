@@ -27,7 +27,7 @@ const ProductTableHead: React.FC<ProductTableHeadProps> = ({
                     />
                 </TableCell>
                 {["หมายเลขสินค้า", "ชื่อ", "หมวดหมู่", "ราคา", "สถานะ", "สต็อก", "การจัดการ"].map((headCell) => (
-                    <TableCell key={headCell} sx={{ pt: 1.5, color: "white", borderBottom: "1px solid #50575E" }}>{headCell}</TableCell>
+                    <TableCell key={headCell} sx={{ pt: 1.5, color: "white", whiteSpace: "pre", borderBottom: "1px solid #50575E" }}>{headCell}</TableCell>
                 ))}
             </TableRow>
         </TableHead>

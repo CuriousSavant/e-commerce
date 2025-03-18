@@ -34,7 +34,7 @@ const Products = () => {
     } = usePagination();
 
     return (
-        <Box sx={{ py: 2, px: 6 }}>
+        <Box sx={{ py: 2, px: { xs: 2, md: 6 } }}>
             <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center", mb: 1 }}>
                 {selectItem.length > 0 ? (
                     <>
@@ -56,18 +56,12 @@ const Products = () => {
 
             {!formOpen ? ( // ถ้าเปิด form อยู่ให้ปิด
                 <FilterSortSearchProduct
-                    sortOrder={sortOrder}
-                    toggleSortOrder={toggleSortOrder}
-                    formOpen={formOpen}
-                    setFormOpen={setFormOpen}
-                    setQuery={setQuery}
-                    query={query}
-                    categoryFilter={categoryFilter}
-                    setCategoryFilter={setCategoryFilter}
-                    setStatusFilter={setStatusFilter}
-                    statusFilter={statusFilter}
-                    priceFilter={priceFilter}
-                    setPriceFilter={setPriceFilter}
+                    {...{
+                        categoryFilter, formOpen, priceFilter,
+                        query, setCategoryFilter, setFormOpen,
+                        setPriceFilter, setQuery, setStatusFilter,
+                        sortOrder, statusFilter, toggleSortOrder,
+                    }}
                 />
             ) : null}
 
@@ -75,15 +69,11 @@ const Products = () => {
                 <>
                     {/* Product Table */}
                     <ProductTable
-                        page={page}
-                        loading={loading}
-                        products={products}
-                        rowsPerPage={rowsPerPage}
-                        selectItem={selectItem}
-                        setSelectItem={setSelectItem}
-                        startEditing={startEditing}
-                        handleAllDelete={handleAllDelete}
-                        handleDeleteProduct={handleDeleteProduct}
+                        {...{
+                            handleAllDelete, handleDeleteProduct, loading,
+                            page, products, rowsPerPage, selectItem,
+                            setSelectItem, startEditing,
+                        }}
                     />
 
                     <TablePagination

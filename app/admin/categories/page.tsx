@@ -108,10 +108,11 @@ const Categories = () => {
   // }
 
   return (
-    <Box py={2} px={6}>
+    <Box py={2} px={{ xs: 2, md: 6 }}>
       <Typography variant="h5" mb={2} fontWeight={700}  >
         หมวดหมู่
       </Typography>
+      
       <FilterSortSearchCategories {...{ query, setQuery, setSortOrder, setStatusFilter, sortOrder, setStatus, dialogOpen, setDialogOpen, statusFilter }} />
 
       <FormCreateCategory

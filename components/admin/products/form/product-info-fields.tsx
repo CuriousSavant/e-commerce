@@ -74,19 +74,18 @@ const ProductInfoFields: React.FC<ProductInfoFielsProps> = ({
                                     </Button>
                                 </Box>
                                 {/* แสดงรูปภาพที่เลือก */}
-                                {!!imageUrl.length &&
-                                    imageUrl.map((image, index) => (
-                                        <div key={index} className="relative">
-                                            <img src={image} onClick={() => setSelectedImage(image)} className="h-24 rounded-md cursor-pointer" alt="uploaded product" />
-                                            <button
-                                                type='button'
-                                                className="absolute top-0 right-0 text-red-500"
-                                                onClick={() => handleRemoveImage(index)}
-                                            >
-                                                <Close />
-                                            </button>
-                                        </div>
-                                    ))}
+                                {!!imageUrl.length && imageUrl.map((image, index) => (
+                                    <div key={index} className="relative">
+                                        <img src={image} onClick={() => setSelectedImage(image)} className="h-24 rounded-md cursor-pointer" alt="uploaded product" />
+                                        <button
+                                            type='button'
+                                            className="absolute top-0 right-0 text-red-500"
+                                            onClick={() => handleRemoveImage(index)}
+                                        >
+                                            <Close />
+                                        </button>
+                                    </div>
+                                ))}
                                 {/* เมื่อกดรูปภาพจะแสดงภาพเต็ม */}
                                 <Modal open={!!selectedImage} className='relative'>
                                     <div className="flex items-center justify-center h-screen bg-black bg-opacity-75">

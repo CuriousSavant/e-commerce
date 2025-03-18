@@ -21,32 +21,30 @@ const FilterSortSearchCategories: React.FC<FilterSortSearchProductProps> = ({
     dialogOpen, setDialogOpen,
 }) => {
     return (
-        <Stack direction={"row"} justifyContent={"space-between"} alignItems={"center"}>
-            <Box display={"flex"} gap={2}>
-                <Box>
-                    <TextField
-                        size="small"
-                        placeholder="Search by name"
-                        sx={{ bgcolor: "secondary.dark", borderRadius: 2, border: "2px solid #4F4F4F" }}
-                        onChange={(e) => setQuery(e.target.value)}
-                        value={query || ""}
-                        InputProps={{
-                            sx: {
-                                "&::placeholder": {
-                                    color: "#C2C2C2",
-                                    opacity: 1,
-                                    fontSize: 14,
-                                },
-                                color: "white"
+        <Stack direction={{ xs: "column", md: "row" }} justifyContent={"space-between"} alignItems={"center"} mt={{ xs: 4, md: 2 }}>
+            <Box display={"flex"} flexDirection={{ xs: "column", md: "row" }} gap={2} width={"100%"}>
+                <TextField
+                    size="small"
+                    placeholder="Search by name"
+                    sx={{ bgcolor: "secondary.dark", borderRadius: 2, border: "2px solid #4F4F4F" }}
+                    onChange={(e) => setQuery(e.target.value)}
+                    value={query || ""}
+                    InputProps={{
+                        sx: {
+                            "&::placeholder": {
+                                color: "#C2C2C2",
+                                opacity: 1,
+                                fontSize: 14,
                             },
-                            startAdornment: (
-                                <InputAdornment position="start" >
-                                    <Search sx={{ color: "#c2c2c2", fontSize: 22 }} />
-                                </InputAdornment>
-                            )
-                        }} />
-                </Box>
-
+                            color: "white"
+                        },
+                        startAdornment: (
+                            <InputAdornment position="start" >
+                                <Search sx={{ color: "#c2c2c2", fontSize: 22 }} />
+                            </InputAdornment>
+                        )
+                    }}
+                />
                 <Select
                     size='small'
                     onChange={(e) => setSortOrder(e.target.value as 'asc' | 'desc')}
@@ -55,7 +53,7 @@ const FilterSortSearchCategories: React.FC<FilterSortSearchProductProps> = ({
                         bgcolor: "secondary.dark",
                         border: "2px solid #4F4F4F",
                         color: "#C2C2C2",
-                        "& .MuiSelect-icon": { color: "white" }
+                        "& .MuiSelect-icon": { color: "white" },
                     }}>
                     <MenuItem value={"asc"}>เก่า - ใหม่</MenuItem>
                     <MenuItem value={"desc"}>ใหม่ - เก่า</MenuItem>
@@ -77,7 +75,7 @@ const FilterSortSearchCategories: React.FC<FilterSortSearchProductProps> = ({
                 </Select>
             </Box>
 
-            <Button sx={{ bgcolor: "primary.main", color: "white", px: 3 }} onClick={() => setDialogOpen(!dialogOpen)}>Add Category</Button>
+            <Button sx={{ bgcolor: "primary.main", color: "white", px: 3, alignSelf: "end", mt: 4 }} onClick={() => setDialogOpen(!dialogOpen)}>สร้างหมวดหมู่</Button>
         </Stack>
     );
 };

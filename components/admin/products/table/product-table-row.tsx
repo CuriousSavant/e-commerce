@@ -66,7 +66,7 @@ const ProductTableRow: React.FC<ProductTableRowProps> = ({
                     )}
                 </Box>
             </TableCell>
-            <TableCell size="small" sx={{ color: "white", borderBottom: "1px solid #50575E" }}>
+            <TableCell size="small" sx={{ color: "white", whiteSpace: "pre", borderBottom: "1px solid #50575E" }}>
                 {loading ? <Skeleton width={40} /> : product?.category ? product?.category.name : "-"}
             </TableCell>
             <TableCell size="small" sx={{ color: "white", borderBottom: "1px solid #50575E" }}>
@@ -78,11 +78,11 @@ const ProductTableRow: React.FC<ProductTableRowProps> = ({
                         label={product?.status}
                         color={product?.status === "ACTIVE" ? "success" : "error"}
                         variant="outlined"
-                        sx={{ fontWeight: "bold" }}
+                        sx={{ fontWeight: "bold", border: 0 }}
                     />
                 )}
             </TableCell>
-            <TableCell size="small" sx={{ color: "white", borderBottom: "1px solid #50575E" }}>
+            <TableCell size="small" sx={{ color: "white", whiteSpace: "pre", borderBottom: "1px solid #50575E" }}>
                 {loading ? <Skeleton width={40} /> : `${product?.stock} ชิ้น`}
             </TableCell>
             <TableCell size="small" sx={{ borderBottom: "1px solid #50575E" }}>

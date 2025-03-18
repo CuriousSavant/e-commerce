@@ -26,14 +26,14 @@ const FilterSortSearchProduct: React.FC<FilterSortSearchProductProps> = ({
     setCategoryFilter, setStatusFilter, setPriceFilter,
 }) => {
     return (
-        <Stack direction={"column"} mt={2}>
-            <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center" }} mb={2}>
-                <Box sx={{ display: "flex", gap: 2 }}>
+        <Stack direction={"column"} mt={{ xs: 4, md: 2 }}>
+            <Box sx={{ display: "flex", flexDirection: { xs: "column", md: "row" }, justifyContent: "space-between", alignItems: "center" }} mb={{ xs: 4, md: 2 }}>
+                <Box sx={{ display: "flex", gap: 2, width: "100%", mb: 2 }}>
                     {/* Search Input */}
                     <TextField
                         size="small"
                         placeholder="Search by name"
-                        sx={{ bgcolor: "secondary.dark", borderRadius: 2, border: "1px solid #4F4F4F", width: "340px" }}
+                        sx={{ bgcolor: "secondary.dark", borderRadius: 2, border: "1px solid #4F4F4F", width: { xs: "100%", md: "440px" } }}
                         onChange={(e) => setQuery(e.target.value)}
                         value={query || ""}
                         InputProps={{
@@ -50,7 +50,7 @@ const FilterSortSearchProduct: React.FC<FilterSortSearchProductProps> = ({
                     />
                 </Box>
 
-                <Box sx={{ display: "flex", gap: 1 }}>
+                <Box sx={{ display: "flex", flexDirection: { xs: "column", md: "row" }, gap: 1, width: { xs: "100%", md: "auto" } }}>
                     <Button
                         variant="contained"
                         startIcon={<AiOutlinePlus />}
@@ -59,17 +59,17 @@ const FilterSortSearchProduct: React.FC<FilterSortSearchProductProps> = ({
                             backgroundColor: "#4F46E5",
                             ":hover": { backgroundColor: "#4338CA" },
                             color: "white",
+                            width: { xs: "100%", md: "auto" }
                         }}
-                        onClick={() => setFormOpen(!formOpen)}
-                    >
+                        onClick={() => setFormOpen(!formOpen)}>
                         Create
                     </Button>
                 </Box>
             </Box>
 
-            <Box display={'flex'} gap={2} alignItems={'center'} mb={4}>
+            <Box display={'flex'} flexDirection={{ xs: "column", md: "row" }} gap={2} alignItems={'center'} mb={4}>
                 {/* Sort Order */}
-                <FormControl size="small" sx={{ minWidth: 120 }}>
+                <FormControl size="small" sx={{ width: { xs: "100%", md: "auto" } }}>
                     <Select
                         value={sortOrder}
                         onChange={toggleSortOrder}
@@ -81,7 +81,7 @@ const FilterSortSearchProduct: React.FC<FilterSortSearchProductProps> = ({
                 </FormControl>
 
                 {/* Category Filter */}
-                <FormControl size="small" sx={{ minWidth: 150 }}>
+                <FormControl size="small" sx={{ width: { xs: "100%", md: "auto" } }}>
                     <Select
                         value={categoryFilter}
                         onChange={(e: SelectChangeEvent) => setCategoryFilter(e.target.value)}
@@ -95,7 +95,7 @@ const FilterSortSearchProduct: React.FC<FilterSortSearchProductProps> = ({
                 </FormControl>
 
                 {/* Status Filter */}
-                <FormControl size="small" sx={{ minWidth: 120 }}>
+                <FormControl size="small" sx={{ width: { xs: "100%", md: "auto" } }}>
                     <Select
                         value={statusFilter || ""}
                         onChange={(e: SelectChangeEvent) => setStatusFilter(e.target.value as 'active' | 'inactive')}
@@ -108,7 +108,7 @@ const FilterSortSearchProduct: React.FC<FilterSortSearchProductProps> = ({
                 </FormControl>
 
                 {/* Price Filter */}
-                <FormControl size="small" sx={{ minWidth: 120 }}>
+                <FormControl size="small" sx={{ width: { xs: "100%", md: "auto" } }}>
                     <Select
                         value={priceFilter || ""}
                         onChange={(e: SelectChangeEvent) => setPriceFilter(e.target.value)}
