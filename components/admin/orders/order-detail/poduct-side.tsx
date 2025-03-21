@@ -15,7 +15,7 @@ const ProductSide = ({ order }: { order?: Order }) => {
                 <Typography variant="body2" sx={{ color: "#c3c3c3", fontSize: "14px" }} mt={{ xs: 0, md: 1 }}>
                     สั่งซื้อเมื่อ: <a className="text-white">{format(order?.createdAt || "", "d MMM yyyy h:mm a")}</a>
                 </Typography>
-                <Typography variant="body2" sx={{ color: "#c3c3c3", fontSize: "14px" }} mt={{ xs: 0, md: 1 }}>สถานะ: <a className="text-white">{order?.status === "PENDING" ? "รอดำเนินการ" : (order?.status === "COMPLETED" ? "สำเร็จ" : "ยกเลิก")}</a></Typography>
+                <Typography variant="body2" sx={{ color: "#c3c3c3", fontSize: "14px" }} mt={{ xs: 0, md: 1 }}>สถานะ: <a className="text-white">{order?.status === "PENDING" ? "รอดำเนินการ" : (order?.status === "COMPLETED" ? "จัดส่งสำเร็จ" : "ยกเลิก")}</a></Typography>
                 <Typography variant="body2" sx={{ color: "#c3c3c3", fontSize: "14px" }} mt={{ xs: 0, md: 1 }}>
                     จะได้รับภายใน: <a className="text-white">ไม่มีกำหนด </a><a href="/client/about" className="text-[#2196f3]">หมายเหตุ</a>
                 </Typography>

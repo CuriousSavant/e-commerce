@@ -55,7 +55,7 @@ export default function OrdersPage() {
 
   const fetchProductList = () => {
     try {
-      axios.get('/api/product').then((res) => setProductList(res.data))
+      axios.get('/api/product').then((res) => setProductList(res.data.products))
     } catch (err) {
       console.error(err)
     }
