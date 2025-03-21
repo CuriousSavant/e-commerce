@@ -12,7 +12,7 @@ export async function middleware(req: NextRequest) {
     return NextResponse.rewrite(new URL("/404", req.url));
   }
 
-  if (pathname.startsWith("/arc/admin") && (!token || token.role !== "admin")) {
+  if (pathname.startsWith("/admin") && (!token || token.role !== "admin")) {
     return NextResponse.redirect(new URL("/404", req.url));
   }
 

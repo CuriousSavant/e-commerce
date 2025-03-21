@@ -1,6 +1,6 @@
 'use client';
 import React, { useEffect, useState } from 'react';
-import { Box, CircularProgress, Typography } from '@mui/material';
+import { Box, CircularProgress, TablePagination, Typography } from '@mui/material';
 import { Order } from '@/types/order';
 import TabsOrder from '@/components/admin/orders/tabs-order';
 import axios from 'axios';
@@ -9,6 +9,7 @@ import OrderDetail from '@/components/admin/orders/order-detail';
 import OrderEdit from '@/components/admin/orders/order-edit';
 import { Address } from '@/types/address';
 import { Product } from '@/types/product';
+import { usePagination } from '@/app/context/PaginationContext';
 
 export type ActiveTabs = 'all' | 'completed' | 'pending' | 'canceled';
 
@@ -29,11 +30,14 @@ export default function OrdersPage() {
   const [openDetail, setOpenDetail] = useState<boolean>(false);
   const [editOrderDetailId, setEditOrderDetailId] = useState<number | null>(null);
 
+  const { page, pageSize, handleChangePage, handleChangeRowsPerPage } = usePagination();
+  const [ordersCount, setOrdersCount] = useState<number>(0);
+
   const fetchOrders = () => {
     setLoading(true)
     try {
-      axios.get(`/api/order?q=${query}&filterStatus=${activeTabs}&sortOrder=${sortOrder}`)
-        .then((res) => { setOrders(res.data), console.log("orders[]:", res.data) });
+      axios.get(`/api/order?q=${query}&filterStatus=${activeTabs}&sortOrder=${sortOrder}&page=${page}&pageSize=${pageSize}`)
+        .then((res) => { setOrders(res.data.orders), setOrdersCount(res.data.ordersCount) });
     } catch (err) {
       console.error(err)
     } finally {
@@ -89,7 +93,7 @@ export default function OrdersPage() {
   };
 
   return (
-    <Box sx={{ bgcolor: "primary.dark", color: "white", minHeight: "100vh", py: 2, px: 6 }}>
+    <Box sx={{ bgcolor: "primary.dark", color: "white", minHeight: "100vh", py: 2, px: { xs: 2, md: 6 } }}>
       {editOrderDetailId ?
         <OrderEdit
           order={orders.find(order => order.id === editOrderDetailId)}
@@ -105,7 +109,7 @@ export default function OrdersPage() {
           <>
             {!openDetail ? (
               <>
-                <Typography variant="h5" fontWeight={'bold'} pb={2}>
+                <Typography variant="h5" fontWeight={'bold'} pb={2} mb={{ xs: 4, md: 2 }}>
                   คำสั่งซื้อทั้งหมด
                 </Typography>
 
@@ -145,6 +149,17 @@ export default function OrdersPage() {
                       <Typography fontSize={20} fontWeight={700}>ยังไม่มีคำสั่งซื้อ</Typography>
                     </Box>
                   ))}
+
+                <TablePagination
+                  rowsPerPageOptions={[5, 10, 25]}
+                  component="div"
+                  count={ordersCount}
+                  rowsPerPage={pageSize}
+                  page={page - 1}
+                  onPageChange={handleChangePage}
+                  onRowsPerPageChange={handleChangeRowsPerPage}
+                  sx={{ color: "white", "& .MuiSvgIcon-root": { color: "white" }, "& .MuiSelect-icon": { color: "white" }, "& .Mui-disabled": { color: "gray" } }}
+                />
               </>
             ) : (
               <>

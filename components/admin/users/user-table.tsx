@@ -20,16 +20,16 @@ const UsersTable: React.FC<TUsersTable> = ({
     return (
         <TableContainer
             sx={{
-                bgcolor: "secondary.dark",
-                borderRadius: "6px",
                 overflowX: "auto",
                 width: "100%",
                 display: "block",
                 maxWidth: "100%",
+                borderTopRightRadius: "10px",
+                borderTopLeftRadius: "10px",
             }}>
-            <Table>
+            <Table size="small">
                 <UsersTableHead />
-                <TableBody>
+                <TableBody sx={{ bgcolor: "secondary.dark" }}>
                     {loading ? (
                         Array.from({ length: 10 }).map((_, i) => (
                             <UsersTableRow key={i} {...{ handleDeleteUser, startEditing, loading }} />

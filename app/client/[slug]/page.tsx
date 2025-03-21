@@ -53,7 +53,7 @@ const ProductDetailPage = () => {
       .catch((err) => {
         console.error("Error fetching wishlist:", err);
       });
-  }, [product?.id]);
+  }, []);
 
   const handleWishlist = async (productId: number) => {
     if (status === 'unauthenticated') {

@@ -26,10 +26,7 @@ const OrderSummary = () => {
       setLoading(true);
       try {
         const res = await axios.get(`/api/order?userId=${session.user.id}`);
-        const sortedOrders = res.data.sort(
-          (a: { createdAt: string }, b: { createdAt: string }) =>
-            new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
-        );
+        const sortedOrders = res.data;
         setOrders(sortedOrders);
       } catch (err) {
         console.error(err);

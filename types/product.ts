@@ -6,7 +6,7 @@ export interface Product {
   description?: string;
   image?: string[] | undefined;
   price: number;
-  brand: string;
+  brandId: number | null;
   stock: number;
   slug: string;
   properties: Propertie;

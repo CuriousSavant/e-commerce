@@ -6,7 +6,7 @@ export const GET = async (
   { params }: { params: { slug: string } }
 ) => {
   try {
-    const product = await prisma.product.findUnique({
+    const products = await prisma.product.findUnique({
       where: { slug: params.slug },
       include: {
         category: true,
@@ -15,7 +15,7 @@ export const GET = async (
       },
     });
 
-    return NextResponse.json(product);
+    return NextResponse.json(products);
   } catch (error) {
     return NextResponse.json(
       { msg: "Failed to fetch products", error: error },
@@ -34,24 +34,24 @@ export const PUT = async (
     image,
     price,
     categoryId,
-    brand,
+    brandId,
     stock,
   } = await req.json();
 
   try {
-    const updateProduct = await prisma.product.update({
+    const update_product = await prisma.product.update({
       data: {
         title,
         description,
         image,
         price,
         categoryId,
-        brand,
+        brandId,
         stock,
       },
       where: { slug: params.slug },
     });
-    return NextResponse.json(updateProduct);
+    return NextResponse.json(update_product);
   } catch (error) {
     return NextResponse.json(
       { msg: "Failed to update product", error: error },
@@ -65,10 +65,11 @@ export const DELETE = async (
   { params }: { params: { slug: string } }
 ) => {
   try {
-    const deleteRow = await prisma.product.delete({
+    const delete_product = await prisma.product.delete({
       where: { slug: params.slug },
     });
-    return NextResponse.json(deleteRow);
+
+    return NextResponse.json(delete_product);
   } catch (error) {
     return NextResponse.json(
       { msg: "Failed to delete product", error: error },

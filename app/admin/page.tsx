@@ -8,16 +8,6 @@ import LatestOrders from '@/components/admin/overview/overview-latest-orders';
 import LatestMembers from '@/components/admin/overview/overview-latest-users';
 
 const AdminPage = () => {
-  const router = useRouter();
-  const { data: session, status } = useSession();
-
-  useEffect(() => {
-    if (status === 'unauthenticated') {
-      router.push('/');
-    }
-  }, [status, session]);
-
-
   return (
     <Box sx={{ flex: 1, px: { xs: 3, md: 6 }, py: 2 }}>
       <Typography variant="h5" mb={2} fontWeight={800} gutterBottom>

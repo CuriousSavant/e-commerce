@@ -1,4 +1,4 @@
-import { Search } from "@mui/icons-material";
+import { Add, Search } from "@mui/icons-material";
 import { Box, Button, InputAdornment, MenuItem, Select, Stack, TextField } from "@mui/material";
 import React from "react";
 
@@ -18,31 +18,29 @@ const FilterSortSearchBrand: React.FC<FilterSortSearchProductProps> = ({
     dialogOpen, setDialogOpen,
 }) => {
     return (
-        <Stack direction={"row"} justifyContent={"space-between"} alignItems={"center"}>
-            <Box display={"flex"} gap={2}>
-                <Box>
-                    <TextField
-                        size="small"
-                        placeholder="Search by name"
-                        sx={{ bgcolor: "secondary.dark", borderRadius: 2, border: "2px solid #4F4F4F" }}
-                        onChange={(e) => setQuery(e.target.value)}
-                        value={query || ""}
-                        InputProps={{
-                            sx: {
-                                "&::placeholder": {
-                                    color: "#C2C2C2",
-                                    opacity: 1,
-                                    fontSize: 14,
-                                },
-                                color: "white"
+        <Stack direction={{ xs: "column", md: "row" }} justifyContent={"space-between"} alignItems={"center"}>
+            <Box display={"flex"} flexDirection={{ xs: "column", md: "row" }} gap={2} width={"100%"} alignItems={"center"}>
+                <TextField
+                    size="small"
+                    placeholder="Search by name"
+                    sx={{ bgcolor: "secondary.dark", borderRadius: 2, border: "2px solid #4F4F4F" }}
+                    onChange={(e) => setQuery(e.target.value)}
+                    value={query || ""}
+                    InputProps={{
+                        sx: {
+                            "&::placeholder": {
+                                color: "#C2C2C2",
+                                opacity: 1,
+                                fontSize: 14,
                             },
-                            startAdornment: (
-                                <InputAdornment position="start" >
-                                    <Search sx={{ color: "#c2c2c2", fontSize: 22 }} />
-                                </InputAdornment>
-                            )
-                        }} />
-                </Box>
+                            color: "white"
+                        },
+                        startAdornment: (
+                            <InputAdornment position="start" >
+                                <Search sx={{ color: "#c2c2c2", fontSize: 22 }} />
+                            </InputAdornment>
+                        )
+                    }} />
 
                 <Select
                     size='small'
@@ -52,14 +50,23 @@ const FilterSortSearchBrand: React.FC<FilterSortSearchProductProps> = ({
                         bgcolor: "secondary.dark",
                         border: "2px solid #4F4F4F",
                         color: "#C2C2C2",
-                        "& .MuiSelect-icon": { color: "white" }
+                        "& .MuiSelect-icon": { color: "white" },
                     }}>
                     <MenuItem value={"asc"}>เก่า - ใหม่</MenuItem>
                     <MenuItem value={"desc"}>ใหม่ - เก่า</MenuItem>
                 </Select>
             </Box>
-
-            <Button sx={{ bgcolor: "primary.main", color: "white", px: 3 }} onClick={() => setDialogOpen(!dialogOpen)}>เพิ่มแบรนด์</Button>
+            <Button
+                sx={{
+                    bgcolor: "primary.main",
+                    color: "white",
+                    px: 3,
+                    alignSelf: "end",
+                    whiteSpace: "pre",
+                }}
+                startIcon={<Add />}
+                onClick={() => setDialogOpen(!dialogOpen)}>เพิ่มแบรนด
+                ์</Button>
         </Stack>
     );
 };

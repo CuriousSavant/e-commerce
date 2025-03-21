@@ -6,6 +6,7 @@ import { SortType, Role } from '@/types/components/filter-sort';
 import { UserFormStateProps } from '@/types/components/create-user-form';
 import { debounce } from "lodash";
 import Swal from 'sweetalert2'
+import { usePagination } from '@/app/context/PaginationContext';
 
 const useUser = () => {
     const [userList, setUserList] = useState<User[]>([]);
@@ -23,18 +24,24 @@ const useUser = () => {
     const [formOpen, setFormOpen] = useState<boolean>(false);
     const [errors, setErrors] = useState<{ [key: string]: string }>({});
 
+    const [userCount, setUserCount] = useState<number>(0);
+
     const [searchQuery, setSearchQuery] = useState<string>(''); // search
     const [sortOrder, setSortOrder] = useState<SortType>('asc'); // sort
     const [role, setRole] = useState<Role>('all') // filter by role
     const [loading, setLoading] = useState<boolean>(true);
     const [editingId, setEditingId] = useState<number | null>(null);
 
+    const { page, pageSize } = usePagination();
+
     const fetchUsers = async () => {
         setLoading(true);
         try {
             Promise.all([
-                await axios.get(`/api/user?sortOrder=${sortOrder}&query=${searchQuery}&role=${role}`).then((res) => setUserList(res.data)),
-                await axios.get(`/api/user/latest-users?sortOrder=${sortOrder}`).then((res) => { setLatestUser(res.data), console.log(res.data) }),
+                await axios.get(`/api/user?sortOrder=${sortOrder}&q=${searchQuery}&role=${role}&page=${page}&pageSize=${pageSize}`)
+                    .then((res) => { setUserList(res.data.users), setUserCount(res.data.countUser) }),
+                await axios.get(`/api/user/latest-users?sortOrder=${sortOrder}`)
+                    .then((res) => setLatestUser(res.data)),
             ])
         } catch (err) {
             console.error("Error fetching users: " + err);
@@ -48,7 +55,7 @@ const useUser = () => {
         const delayedFetch = debounce(fetchUsers, 500);
         delayedFetch(); // delay เพื่อลดการเรียก api ที่ไม่จำเป็น
         return () => delayedFetch.cancel();
-    }, [sortOrder, searchQuery, role])
+    }, [sortOrder, searchQuery, role, page, pageSize])
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement> | SelectChangeEvent) => {
         let { name, value } = e.target;
@@ -176,7 +183,7 @@ const useUser = () => {
         validateForm, handleReset,
         handleSignUp, handleDeleteUser,
         startEditing, latestUser,
-        setLatestUser,
+        setLatestUser, userCount,
     }
 }
 

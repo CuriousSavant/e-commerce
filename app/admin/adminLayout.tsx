@@ -68,7 +68,7 @@ const AdminLayoutPage = ({ children }: { children: React.ReactNode }) => {
                     <SidebarMenu />
                 </Box>
 
-                <Box sx={{ ml: { xs: 0, md: "260px", width: "100%" } }}>
+                <Box sx={{ ml: { xs: 0, md: "260px" }, width: "100%", overflowX: "auto" }}>
                     {children}
                 </Box>
             </Box>

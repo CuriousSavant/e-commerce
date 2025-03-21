@@ -1,31 +1,25 @@
 'use client'
 import React from 'react'
-import { Table, TableBody, TableContainer } from "@mui/material"
+import { Table, TableBody, TableCell, TableContainer, TableRow, Typography } from "@mui/material"
 import { Product } from "@/types/product";
 import ProductTableHead from './table/product-table-head';
 import ProductTableRow from './table/product-table-row';
 
 interface RowPageProps {
     products: Product[];
-    page: number;
-    rowsPerPage: number;
     selectItem: string[];
     loading: boolean;
     setSelectItem: React.Dispatch<React.SetStateAction<string[]>>;
     startEditing: (product: any) => void;
-    handleAllDelete: () => void;
     handleDeleteProduct: (slug: string, productName: string) => void;
 }
 
 const ProductTable: React.FC<RowPageProps> = ({
-    page,
-    rowsPerPage,
     products,
     selectItem,
     setSelectItem,
     startEditing,
     loading,
-    handleAllDelete,
     handleDeleteProduct,
 }) => {
     const handleSelectAllClick = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -53,7 +47,6 @@ const ProductTable: React.FC<RowPageProps> = ({
 
     const isSelected = (slug: string) => selectItem.indexOf(slug) !== -1;
 
-
     return (
         <TableContainer
             sx={{
@@ -61,7 +54,8 @@ const ProductTable: React.FC<RowPageProps> = ({
                 width: "100%",
                 display: "block",
                 maxWidth: "100%",
-                borderRadius: "10px",
+                borderTopRightRadius: "10px",
+                borderTopLeftRadius: "10px",
             }}
         >
             <Table size="small">
@@ -81,20 +75,28 @@ const ProductTable: React.FC<RowPageProps> = ({
                                 startEditing={startEditing}
                             />
                         )) : (
-                            products.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((product, index) => {
-                                const selectedRow = isSelected(product.slug!!);
-                                return (
-                                    <ProductTableRow
-                                        key={index}
-                                        loading={loading}
-                                        handleClick={handleClick}
-                                        handleDeleteProduct={handleDeleteProduct}
-                                        product={product}
-                                        startEditing={startEditing}
-                                        selectedRow={selectedRow}
-                                    />
-                                );
-                            })
+                            products.length > 0 ? (
+                                products.map((product, index) => {
+                                    const selectedRow = isSelected(product.slug!!);
+                                    return (
+                                        <ProductTableRow
+                                            key={index}
+                                            loading={loading}
+                                            handleClick={handleClick}
+                                            handleDeleteProduct={handleDeleteProduct}
+                                            product={product}
+                                            startEditing={startEditing}
+                                            selectedRow={selectedRow}
+                                        />
+                                    );
+                                })
+                            ) : (
+                                <TableRow>
+                                    <TableCell colSpan={8} sx={{ borderBottom: 0, height: 160 }}>
+                                        <Typography color="white" align="center" fontSize={20}>ไม่พบสินค้า</Typography>
+                                    </TableCell>
+                                </TableRow>
+                            )
                         )}
                 </TableBody>
             </Table>

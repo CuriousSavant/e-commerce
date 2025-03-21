@@ -1,13 +1,13 @@
 import { Delete, Edit } from "@mui/icons-material";
-import { Box, Chip, IconButton, Skeleton, TableCell, TableRow } from "@mui/material";
+import { Box, Chip, IconButton, Skeleton, TableCell, TableRow, Typography } from "@mui/material";
 import { Category } from '@/types/product';
 
 interface CategoriesTableRowProps {
-    category?: Category;
-    parentCategory?: Category | undefined;
-    loading: boolean;
-    startEditingCategory: (category: Category) => void;
-    handleDeleteCategory: (id: number, name: string) => void;
+  category?: Category;
+  parentCategory?: Category | undefined;
+  loading: boolean;
+  startEditingCategory: (category: Category) => void;
+  handleDeleteCategory: (id: number, name: string) => void;
 }
 
 const CategoriesTableRow: React.FC<CategoriesTableRowProps> = ({
@@ -23,8 +23,10 @@ const CategoriesTableRow: React.FC<CategoriesTableRowProps> = ({
       <TableCell sx={{ minWidth: "150px", borderBottom: "1px solid #50575E", color: "white", px: 3 }} size="small">
         {loading ? <Skeleton width={40} /> : category?.id}
       </TableCell>
-      <TableCell sx={{ minWidth: "150px", borderBottom: "1px solid #50575E", color: "white", px: 3 }} size="small">
-        {loading ? <Skeleton width={40} /> : category?.name}
+      <TableCell sx={{ minWidth: "150px", borderBottom: "1px solid #50575E", color: "white", px: 3, maxWidth: { xs: "400px", md: "220px" } }} size="small">
+        <Typography variant="body2" className="line-clamp-1 w-[260px] max-w-full">
+          {loading ? <Skeleton width={40} /> : category?.name}
+        </Typography>
       </TableCell>
       <TableCell sx={{ minWidth: "150px", borderBottom: "1px solid #50575E", color: "white", px: 3 }} size="small">
         {loading ? <Skeleton width={40} /> : parentCategory?.name || "-"}
@@ -33,7 +35,7 @@ const CategoriesTableRow: React.FC<CategoriesTableRowProps> = ({
         {loading ? (
           <Skeleton width={60} />
         ) : (
-          <Chip label={category?.status} color={category?.status === "ACTIVE" ? "success" : "error"} variant="outlined" />
+          <Chip label={category?.status === "ACTIVE" ? "เปิดใช้งาน" : "ปิดใช้งาน"} color={category?.status === "ACTIVE" ? "success" : "error"} variant="outlined" sx={{ fontWeight: "bold", border: 0 }} />
         )}
       </TableCell>
       <TableCell sx={{ minWidth: "150px", borderBottom: "1px solid #50575E", px: 3 }} size="small">

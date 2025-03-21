@@ -4,7 +4,7 @@ import React from "react";
 
 const UserSide = ({ order }: { order?: Order }) => {
     return (
-        <Card sx={{ backgroundColor: "#27293d", width: 350, p: 2 }}>
+        <Card sx={{ backgroundColor: "#27293d", width: { xs: "100%", md: 350 }, p: 2 }}>
             <Box sx={{ borderBottom: "1px solid #50575E", display: "flex", alignItems: "center" }}>
                 <Typography variant="h6" fontWeight={600} gutterBottom sx={{ color: "#ffff" }}>
                     ข้อมูลผู้ใช้
@@ -28,7 +28,7 @@ const UserSide = ({ order }: { order?: Order }) => {
                 </Box>
                 <Box display={'flex'} justifyContent={'space-between'} alignItems={'center'} mt={1}>
                     <Typography variant="body2" sx={{ color: "#c3c3c3" }}>หมายเลขโทรศัพท์:</Typography>
-                    <Typography variant="body2" sx={{ color: "#ffff" }}>{order?.user.phone || "-"}</Typography>
+                    <Typography variant="body2" sx={{ color: "#ffff" }}>{order?.address?.phone || "-"}</Typography>
                 </Box>
                 <Box display={'flex'} justifyContent={'space-between'} alignItems={'center'} mt={1}>
                     <Typography variant="body2" sx={{ color: "#c3c3c3" }}>ภาษีมูลค่าเพิ่ม:</Typography>

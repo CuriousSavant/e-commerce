@@ -18,7 +18,7 @@ const OrderDetail = () => {
         const fetchOrderDetails = async () => {
             try {
                 const res = await axios.get(`/api/order/${id}?userId=${session?.user.id}`);
-                setOrders(res.data);
+                setOrders(res.data.orders);
             } catch (err) {
                 console.error(err);
             }

@@ -6,7 +6,8 @@ import ProductForm from "@/components/admin/products/form/product-form";
 import { MdDelete } from "react-icons/md";
 import FilterSortSearchProduct from "@/components/admin/products/filter-sort-search-product";
 import { useProducts } from "@/hooks/useProducts";
-import { usePagination } from "@/hooks/usePagination";
+import { usePagination } from "@/app/context/PaginationContext";
+import useBrands from "@/hooks/useBrands";
 
 const Products = () => {
     const {
@@ -24,18 +25,26 @@ const Products = () => {
         deletedImage, handleRemoveImage, handleUndoDelete,
         handleUploadImage, loadingImage, selectedImage,
         setSelectedImage, setSnackbarOpen, snackbarOpen,
+        countProducts,
     } = useProducts();
+
+    const { brands } = useBrands();
 
     const {
         handleChangePage,
         handleChangeRowsPerPage,
         page,
-        rowsPerPage,
+        pageSize,
     } = usePagination();
+
+    console.log("from page:", page, pageSize)
+
+    console.log("next:", (page * pageSize) >= countProducts)
+    console.log("prev:", page <= 1)
 
     return (
         <Box sx={{ py: 2, px: { xs: 2, md: 6 } }}>
-            <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center", mb: 1 }}>
+            <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center", mb: { xs: 4, md: 2 } }}>
                 {selectItem.length > 0 ? (
                     <>
                         <Typography variant="h5" fontWeight={"bold"}>{selectItem.length} Selected</Typography>
@@ -45,7 +54,7 @@ const Products = () => {
                             size="medium"
                             sx={{ textTransform: "none", display: "flex", alignItems: "center" }}>
                             <MdDelete size={20} color="#fff" />
-                            <Typography variant="button" fontWeight={"bold"} sx={{ ml: 1 }}>
+                            <Typography variant="button" fontWeight={"bold"} sx={{ ml: 1 }} onClick={() => handleAllDelete()}>
                                 Delete
                                 ({selectItem.length > 0 ? selectItem.length : ""})
                             </Typography>
@@ -61,29 +70,36 @@ const Products = () => {
                         query, setCategoryFilter, setFormOpen,
                         setPriceFilter, setQuery, setStatusFilter,
                         sortOrder, statusFilter, toggleSortOrder,
+                        categories,
                     }}
                 />
             ) : null}
 
             {!formOpen ? (
                 <>
-                    {/* Product Table */}
                     <ProductTable
                         {...{
-                            handleAllDelete, handleDeleteProduct, loading,
-                            page, products, rowsPerPage, selectItem,
+                            handleDeleteProduct, loading,
+                            products, selectItem,
                             setSelectItem, startEditing,
-                        }}
-                    />
+                        }} />
 
                     <TablePagination
                         rowsPerPageOptions={[5, 10, 25]}
                         component="div"
-                        count={products.length}
-                        rowsPerPage={rowsPerPage}
-                        page={page}
+                        count={countProducts}
+                        rowsPerPage={pageSize}
+                        page={page - 1}
                         onPageChange={handleChangePage}
                         onRowsPerPageChange={handleChangeRowsPerPage}
+                        nextIconButtonProps={{ disabled: (page * pageSize) >= countProducts }}
+                        backIconButtonProps={{ disabled: page <= 1 }}
+                        sx={{
+                            color: "white",
+                            "& .MuiSvgIcon-root": { color: "white" },
+                            "& .MuiSelect-icon": { color: "white" },
+                            "& .Mui-disabled": { color: "gray" },
+                        }}
                     />
                 </>
             ) : (
@@ -92,7 +108,7 @@ const Products = () => {
                     handleRemoveImage, handleUndoDelete, handleUploadImage, imageUrl,
                     loadingImage, selectedImage, setSelectedImage, snackbarOpen,
                     setSnackbarOpen, startEditing, formOpen, setFormOpen, setSlug,
-                    setImageUrl,
+                    setImageUrl, brands, categories,
                 }} />
             )}
         </Box>

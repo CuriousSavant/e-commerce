@@ -4,6 +4,7 @@ import { Category, Product } from "@/types/product";
 import { useImageUpload } from "./useImageUpload";
 import { debounce } from "lodash";
 import Swal from 'sweetalert2'
+import { usePagination } from "../app/context/PaginationContext";
 
 export const useProducts = () => {
     const [products, setProducts] = useState<Product[]>([]); // เก็บสินค้าที่ดึงมาจาก API
@@ -27,26 +28,33 @@ export const useProducts = () => {
         deletedIndex, setDeletedImage, setDeletedIndex,
     } = useImageUpload();
 
+    const { page, pageSize } = usePagination();
+
     const [productForm, setProductForm] = useState<ProductFormStateProps>({ // state สำหรับ form create user
         productName: "",
         productDesc: "",
         price: 0,
-        brand: "",
+        brandId: null,
         stock: 0,
         categoryId: null,
     });
 
+    const [countProducts, setCountProducts] = useState<number>(0)
+
     const fetchProducts = () => {
         setLoading(true)
-        axios.get(`/api/product?q=${query}&sortOrder=${sortOrder}&status=${statusFilter}&price=${priceFilter}`)
-            .then((res) => setProducts(res.data))
+        axios.get(`/api/product?q=${query}&sortOrder=${sortOrder}&status=${statusFilter}&price=${priceFilter}&categoryId=${categoryFilter}&page=${page}&pageSize=${pageSize}`)
+            .then((res) => {
+                setProducts(res.data.products)
+                setCountProducts(res.data.totalProducts)
+            })
             .catch((err) => console.error(err))
             .finally(() => setLoading(false))
     };
 
     const fetchCategories = () => {
         axios.get('/api/categories')
-            .then((res) => setCategories(res.data))
+            .then((res) => setCategories(res.data.categories))
             .catch((err) => console.error(err))
     };
 
@@ -55,12 +63,12 @@ export const useProducts = () => {
         const delayedFetch = debounce(fetchProducts, 500);
         delayedFetch(); // delay เพื่อลดการเรียก api ที่ไม่จำเป็น
         return () => delayedFetch.cancel();
-    }, [sortOrder, query, statusFilter, priceFilter])
+    }, [sortOrder, query, statusFilter, priceFilter, categoryFilter, page, pageSize])
 
     // ดึง หมวดหมู่ จาก API
     useEffect(() => {
         fetchCategories();
-    }, [categoryFilter]);
+    }, []);
 
     const toggleSortOrder = () => {
         setSortOrder((prev) => (prev === 'asc' ? 'desc' : 'asc'));
@@ -71,8 +79,8 @@ export const useProducts = () => {
             productName: product.title,
             productDesc: product.description || "",
             price: product.price,
-            brand: product.brand,
             stock: product.stock,
+            brandId: product.brandId,
             categoryId: product.categoryId,
         });
         setImageUrl(product.image || []);
@@ -85,8 +93,8 @@ export const useProducts = () => {
             productName: "",
             productDesc: "",
             price: 0,
-            brand: "",
             stock: 0,
+            brandId: null,
             categoryId: null,
         });
         setSlug(null);
@@ -101,8 +109,8 @@ export const useProducts = () => {
             description: productForm.productDesc,
             image: imageUrl,
             price: productForm.price,
-            brand: productForm.brand,
             stock: productForm.stock,
+            brandId: productForm.brandId,
             categoryId: productForm.categoryId,
         };
 
@@ -213,6 +221,6 @@ export const useProducts = () => {
         handleAllDelete, handleDeleteProduct, imageUrl,
         setImageUrl, handleRemoveImage, handleUndoDelete,
         handleUploadImage, loadingImage, selectedImage, setSelectedImage,
-        setSnackbarOpen, snackbarOpen, deletedImage,
+        setSnackbarOpen, snackbarOpen, deletedImage, countProducts,
     };
 };

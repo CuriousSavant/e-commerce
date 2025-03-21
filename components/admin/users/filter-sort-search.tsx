@@ -1,7 +1,7 @@
 "use client"
 
 import { Role, SortType } from '@/types/components/filter-sort';
-import { Search } from '@mui/icons-material';
+import { Add, Search } from '@mui/icons-material';
 import {
     Box,
     Button,
@@ -91,8 +91,16 @@ const FilterSortSearch: React.FC<ITrinity> = ({
                 </Select>
             </Box>
 
-            <Button variant="contained" sx={{ bgcolor: "primary.main", mt: { xs: 4, md: 0 }, alignSelf: "end" }} onClick={() => setFormOpen(!formOpen)}>
-                Create +
+            <Button
+                variant="contained"
+                sx={{
+                    bgcolor: "primary.main",
+                    mt: { xs: 4, md: 0 },
+                    alignSelf: "end"
+                }}
+                startIcon={<Add />}
+                onClick={() => setFormOpen(!formOpen)}>
+                สร้างผู้ใช้
             </Button>
         </Box>
     )

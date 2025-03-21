@@ -7,32 +7,33 @@ export const GET = async (req: NextRequest) => {
     const url = new URL(req.url).searchParams;
     const query = url.get('q')?.trim() || "";
     const sortOrder = url.get('sortOrder') === "asc" ? "asc" : "desc";
-    const status = url.get('status')
+    const status = url.get('status');
+    const page = url.get('page') || "1";
+    const pageSize = url.get('pageSize') || "10";
 
     let whereClause: any = {};
+    const categoriesCount = await prisma.categories.count({});
 
     if (query) whereClause.name = { contains: query, mode: "insensitive" }
     if (status && status !== "ALL") whereClause.status = status as STATUS_PRODUCT;
 
     if (!query && !status) {
       const categories = await prisma.categories.findMany({
-        include: {
-          product: true,
-        },
-        orderBy: {
-          createdAt: sortOrder,
-        }
+        include: { product: true },
+        orderBy: { createdAt: sortOrder },
+        skip: (parseInt(page) - 1) * parseInt(pageSize),
+        take: parseInt(pageSize),
       });
 
-      return NextResponse.json(categories);
+      return NextResponse.json({ categories, categoriesCount });
     } else {
-      const categorys = await prisma.categories.findMany({
+      const categories = await prisma.categories.findMany({
         where: whereClause,
-        orderBy: {
-          createdAt: sortOrder,
-        } as any,
+        orderBy: { createdAt: sortOrder } as any,
+        skip: (parseInt(page) - 1) * parseInt(pageSize),
+        take: parseInt(pageSize),
       })
-      return NextResponse.json(categorys);
+      return NextResponse.json({ categories, categoriesCount });
     }
   } catch (error) {
     return NextResponse.json({ msg: "Failed to fetch categories", error: error }, { status: 500 });

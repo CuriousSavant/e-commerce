@@ -6,47 +6,47 @@ import { SortType } from "@/types/components/filter-sort";
 export async function GET(req: Request) {
   try {
     const { searchParams } = new URL(req.url);
-    const query = searchParams.get("query")?.trim() || "";
+    const query = searchParams.get("q")?.trim() || "";
     const sortOrder = searchParams.get("sortOrder") || "asc";
     const role = searchParams.get("role") || "all";
+    const page = parseInt(searchParams.get("page") || "1");
+    const pageSize = parseInt(searchParams.get("pageSize") || "10");
+
+    const countUser = await prisma.user.count({});
 
     if (!query) {
       const users = await prisma.user.findMany({
-        where: {
-          role: role === 'all' ? {} : role,
-        },
-        orderBy: {
-          createdAt: sortOrder as SortType,
-        },
-        include: {
-          address: true,
-          order: true,
-        }
+        where: { role: role === 'all' ? {} : role },
+        orderBy: { createdAt: sortOrder as SortType },
+        include: { address: true, order: true },
+        skip: (page - 1) * pageSize,
+        take: pageSize,
       });
-      return NextResponse.json(users, { status: 200 });
+      return NextResponse.json({ users, countUser }, { status: 200 });
     }
 
     const isNumeric = !isNaN(Number(query));
 
     const users = await prisma.user.findMany({
-      orderBy: {
-        createdAt: sortOrder as SortType,
-      },
+      orderBy: { createdAt: sortOrder as SortType },
       where: {
         role: role === 'all' ? {} : role,
         OR: [
-          { firstname: { contains: query.toLowerCase() } },
-          { email: { contains: query.toLowerCase() } },
+          { firstname: { contains: query, mode: "insensitive" } },
+          { lastname: { contains: query, mode: "insensitive" } },
+          { email: { contains: query.toLowerCase(), mode: "insensitive" } },
           ...(isNumeric ? [{ id: Number(query) }] : [])
         ]
       },
       include: {
         address: true,
         order: true,
-      }
+      },
+      skip: (page - 1) * pageSize,
+      take: pageSize,
     });
 
-    return NextResponse.json(users, { status: 200 });
+    return NextResponse.json({ users, countUser }, { status: 200 });
   } catch (error) {
     return NextResponse.json({ msg: "Failed to fetch users", error: error }, { status: 500 });
   }
@@ -57,17 +57,10 @@ export async function POST(req: Request) {
     const { firstname, lastname, email, phone, birthday, role, password, confirmPassword } =
       await req.json();
 
-    const existingUser = await prisma.user.findUnique({
-      where: { email },
-    });
-
-    // console.log(firstname, lastname, email, phone, birthday, role, password, confirmPassword)
+    const existingUser = await prisma.user.findUnique({ where: { email } });
 
     if (existingUser) {
-      return NextResponse.json(
-        { msg: "มีผู้ใช้อีเมลนี้แล้ว" },
-        { status: 400 }
-      );
+      return NextResponse.json({ msg: "มีผู้ใช้อีเมลนี้แล้ว" }, { status: 400 });
     }
 
     if (password !== confirmPassword) {

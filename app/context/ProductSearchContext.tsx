@@ -6,8 +6,8 @@ import axios from 'axios';
 interface SearchContextType {
     viewMode: 'grid' | 'list';
     setViewMode: React.Dispatch<React.SetStateAction<'grid' | 'list'>>;
-    sortOption: string;
-    setSortOption: React.Dispatch<React.SetStateAction<string>>;
+    sortOrder: string;
+    setSortOrder: React.Dispatch<React.SetStateAction<string>>;
     originalProducts: Product[];
     setOriginalProducts: React.Dispatch<React.SetStateAction<Product[]>>;
     searchQuery: string;
@@ -15,7 +15,7 @@ interface SearchContextType {
     query: string | null;
     loading: boolean;
     setLoading: React.Dispatch<React.SetStateAction<boolean>>;
-    categorys: Category[];
+    categories: Category[];
     selectedCategory: string | null;
     setSelectedCategory: React.Dispatch<React.SetStateAction<string | null>>;
     filteredProducts: Product[];
@@ -27,44 +27,39 @@ const SearchContext = createContext<SearchContextType | undefined>(undefined);
 // สร้าง Provider Component
 export const SearchProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
     const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
-    const [sortOption, setSortOption] = useState<string>('createdAt');
+    const [sortOrder, setSortOrder] = useState<string>('createdAt');
     const [originalProducts, setOriginalProducts] = useState<Product[]>([]);
     const [searchQuery, setSearchQuery] = useState('');
-    const [categorys, setCategorys] = useState<Category[]>([]);
+    const [categories, setCategories] = useState<Category[]>([]);
     const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
     const [loading, setLoading] = useState<boolean>(false)
     const [filteredProducts, setFilteredProducts] = useState<Product[]>([])
 
-    // use hooks
     const searchParams = useSearchParams();
     const query = searchParams.get('q');
 
     useEffect(() => {
         setLoading(true)
         if (query) {
-            axios.get(`/api/product?search=${query}&sortBy=${sortOption}`)
+            axios.get(`/api/product?search=${query}&sortBy=${sortOrder}`)
                 .then((res) => setOriginalProducts(res.data))
                 .catch((err) => console.error(err))
                 .finally(() => setLoading(false))
         } else {
-            axios.get(`/api/product?sortBy=${sortOption}`)
-                .then((res) => {
-                    setOriginalProducts(res.data)
-                })
+            axios.get(`/api/product?sortBy=${sortOrder}`)
+                .then((res) => setOriginalProducts(res.data.products))
                 .catch((err) => console.error(err))
                 .finally(() => setLoading(false))
 
-            axios.get('/api/categories').then((res) => setCategorys(res.data))
+            axios.get('/api/categories').then((res) => setCategories(res.data.categories))
         }
-    }, [query, sortOption]);
+    }, [query, sortOrder]);
 
     useEffect(() => {
         if (!selectedCategory) return;
         setLoading(true)
-        axios.get(`/api/product?categoryId=${selectedCategory}&sortBy=${sortOption}`)
-            .then((res) => {
-                setFilteredProducts(res.data)
-            })
+        axios.get(`/api/product?categoryId=${selectedCategory}&sortBy=${sortOrder}`)
+            .then((res) => setFilteredProducts(res.data))
             .catch((err) => console.error(err))
             .finally(() => setLoading(false))
     }, [originalProducts, selectedCategory])
@@ -74,8 +69,8 @@ export const SearchProvider: React.FC<{ children: React.ReactNode }> = ({ childr
             value={{
                 viewMode,
                 setViewMode,
-                sortOption,
-                setSortOption,
+                sortOrder,
+                setSortOrder,
                 originalProducts,
                 setOriginalProducts,
                 searchQuery,
@@ -83,7 +78,7 @@ export const SearchProvider: React.FC<{ children: React.ReactNode }> = ({ childr
                 query,
                 loading,
                 setLoading,
-                categorys,
+                categories,
                 selectedCategory,
                 setSelectedCategory,
                 filteredProducts,

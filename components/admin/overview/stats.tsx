@@ -19,7 +19,7 @@ const Stats = () => {
                 axios.get('/api/product/latest-product')
             ]);
 
-            setOrders(ordersRes.data);
+            setOrders(ordersRes.data.orders);
             setUsers(usersRes.data);
             setProducts(productsRes.data);
         }

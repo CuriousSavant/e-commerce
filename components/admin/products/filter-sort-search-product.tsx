@@ -1,12 +1,13 @@
-import { Search } from "@mui/icons-material";
+import { Category } from "@/types/product";
+import { Add, Search } from "@mui/icons-material";
 import { Box, Button, FormControl, InputAdornment, MenuItem, Select, SelectChangeEvent, Stack, TextField } from "@mui/material";
 import React from "react";
-import { AiOutlinePlus } from "react-icons/ai";
 
 type FilterSortSearchProductProps = {
     sortOrder: string;
     formOpen: boolean;
     query: string;
+    categories: Category[];
     categoryFilter: string;
     statusFilter: string;
     priceFilter: string;
@@ -21,14 +22,14 @@ type FilterSortSearchProductProps = {
 
 const FilterSortSearchProduct: React.FC<FilterSortSearchProductProps> = ({
     sortOrder, formOpen, query, categoryFilter,
-    statusFilter, priceFilter,
+    statusFilter, priceFilter, categories,
     setQuery, setFormOpen, toggleSortOrder,
     setCategoryFilter, setStatusFilter, setPriceFilter,
 }) => {
     return (
         <Stack direction={"column"} mt={{ xs: 4, md: 2 }}>
             <Box sx={{ display: "flex", flexDirection: { xs: "column", md: "row" }, justifyContent: "space-between", alignItems: "center" }} mb={{ xs: 4, md: 2 }}>
-                <Box sx={{ display: "flex", gap: 2, width: "100%", mb: 2 }}>
+                <Box sx={{ display: "flex", gap: 2, width: "100%", mb: { xs: 3, md: 0 } }}>
                     {/* Search Input */}
                     <TextField
                         size="small"
@@ -53,16 +54,17 @@ const FilterSortSearchProduct: React.FC<FilterSortSearchProductProps> = ({
                 <Box sx={{ display: "flex", flexDirection: { xs: "column", md: "row" }, gap: 1, width: { xs: "100%", md: "auto" } }}>
                     <Button
                         variant="contained"
-                        startIcon={<AiOutlinePlus />}
                         sx={{
                             textTransform: "none",
                             backgroundColor: "#4F46E5",
                             ":hover": { backgroundColor: "#4338CA" },
                             color: "white",
-                            width: { xs: "100%", md: "auto" }
+                            width: { xs: "100%", md: "auto" },
+                            whiteSpace: "pre",
                         }}
+                        startIcon={<Add />}
                         onClick={() => setFormOpen(!formOpen)}>
-                        Create
+                        สร้างสินค้า
                     </Button>
                 </Box>
             </Box>
@@ -83,14 +85,18 @@ const FilterSortSearchProduct: React.FC<FilterSortSearchProductProps> = ({
                 {/* Category Filter */}
                 <FormControl size="small" sx={{ width: { xs: "100%", md: "auto" } }}>
                     <Select
-                        value={categoryFilter}
+                        value={categoryFilter || "all"}
                         onChange={(e: SelectChangeEvent) => setCategoryFilter(e.target.value)}
                         sx={{ bgcolor: "secondary.dark", color: "white", border: "1px solid #4f4f4f", borderRadius: 2, '& .MuiSelect-icon': { color: "white" } }}
                     >
-                        <MenuItem value="all">All Categories</MenuItem>
-                        <MenuItem value="electronics">Electronics</MenuItem>
-                        <MenuItem value="fashion">Fashion</MenuItem>
-                        <MenuItem value="home">Home</MenuItem>
+                        <MenuItem value="all">หมวดหมู่ทั้งหมด</MenuItem>
+                        {categories.length > 0 ? (
+                            categories.map((category) => (
+                                <MenuItem key={category.id} value={category.id}>{category.name}</MenuItem>
+                            ))
+                        ) : (
+                            <MenuItem disabled>No categories available</MenuItem>
+                        )}
                     </Select>
                 </FormControl>
 
@@ -101,9 +107,9 @@ const FilterSortSearchProduct: React.FC<FilterSortSearchProductProps> = ({
                         onChange={(e: SelectChangeEvent) => setStatusFilter(e.target.value as 'active' | 'inactive')}
                         sx={{ bgcolor: "secondary.dark", color: "white", border: "1px solid #4f4f4f", borderRadius: 2, '& .MuiSelect-icon': { color: "white" } }}
                     >
-                        <MenuItem value="all">All Status</MenuItem>
-                        <MenuItem value="active">Active</MenuItem>
-                        <MenuItem value="inactive">Inactive</MenuItem>
+                        <MenuItem value="all">สถานะทั้งหมด</MenuItem>
+                        <MenuItem value="active">เปิดใช้งาน</MenuItem>
+                        <MenuItem value="inactive">ปิดใช้งาน</MenuItem>
                     </Select>
                 </FormControl>
 
@@ -114,9 +120,9 @@ const FilterSortSearchProduct: React.FC<FilterSortSearchProductProps> = ({
                         onChange={(e: SelectChangeEvent) => setPriceFilter(e.target.value)}
                         sx={{ bgcolor: "secondary.dark", color: "white", border: "1px solid #4f4f4f", borderRadius: 2, '& .MuiSelect-icon': { color: "white" } }}
                     >
-                        <MenuItem value="all">Filter Price</MenuItem>
-                        <MenuItem value="low-high">Low - High</MenuItem>
-                        <MenuItem value="high-low">High - Low</MenuItem>
+                        <MenuItem value="all">กรองตามราคา(ค่าเริ่มต้น)</MenuItem>
+                        <MenuItem value="low-high">ถูก - แพง</MenuItem>
+                        <MenuItem value="high-low">แพง - ถูก</MenuItem>
                     </Select>
                 </FormControl>
             </Box>

@@ -8,11 +8,11 @@ import { useSearchContext } from '@/app/context/ProductSearchContext';
 
 const SearchLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
     const {
-        sortOption,
+        sortOrder,
         viewMode,
         setViewMode,
-        setSortOption,
-        categorys,
+        setSortOrder,
+        categories,
         setSelectedCategory,
         selectedCategory,
     } = useSearchContext();
@@ -31,7 +31,7 @@ const SearchLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => 
                         displayEmpty
                     >
                         <MenuItem value="สินค้าแนะนำ">สินค้าแนะนำ</MenuItem>
-                        {categorys.map((item) => {
+                        {categories.map((item) => {
                             return (
                                 <MenuItem key={item.id} value={item.id}>{item.name}</MenuItem>
                             )
@@ -45,8 +45,8 @@ const SearchLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => 
                     <Select
                         size="small"
                         className="bg-white border border-gray-300 rounded w-full md:w-auto"
-                        value={sortOption}
-                        onChange={(e) => setSortOption(e.target.value)}
+                        value={sortOrder}
+                        onChange={(e) => setSortOrder(e.target.value)}
                         displayEmpty
                     >
                         <MenuItem value="createdAt">ค่าเริ่มต้น</MenuItem>

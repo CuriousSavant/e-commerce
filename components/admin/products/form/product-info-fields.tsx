@@ -4,6 +4,8 @@ import { BiUpload } from 'react-icons/bi';
 import { Button, TextField, Select, MenuItem, InputLabel, FormControl, Box, Typography, Grid, Modal, IconButton, Snackbar } from '@mui/material';
 import { Close } from '@mui/icons-material';
 import { fieldsProps } from './product-form';
+import { Category } from '@/types/product';
+import { Brand } from '@/types/brand';
 
 interface ProductInfoFielsProps {
     formFields: fieldsProps[];
@@ -13,6 +15,8 @@ interface ProductInfoFielsProps {
     imageUrl: string[];
     selectedImage: string | null;
     slug: string | null;
+    categories: Category[];
+    brands: Brand[];
     handleUploadImage: (e: React.ChangeEvent<HTMLInputElement>) => void;
     setSelectedImage: React.Dispatch<React.SetStateAction<string | null>>;
     handleRemoveImage: (index: number) => void;
@@ -28,12 +32,13 @@ const ProductInfoFields: React.FC<ProductInfoFielsProps> = ({
     slug, setSelectedImage, handleRemoveImage,
     handleUndoDelete, handleUploadImage,
     setSnackbarOpen, handleCreateProductAndUpdate,
-    setProductForm,
+    setProductForm, brands, categories,
 }) => {
     const [errors, setErrors] = useState<{ [key: string]: string }>({});
 
     const handleChange = (e: any) => {
         const { name, value } = e.target;
+        console.log(name, value)
         setProductForm({ ...productForm, [name]: name === "price" || name === "stock" ? Number(value) : value });
         setErrors({ ...errors, [name]: '' });
     }
@@ -102,36 +107,48 @@ const ProductInfoFields: React.FC<ProductInfoFielsProps> = ({
                                 <Select
                                     name={field.name}
                                     onChange={handleChange}
-                                    value={productForm[field.name as keyof typeof productForm]}
+                                    value={productForm[field.name as keyof typeof productForm] || ""}
                                     sx={{ bgcolor: "secondary.dark", color: "white", border: "1px solid #4a4a5c" }}>
-                                    {field.options?.length || 0 > 0 ? (
-                                        field.options?.map((option: any, idx: number) => (
-                                            <MenuItem key={idx} value={option}>{option}</MenuItem>
-                                        ))
-                                    ) : (
-                                        <MenuItem disabled>ไม่มีหมวดหมู่</MenuItem>
-                                    )}
+                                    {field.name === "categoryId" ? (
+                                        categories.length > 0 ? (
+                                            categories.map((category) => (
+                                                <MenuItem key={category.id} value={category.id}>
+                                                    {category.name}
+                                                </MenuItem>
+                                            ))
+                                        ) : (
+                                            <MenuItem disabled>ไม่มีหมวดหมู่</MenuItem>
+                                        )
+                                    ) : field.name === "brandId" ? (
+                                        brands.length > 0 ? (
+                                            brands.map((brand) => (
+                                                <MenuItem key={brand.id} value={brand.id}>
+                                                    {brand.name}
+                                                </MenuItem>
+                                            ))
+                                        ) : (
+                                            <MenuItem disabled>ไม่มีแบรนด์</MenuItem>
+                                        )
+                                    ) : null}
                                 </Select>
                             </FormControl>
                         ) : ( // field กรอกข้อมูล
-                            <>
-                                <TextField
-                                    label={field.label}
-                                    variant="outlined"
-                                    name={field.name}
-                                    type={field.type}
-                                    onChange={handleChange}
-                                    value={productForm[field.name as keyof typeof productForm]}
-                                    size="small"
-                                    fullWidth
-                                    multiline={field.multiline || false}
-                                    rows={field.rows || 1}
-                                    error={!!errors[field.name || '']}
-                                    helperText={errors[field.name || '']}
-                                    InputLabelProps={{ style: { color: "#C0C0C0" } }}
-                                    sx={{ bgcolor: "secondary.dark", borderRadius: 2, border: "1px solid #4a4a5c", input: { color: "white" }, "& .MuiInputBase-root": { color: "white" } }}
-                                />
-                            </>
+                            <TextField
+                                label={field.label}
+                                variant="outlined"
+                                name={field.name}
+                                type={field.type}
+                                onChange={handleChange}
+                                value={productForm[field.name as keyof typeof productForm]}
+                                size="small"
+                                fullWidth
+                                multiline={field.multiline || false}
+                                rows={field.rows || 1}
+                                error={!!errors[field.name || '']}
+                                helperText={errors[field.name || '']}
+                                InputLabelProps={{ style: { color: "#C0C0C0" } }}
+                                sx={{ bgcolor: "secondary.dark", borderRadius: 2, border: "1px solid #4a4a5c", input: { color: "white" }, "& .MuiInputBase-root": { color: "white" } }}
+                            />
                         )}
                     </Grid>
                 ))}

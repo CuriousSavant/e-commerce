@@ -29,8 +29,8 @@ const LoginForm: React.FC<LoginFormProps> = ({ formData, handleChange, onClose, 
         e.preventDefault()
 
         const errors: FormErrorProps = {
-            userName: false,
-            lastName: false,
+            firstname: false,
+            lastname: false,
             email: false,
             password: false,
             confirmPassword: false,
@@ -39,6 +39,7 @@ const LoginForm: React.FC<LoginFormProps> = ({ formData, handleChange, onClose, 
         if (!formData.email) {
             errors.email = true;
         }
+
         if (!formData.password) {
             errors.password = true;
         }

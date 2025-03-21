@@ -7,12 +7,10 @@ export async function GET(
   { params }: { params: { id: string } }
 ) {
   const orderId = Number(params.id);
-  const { searchParams } = new URL(req.url);
-  const userId = searchParams.get("userId");
 
   try {
-    if (!userId) {
-      throw new Error("User Not Found");
+    if (!orderId) {
+      throw new Error("Order Not Found");
     }
 
     const orderItem = await prisma.order.findMany({

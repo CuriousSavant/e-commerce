@@ -7,11 +7,17 @@ export async function GET(req: NextRequest) {
   const query = searchParams.get("q")?.trim();
   const sortOrder = searchParams.get("sortOrder") || "asc";
   const filterStatus = searchParams.get("filterStatus");
+  const userId = searchParams.get("userId");
+  const page = parseInt(searchParams.get("page") || "1");
+  const pageSize = parseInt(searchParams.get("pageSize") || "10");
 
   let whereClause: any = {};
 
   if (filterStatus && filterStatus !== 'all') whereClause.status = filterStatus.toUpperCase();
   if (query) whereClause.orderId = { contains: query, mode: "insensitive" };
+  if (userId) whereClause.userId = userId;
+
+  const ordersCount = await prisma.order.count({})
 
   try {
     const orders = await prisma.order.findMany({
@@ -24,8 +30,10 @@ export async function GET(req: NextRequest) {
         user: true,
         address: true,
       },
+      skip: (page - 1) * pageSize,
+      take: pageSize,
     });
-    return NextResponse.json(orders);
+    return NextResponse.json({ orders, ordersCount });
   } catch (error) {
     return NextResponse.json({ msg: "Failed to fetch orders", error: error }, { status: 500 });
   }

@@ -38,11 +38,11 @@ const SignUpForm: React.FC<SignUpFormProps> = ({
                 variant="outlined"
                 margin="normal"
                 size="small"
-                name="userName"
-                value={formData.userName}
+                name="firstname"
+                value={formData.firstname}
                 onChange={handleChange}
-                error={!!formError.userName}
-                helperText={formError.userName && "กรุณากรอกชื่อ"}
+                error={!!formError.lastname}
+                helperText={formError.firstname && "กรุณากรอกชื่อ"}
                 fullWidth
             />
             <TextField
@@ -52,11 +52,11 @@ const SignUpForm: React.FC<SignUpFormProps> = ({
                 variant="outlined"
                 margin="normal"
                 size="small"
-                name="lastName"
-                value={formData.lastName}
+                name="lastname"
+                value={formData.lastname}
                 onChange={handleChange}
-                error={!!formError.lastName}
-                helperText={formError.lastName && "กรุณากรอกนามสกุล"}
+                error={!!formError.lastname}
+                helperText={formError.lastname && "กรุณากรอกนามสกุล"}
                 fullWidth
             />
             <TextField

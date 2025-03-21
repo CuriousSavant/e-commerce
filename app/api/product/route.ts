@@ -11,6 +11,11 @@ export async function GET(req: Request) {
     const categoryId = url.get("categoryId");
     const price = url.get("price");
 
+    const page = Math.max(1, parseInt(url.get("page") || "1"));
+    const pageSize = Math.max(1, parseInt(url.get("pageSize") || "10"));
+
+    console.log("page:", page, "pageSize:", pageSize)
+
     // Validate sortOrder
     if (!["asc", "desc"].includes(sortOrder)) {
       throw new Error("Invalid sortOrder value");
@@ -21,9 +26,10 @@ export async function GET(req: Request) {
     let orderByClause: any = { createdAt: sortOrder }
 
     let products;
+    const totalProducts = await prisma.product.count({ where: whereClause }); // ใช้ .count() เพื่อนับจำนวนสินค้าทั้งหมด
 
     if (query) whereClause.title = { contains: query, mode: "insensitive" };
-    if (categoryId) whereClause.categoryId = Number(categoryId);
+    if (categoryId && categoryId !== "all") whereClause.categoryId = Number(categoryId);
     if (price) {
       if (price === "low-high") orderByClause = { price: "asc" };
       else if (price === "high-low") orderByClause = { price: "desc" };
@@ -34,9 +40,7 @@ export async function GET(req: Request) {
 
     if (!query && !categoryId && !status) {
       products = await prisma.product.findMany({
-        orderBy: {
-          createdAt: sortOrder,
-        } as any,
+        orderBy: { createdAt: sortOrder } as any,
         include: {
           category: {
             include: {
@@ -45,6 +49,8 @@ export async function GET(req: Request) {
           },
           properties: true,
         },
+        skip: (page - 1) * pageSize,
+        take: pageSize,
       })
     } else {
       // Fetch products
@@ -59,10 +65,14 @@ export async function GET(req: Request) {
           },
           properties: true,
         },
+        skip: (page - 1) * pageSize,
+        take: pageSize,
       });
     }
 
-    return NextResponse.json(products);
+    console.log("products:", products.length)
+
+    return NextResponse.json({ products, totalProducts });
   } catch (error) {
     console.error(error);
     return NextResponse.json({ msg: "Failed to fetch products", error: error }, { status: 500 });
@@ -76,27 +86,27 @@ export const POST = async (req: Request) => {
       description,
       image,
       price,
-      brand,
+      brandId,
       stock,
       categoryId,
     } = await req.json();
 
     const slug = slugify(title, { lower: true, strict: true });
 
-    const createProduct = await prisma.product.create({
+    const create_product = await prisma.product.create({
       data: {
         title,
         description,
         image,
         price,
-        brand,
+        brandId,
         stock,
         categoryId,
         slug,
       },
     });
 
-    return NextResponse.json(createProduct);
+    return NextResponse.json(create_product);
   } catch (error) {
     return NextResponse.json({ msg: "Failed to create product", error: error, status: 500 });
   }
@@ -106,12 +116,12 @@ export const DELETE = async (req: Request) => {
   try {
     const { slugs } = await req.json();
     if (Array.isArray(slugs) && slugs.length > 0) {
-      const deleteMaryProduct = await prisma.product.deleteMany({
+      const delete_many_product = await prisma.product.deleteMany({
         where: {
           slug: { in: slugs },
         },
       });
-      return NextResponse.json(deleteMaryProduct);
+      return NextResponse.json(delete_many_product);
     }
   } catch (error) {
     return NextResponse.json({ msg: "Failed to delete products", error: error }, { status: 500 });

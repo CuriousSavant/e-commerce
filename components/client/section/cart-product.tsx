@@ -22,7 +22,7 @@ const CartProduct = ({ product, viewMode = 'grid' }: { product: Product, viewMod
             .then((res) => {
                 const isFavorite = res.data.some((item: Wishlist) => item.productId === product?.id);
                 setIsFavorite(isFavorite);
-            })
+            })  
             .catch((err) => {
                 console.error("Error fetching wishlist:", err);
             });

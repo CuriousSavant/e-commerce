@@ -7,6 +7,7 @@ import Footer from '@/components/client/section/footer';
 import { ThemeProvider } from '@emotion/react';
 import theme from '@/lib/theme';
 import { SearchProvider } from './context/ProductSearchContext';
+import { PaginationProvider } from './context/PaginationContext';
 
 const LayoutSetting = ({ children }: { children: React.ReactNode }) => {
     const pathname = usePathname()
@@ -14,14 +15,16 @@ const LayoutSetting = ({ children }: { children: React.ReactNode }) => {
     return (
         <>
             <ThemeProvider theme={theme}>
-                <SearchProvider>
-                    {/* Reset Css Base */}
-                    <CssBaseline />
-                    {/* เมื่ออยู่ใน path /admin/* จะไม่แสดง components พวกนนี้ */}
-                    {!pathname.startsWith('/admin') && <Navbar />}
-                    {children}
-                    {!pathname.startsWith('/admin') && <Footer />}
-                </SearchProvider>
+                <PaginationProvider>
+                    <SearchProvider>
+                        {/* Reset Css Base */}
+                        <CssBaseline />
+                        {/* เมื่ออยู่ใน path /admin/* จะไม่แสดง components พวกนนี้ */}
+                        {!pathname.startsWith('/admin') && <Navbar />}
+                        {children}
+                        {!pathname.startsWith('/admin') && <Footer />}
+                    </SearchProvider>
+                </PaginationProvider>
             </ThemeProvider>
         </>
     )

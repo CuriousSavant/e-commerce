@@ -75,7 +75,7 @@ const ProductTableRow: React.FC<ProductTableRowProps> = ({
             <TableCell size="small" sx={{ borderBottom: "1px solid #50575E" }}>
                 {loading ? <Skeleton width={40} /> : (
                     <Chip
-                        label={product?.status}
+                        label={product?.status === "ACTIVE" ? "เปิดใช้งาน" : "ปิดใช้งาน"}
                         color={product?.status === "ACTIVE" ? "success" : "error"}
                         variant="outlined"
                         sx={{ fontWeight: "bold", border: 0 }}

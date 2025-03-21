@@ -1,4 +1,4 @@
-import { Search } from "@mui/icons-material";
+import { Add, Search } from "@mui/icons-material";
 import { Box, Button, InputAdornment, MenuItem, Select, Stack, TextField } from "@mui/material";
 import React from "react";
 
@@ -21,12 +21,12 @@ const FilterSortSearchCategories: React.FC<FilterSortSearchProductProps> = ({
     dialogOpen, setDialogOpen,
 }) => {
     return (
-        <Stack direction={{ xs: "column", md: "row" }} justifyContent={"space-between"} alignItems={"center"} mt={{ xs: 4, md: 2 }}>
-            <Box display={"flex"} flexDirection={{ xs: "column", md: "row" }} gap={2} width={"100%"}>
+        <Stack direction={{ xs: "column", md: "row" }} justifyContent={"space-between"} alignItems={"center"}>
+            <Box display={"flex"} flexDirection={{ xs: "column", md: "row" }} gap={2} width={"100%"} alignItems={"center"}>
                 <TextField
                     size="small"
                     placeholder="Search by name"
-                    sx={{ bgcolor: "secondary.dark", borderRadius: 2, border: "2px solid #4F4F4F" }}
+                    sx={{ bgcolor: "secondary.dark", borderRadius: 2, border: "2px solid #4F4F4F", width: { xs: "100%", md: "auto" } }}
                     onChange={(e) => setQuery(e.target.value)}
                     value={query || ""}
                     InputProps={{
@@ -36,7 +36,7 @@ const FilterSortSearchCategories: React.FC<FilterSortSearchProductProps> = ({
                                 opacity: 1,
                                 fontSize: 14,
                             },
-                            color: "white"
+                            color: "white",
                         },
                         startAdornment: (
                             <InputAdornment position="start" >
@@ -54,6 +54,7 @@ const FilterSortSearchCategories: React.FC<FilterSortSearchProductProps> = ({
                         border: "2px solid #4F4F4F",
                         color: "#C2C2C2",
                         "& .MuiSelect-icon": { color: "white" },
+                        width: { xs: "100%", md: "auto" },
                     }}>
                     <MenuItem value={"asc"}>เก่า - ใหม่</MenuItem>
                     <MenuItem value={"desc"}>ใหม่ - เก่า</MenuItem>
@@ -67,15 +68,27 @@ const FilterSortSearchCategories: React.FC<FilterSortSearchProductProps> = ({
                         bgcolor: "secondary.dark",
                         border: "2px solid #4F4F4F",
                         color: "#C2C2C2",
-                        "& .MuiSelect-icon": { color: "white" }
+                        "& .MuiSelect-icon": { color: "white" },
+                        width: { xs: "100%", md: "auto" },
                     }}>
-                    <MenuItem value={"ALL"}>All</MenuItem>
-                    <MenuItem value={"ACTIVE"}>Active</MenuItem>
-                    <MenuItem value={"INACTIVE"}>Inactive</MenuItem>
+                    <MenuItem value={"ALL"}>สถานะทั้งหมด</MenuItem>
+                    <MenuItem value={"ACTIVE"}>เปิดใช้งาน</MenuItem>
+                    <MenuItem value={"INACTIVE"}>ปิดใช้งาน</MenuItem>
                 </Select>
             </Box>
 
-            <Button sx={{ bgcolor: "primary.main", color: "white", px: 3, alignSelf: "end", mt: 4 }} onClick={() => setDialogOpen(!dialogOpen)}>สร้างหมวดหมู่</Button>
+            <Button
+                sx={{
+                    bgcolor: "primary.main",
+                    color: "white",
+                    px: 3,
+                    alignSelf: "end",
+                    mt: { xs: 4, md: 0 },
+                    whiteSpace: "pre"
+                }}
+                startIcon={<Add />}
+                onClick={() => setDialogOpen(!dialogOpen)}
+            >สร้างหมวดหมู่</Button>
         </Stack>
     );
 };

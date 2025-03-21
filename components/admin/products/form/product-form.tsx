@@ -3,9 +3,13 @@ import React from 'react';
 import ProductInfoFields from './product-info-fields';
 import { Box, IconButton } from '@mui/material';
 import { ArrowBack } from '@mui/icons-material';
+import { Category } from '@/types/product';
+import { Brand } from '@/types/brand';
 
 interface ProductFormProps {
     productForm: ProductFormStateProps;
+    categories: Category[];
+    brands: Brand[];
     slug: string | null;
     imageUrl: string[];
     loadingImage: boolean;
@@ -31,7 +35,7 @@ export type fieldsProps = {
     fullWidth?: boolean;
     multiline?: boolean;
     rows?: number;
-    options?: string[];
+    options?: any[];
 }
 
 const ProductForm: React.FC<ProductFormProps> = ({
@@ -41,14 +45,15 @@ const ProductForm: React.FC<ProductFormProps> = ({
     imageUrl, loadingImage, selectedImage,
     setSelectedImage, snackbarOpen, setSnackbarOpen,
     formOpen, setFormOpen, setSlug, setImageUrl,
+    brands, categories,
 }) => {
     const formFields: fieldsProps[] = [
         { label: 'Product Name', name: "productName", type: "text", fullWidth: true },
         { label: 'Description', name: "productDesc", type: "text", multiline: true, rows: 4, fullWidth: true },
         { label: "Upload Image", type: "file" },
-        { label: 'Category', name: "category", type: "select", options: [] },
+        { label: 'Category', name: "categoryId", type: "select" },
         { label: 'Price', name: "price", type: "text" },
-        { label: 'Brand', name: "brand", type: "select", options: [] },
+        { label: 'Brand', name: "brandId", type: "select" },
         { label: 'Stock', name: "stock", type: "text" },
     ];
 
@@ -57,8 +62,8 @@ const ProductForm: React.FC<ProductFormProps> = ({
             productName: "",
             productDesc: "",
             price: 0,
-            brand: "",
             stock: 0,
+            brandId: null,
             categoryId: null,
         });
         setImageUrl([]);
@@ -88,6 +93,8 @@ const ProductForm: React.FC<ProductFormProps> = ({
                 handleCreateProductAndUpdate,
                 setProductForm,
                 slug,
+                categories,
+                brands,
             }} />
         </div>
     );

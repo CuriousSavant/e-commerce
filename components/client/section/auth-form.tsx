@@ -8,16 +8,16 @@ import axios from 'axios';
 import { signIn } from 'next-auth/react';
 
 export interface FormDataProps {
-    userName: string;
-    lastName: string;
+    firstname: string;
+    lastname: string;
     email: string;
     password: string;
     confirmPassword: string;
 }
 
 export interface FormErrorProps {
-    userName: boolean;
-    lastName: boolean;
+    firstname: boolean;
+    lastname: boolean;
     email: boolean;
     password: boolean;
     confirmPassword: boolean;
@@ -28,16 +28,16 @@ function AuthModal({ onClose }: { onClose: () => void }) {
     const [errorMsg, setErrorMsg] = useState<string>('');
 
     const [formData, setFormData] = useState<FormDataProps>({
-        userName: "",
-        lastName: "",
+        firstname: "",
+        lastname: "",
         email: "",
         password: "",
         confirmPassword: "",
     })
 
     const [formError, setFormError] = useState<FormErrorProps>({
-        userName: false,
-        lastName: false,
+        firstname: false,
+        lastname: false,
         email: false,
         password: false,
         confirmPassword: false,
@@ -47,15 +47,15 @@ function AuthModal({ onClose }: { onClose: () => void }) {
         setActiveTab(value);
         setErrorMsg('')
         setFormData({
-            userName: "",
-            lastName: "",
+            firstname: "",
+            lastname: "",
             email: "",
             password: "",
             confirmPassword: "",
         })
         setFormError({
-            userName: false,
-            lastName: false,
+            firstname: false,
+            lastname: false,
             email: false,
             password: false,
             confirmPassword: false,
@@ -94,8 +94,8 @@ function AuthModal({ onClose }: { onClose: () => void }) {
         e.preventDefault();
 
         const errors: FormErrorProps = {
-            userName: !formData.userName.trim(),
-            lastName: !formData.lastName?.trim(),
+            firstname: !formData.firstname.trim(),
+            lastname: !formData.lastname?.trim(),
             email: !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email),
             password: formData.password.length < 8,
             confirmPassword: formData.confirmPassword !== formData.password || formData.confirmPassword.length < 8,

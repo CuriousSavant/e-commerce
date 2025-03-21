@@ -19,8 +19,6 @@ interface CategoriesTableProps {
 
 const CategoriesTable: React.FC<CategoriesTableProps> = ({
     categories,
-    // page,
-    // rowsPerPage,
     handleDeleteCategory,
     startEditingCategory,
     loading,
@@ -33,8 +31,6 @@ const CategoriesTable: React.FC<CategoriesTableProps> = ({
             tableLayout: "fixed",
             bgcolor: "secondary.dark",
             borderRadius: "6px",
-            overflowX: "auto",
-            width: "100%",
             display: "block",
             maxWidth: "100%",
         }}>

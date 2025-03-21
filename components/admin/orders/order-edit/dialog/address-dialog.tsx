@@ -15,6 +15,11 @@ const AddressDialog: React.FC<AddressDialogProps> = ({
     addressList, openAddressDialog,
     setAddressInfo, setOpenAddressDialog,
 }) => {
+    const onSelectAddress = (address: Address) => {
+        setAddressInfo(address as any);
+        setOpenAddressDialog(false);
+    }
+
     return (
         <>
             <Dialog open={openAddressDialog} onClose={() => setOpenAddressDialog(!openAddressDialog)}>
@@ -28,7 +33,7 @@ const AddressDialog: React.FC<AddressDialogProps> = ({
                                 <Typography sx={{ color: "#c3c3c3" }} variant="body2" className="line-clamp-2">รายละเอียดที่อยู่: {address.address}, {address.subDistrict}, {address.district}, {address.province} {address.postalCode} </Typography>
                             </Box>
                             <Box>
-                                <IconButton size="small" onClick={() => setAddressInfo(address as any)}>
+                                <IconButton size="small" onClick={() => onSelectAddress(address)}>
                                     <Add sx={{ color: "white" }} />
                                 </IconButton>
                             </Box>
