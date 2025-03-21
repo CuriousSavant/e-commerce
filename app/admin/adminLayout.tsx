@@ -26,28 +26,20 @@ const AdminLayoutPage = ({ children }: { children: React.ReactNode }) => {
             <Drawer open={openDrawer} onClose={() => setOpenDrawer(!openDrawer)}>
                 {openDrawer && (
                     <Box sx={{ width: 250, bgcolor: "secondary.dark", height: "100%", color: "white" }} role="application" onClick={() => setOpenDrawer(!openDrawer)}>
-                        <Link href="/profile" passHref>
-                            <Box sx={{
-                                display: 'flex',
-                                gap: 1.5,
-                                alignItems: 'center',
-                                p: 2,
-                                m: 1,
-                                borderRadius: 2,
-                                cursor: 'pointer',
-                                transition: 'all 0.2s ease-in-out',
-                                '&:hover': {
-                                    bgcolor: 'primary.dark',
-                                    boxShadow: 2,
-                                }
-                            }}>
-                                <Avatar sx={{ bgcolor: "secondary.main" }}>{session?.user.name?.at(0)}</Avatar>
-                                <Box display={'flex'} flexDirection={'column'}>
-                                    <Typography variant='body1'>{session?.user.name}</Typography>
-                                    <Typography variant='body2' sx={{ color: "#c3c3c3" }}>{session?.user.email}</Typography>
-                                </Box>
+                        <Box sx={{
+                            display: 'flex',
+                            gap: 1.5,
+                            alignItems: 'center',
+                            p: 2,
+                            m: 1,
+                            borderRadius: 2,
+                        }}>
+                            <Avatar sx={{ bgcolor: "secondary.main" }}>{session?.user.name?.at(0)}</Avatar>
+                            <Box display={'flex'} flexDirection={'column'}>
+                                <Typography variant='body1'>{session?.user.name}</Typography>
+                                <Typography variant='body2' sx={{ color: "#c3c3c3" }}>{session?.user.email}</Typography>
                             </Box>
-                        </Link>
+                        </Box>
                         <List>
                             {menuItems.map((item, index) => (
                                 <ListItem key={index} disablePadding>

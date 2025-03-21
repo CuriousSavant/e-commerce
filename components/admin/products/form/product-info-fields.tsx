@@ -17,10 +17,12 @@ interface ProductInfoFielsProps {
     slug: string | null;
     categories: Category[];
     brands: Brand[];
+    deletedImages: { id: number; url: string }[];
+    setDeletedImages: React.Dispatch<React.SetStateAction<{ id: number; url: string }[]>>;
     handleUploadImage: (e: React.ChangeEvent<HTMLInputElement>) => void;
     setSelectedImage: React.Dispatch<React.SetStateAction<string | null>>;
     handleRemoveImage: (index: number) => void;
-    handleUndoDelete: () => void;
+    handleUndoDelete: (id: number) => void;
     setSnackbarOpen: React.Dispatch<React.SetStateAction<boolean>>;
     handleCreateProductAndUpdate: (e: React.FormEvent<HTMLFormElement>) => void;
     setProductForm: React.Dispatch<React.SetStateAction<ProductFormStateProps>>;
@@ -33,6 +35,7 @@ const ProductInfoFields: React.FC<ProductInfoFielsProps> = ({
     handleUndoDelete, handleUploadImage,
     setSnackbarOpen, handleCreateProductAndUpdate,
     setProductForm, brands, categories,
+    deletedImages, setDeletedImages,
 }) => {
     const [errors, setErrors] = useState<{ [key: string]: string }>({});
 
@@ -157,18 +160,24 @@ const ProductInfoFields: React.FC<ProductInfoFielsProps> = ({
             <Button type="submit" variant="contained" sx={{ bgcolor: "primary.main" }} className="mt-10 rounded-lg px-14">
                 {slug ? "แก้ไขสินค้า" : "เพิ่มสินค้า"}
             </Button>
-            <Snackbar
-                open={snackbarOpen}
-                autoHideDuration={3000}
-                onClose={() => setSnackbarOpen(false)}
-                message="ลบรูปภาพแล้ว"
-                color='white'
-                action={
-                    <Button color="secondary" size="small" onClick={handleUndoDelete}>
-                        Undo
-                    </Button>
-                }
-            />
+            {deletedImages.map((image) => (
+                <Snackbar
+                    key={image.id}
+                    open={true}
+                    autoHideDuration={3000}
+                    onClose={() => setDeletedImages((prev) => prev.filter((img) => img.id !== image.id))}
+                    message="ลบรูปภาพแล้ว"
+                    action={
+                        <Button
+                            color="secondary"
+                            size="small"
+                            onClick={() => handleUndoDelete(image.id)}
+                        >
+                            Undo
+                        </Button>
+                    }
+                />
+            ))}
         </form>
     )
 }

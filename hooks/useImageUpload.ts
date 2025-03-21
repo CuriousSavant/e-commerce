@@ -6,7 +6,7 @@ export const useImageUpload = () => {
     const [loadingImage, setLoadingImage] = useState<boolean>(false); // ตัวแปรสำหรับเก็บสถานะการโหลดรูปภาพ
     const [selectedImage, setSelectedImage] = useState<string | null>(null); // รูปที่ถูกเลือก
     const [snackbarOpen, setSnackbarOpen] = useState(false); // สถานะของ snackbar
-    const [deletedImage, setDeletedImage] = useState<string | null>(null); // รูปที่ถูกลบ
+    const [deletedImages, setDeletedImages] = useState<{ id: number; url: string }[]>([]); // รูปที่ถูกลบ
     const [deletedIndex, setDeletedIndex] = useState<number | null>(null); // ตำแหน่งของรูปที่ถูกลบ
 
     const [errorImageType, setErrorImagetype] = useState<boolean>(false);
@@ -42,8 +42,8 @@ export const useImageUpload = () => {
     return {
         imageUrl, loadingImage, selectedImage, snackbarOpen,
         setSelectedImage, setSnackbarOpen,
-        handleUploadImage, setImageUrl, setDeletedImage,
-        setDeletedIndex, deletedImage, deletedIndex,
+        handleUploadImage, setImageUrl, setDeletedImages,
+        setDeletedIndex, deletedImages, deletedIndex,
         errorImageType,
     };
 };

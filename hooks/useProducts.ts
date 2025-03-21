@@ -24,8 +24,8 @@ export const useProducts = () => {
     const {
         imageUrl, setImageUrl, handleUploadImage,
         loadingImage, selectedImage, setSelectedImage,
-        setSnackbarOpen, snackbarOpen, deletedImage,
-        deletedIndex, setDeletedImage, setDeletedIndex,
+        setSnackbarOpen, snackbarOpen, deletedImages,
+        deletedIndex, setDeletedImages, setDeletedIndex,
     } = useImageUpload();
 
     const { page, pageSize } = usePagination();
@@ -187,23 +187,17 @@ export const useProducts = () => {
     }
 
     const handleRemoveImage = (index: number) => {
-        const updatedImages = [...imageUrl];
-        const removedImage = updatedImages.splice(index, 1)[0]; // เก็บรูปที่ถูกลบ
-        setImageUrl(updatedImages);
-        setDeletedImage(removedImage);
-        setDeletedIndex(index);
-        setSnackbarOpen(true);
+        const deletedImage = { id: Date.now(), url: imageUrl[index] }; // ใช้ timestamp เป็น ID
+        setDeletedImages((prev) => [...prev, deletedImage]); // เก็บรายการที่ถูกลบ
+        setImageUrl((prev) => prev.filter((_, i) => i !== index)); // ลบจาก list
     };
 
-    const handleUndoDelete = () => {
-        if (deletedImage !== null && deletedIndex !== null) {
-            const updatedImages = [...imageUrl];
-            updatedImages.splice(deletedIndex, 0, deletedImage); // คืนรูปกลับที่เดิม
-            setImageUrl(updatedImages);
-            setDeletedImage(null);
-            setDeletedIndex(null);
+    const handleUndoDelete = (id: number) => {
+        const restoredImage = deletedImages.find((img) => img.id === id);
+        if (restoredImage) {
+            setImageUrl((prev) => [...prev, restoredImage.url]); // นำรูปกลับไปที่ list
+            setDeletedImages((prev) => prev.filter((img) => img.id !== id)); // ลบจากรายการลบ
         }
-        setSnackbarOpen(false);
     };
 
     return {
@@ -221,6 +215,7 @@ export const useProducts = () => {
         handleAllDelete, handleDeleteProduct, imageUrl,
         setImageUrl, handleRemoveImage, handleUndoDelete,
         handleUploadImage, loadingImage, selectedImage, setSelectedImage,
-        setSnackbarOpen, snackbarOpen, deletedImage, countProducts,
+        setSnackbarOpen, snackbarOpen, deletedImages, countProducts, 
+        setDeletedImages,
     };
 };

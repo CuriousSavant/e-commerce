@@ -22,10 +22,10 @@ const Products = () => {
         setPriceFilter, setStatusFilter, statusFilter,
         setSlug, loading, setLoading, handleAllDelete,
         handleDeleteProduct, imageUrl, setImageUrl,
-        deletedImage, handleRemoveImage, handleUndoDelete,
+        deletedImages, handleRemoveImage, handleUndoDelete,
         handleUploadImage, loadingImage, selectedImage,
         setSelectedImage, setSnackbarOpen, snackbarOpen,
-        countProducts,
+        countProducts, setDeletedImages,
     } = useProducts();
 
     const { brands } = useBrands();
@@ -108,7 +108,7 @@ const Products = () => {
                     handleRemoveImage, handleUndoDelete, handleUploadImage, imageUrl,
                     loadingImage, selectedImage, setSelectedImage, snackbarOpen,
                     setSnackbarOpen, startEditing, formOpen, setFormOpen, setSlug,
-                    setImageUrl, brands, categories,
+                    setImageUrl, brands, categories, deletedImages, setDeletedImages,
                 }} />
             )}
         </Box>

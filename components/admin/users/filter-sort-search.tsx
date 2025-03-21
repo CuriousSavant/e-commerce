@@ -1,5 +1,4 @@
 "use client"
-
 import { Role, SortType } from '@/types/components/filter-sort';
 import { Add, Search } from '@mui/icons-material';
 import {
@@ -71,7 +70,7 @@ const FilterSortSearch: React.FC<ITrinity> = ({
                         color: "#C2C2C2",
                         "& .MuiSelect-icon": { color: "white" }
                     }}>
-                    <MenuItem value={"all"}>All</MenuItem>
+                    <MenuItem value={"all"}>บทบาททั้งหมด</MenuItem>
                     <MenuItem value={"member"}>Member</MenuItem>
                     <MenuItem value={"admin"}>Admin</MenuItem>
                 </Select>
