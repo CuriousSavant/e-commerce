@@ -5,7 +5,7 @@ import React from "react";
 
 const ProductSide = ({ order }: { order?: Order }) => {
     return (
-        <Card sx={{ backgroundColor: "#27293d", flex: 1, pt : 2, px: 3 }}>
+        <Card sx={{ backgroundColor: "#27293d", flex: 1, pt: 2, px: 3 }}>
             <Box sx={{ borderBottom: "1px solid #50575E" }}>
                 <Typography variant="h6" fontWeight={600} gutterBottom sx={{ color: "#ffff" }}>
                     รายละเอียดคำสั่งซื้อหมายเลข : #{order?.orderId}

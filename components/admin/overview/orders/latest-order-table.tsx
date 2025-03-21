@@ -50,7 +50,7 @@ const LatestOrderTable: FC<ILatestOrderTable> = ({ order, loading }) => {
                                 {order?.user?.firstname?.charAt(0)}
                             </Avatar>
                             <Box ml={1}>
-                                <Typography className="w-[120px] line-clamp-1">
+                                <Typography className="w-[150px] line-clamp-1">
                                     {`${order?.user?.firstname} ${order?.user?.lastname ? order?.user.lastname : ""}`}
                                 </Typography>
                                 <Typography sx={{ color: "#BABABA", fontSize: "12px" }}>
