@@ -10,7 +10,6 @@ import { Brand } from '@/types/brand';
 interface ProductInfoFielsProps {
     formFields: fieldsProps[];
     loadingImage: boolean;
-    snackbarOpen: boolean;
     productForm: ProductFormStateProps;
     imageUrl: string[];
     selectedImage: string | null;
@@ -23,17 +22,16 @@ interface ProductInfoFielsProps {
     setSelectedImage: React.Dispatch<React.SetStateAction<string | null>>;
     handleRemoveImage: (index: number) => void;
     handleUndoDelete: (id: number) => void;
-    setSnackbarOpen: React.Dispatch<React.SetStateAction<boolean>>;
     handleCreateProductAndUpdate: (e: React.FormEvent<HTMLFormElement>) => void;
     setProductForm: React.Dispatch<React.SetStateAction<ProductFormStateProps>>;
 }
 
 const ProductInfoFields: React.FC<ProductInfoFielsProps> = ({
     formFields, imageUrl, loadingImage,
-    productForm, selectedImage, snackbarOpen,
+    productForm, selectedImage,
     slug, setSelectedImage, handleRemoveImage,
     handleUndoDelete, handleUploadImage,
-    setSnackbarOpen, handleCreateProductAndUpdate,
+    handleCreateProductAndUpdate,
     setProductForm, brands, categories,
     deletedImages, setDeletedImages,
 }) => {
@@ -111,7 +109,7 @@ const ProductInfoFields: React.FC<ProductInfoFielsProps> = ({
                                     name={field.name}
                                     onChange={handleChange}
                                     value={productForm[field.name as keyof typeof productForm] || ""}
-                                    sx={{ bgcolor: "secondary.dark", color: "white", border: "1px solid #4a4a5c" }}>
+                                    sx={{ bgcolor: "secondary.dark", color: "white", border: "1px solid #4a4a5c", "& .MuiSelect-icon": { color: "white" } }}>
                                     {field.name === "categoryId" ? (
                                         categories.length > 0 ? (
                                             categories.map((category) => (
@@ -158,7 +156,7 @@ const ProductInfoFields: React.FC<ProductInfoFielsProps> = ({
             </Grid>
 
             <Button type="submit" variant="contained" sx={{ bgcolor: "primary.main" }} className="mt-10 rounded-lg px-14">
-                {slug ? "แก้ไขสินค้า" : "เพิ่มสินค้า"}
+                {slug ? "อัพเดตสินค้า" : "เพิ่มสินค้า"}
             </Button>
             {deletedImages.map((image) => (
                 <Snackbar

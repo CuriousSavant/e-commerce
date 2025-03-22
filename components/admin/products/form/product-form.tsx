@@ -14,7 +14,6 @@ interface ProductFormProps {
     imageUrl: string[];
     loadingImage: boolean;
     selectedImage: string | null;
-    snackbarOpen: boolean;
     formOpen: boolean;
     deletedImages: { id: number; url: string }[];
     setDeletedImages: React.Dispatch<React.SetStateAction<{ id: number; url: string }[]>>;
@@ -23,7 +22,6 @@ interface ProductFormProps {
     handleUndoDelete: (id: number) => void;
     handleUploadImage: (e: React.ChangeEvent<HTMLInputElement>) => void
     setSelectedImage: React.Dispatch<React.SetStateAction<string | null>>;
-    setSnackbarOpen: React.Dispatch<React.SetStateAction<boolean>>;
     handleCreateProductAndUpdate: (e: React.FormEvent<HTMLFormElement>) => void;
     setFormOpen: React.Dispatch<React.SetStateAction<boolean>>;
     setSlug: React.Dispatch<React.SetStateAction<string | null>>
@@ -45,9 +43,9 @@ const ProductForm: React.FC<ProductFormProps> = ({
     handleCreateProductAndUpdate, handleRemoveImage,
     handleUndoDelete, handleUploadImage,
     imageUrl, loadingImage, selectedImage,
-    setSelectedImage, snackbarOpen, setSnackbarOpen,
-    formOpen, setFormOpen, setSlug, setImageUrl,
-    brands, categories, deletedImages, setDeletedImages,
+    setSelectedImage, formOpen, setFormOpen,
+    setSlug, setImageUrl, brands, categories,
+    deletedImages, setDeletedImages,
 }) => {
     const formFields: fieldsProps[] = [
         { label: 'Product Name', name: "productName", type: "text", fullWidth: true },
@@ -84,7 +82,7 @@ const ProductForm: React.FC<ProductFormProps> = ({
                 formFields, handleRemoveImage, handleUndoDelete,
                 handleUploadImage, imageUrl, loadingImage,
                 productForm, selectedImage, setSelectedImage,
-                snackbarOpen, setSnackbarOpen, handleCreateProductAndUpdate,
+                handleCreateProductAndUpdate,
                 setProductForm, slug, categories,
                 brands, deletedImages, setDeletedImages
             }} />
