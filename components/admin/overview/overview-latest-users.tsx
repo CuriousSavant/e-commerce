@@ -1,10 +1,11 @@
 "use client"
-
 import { User } from "@/types/user";
 import { Box, Card, CardContent, Typography, Button, Avatar, AvatarGroup } from "@mui/material";
 import axios from "axios";
 import { useEffect, useState } from "react";
 import AvatarUser from "./users/AvatarUser";
+
+// component สำหรับแสดงสมาชิกใหม่ล่าสุด
 
 export default function LatestUsers() {
     const [users, setUsers] = useState<User[]>([]);

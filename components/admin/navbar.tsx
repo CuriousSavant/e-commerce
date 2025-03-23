@@ -35,12 +35,12 @@ export default function NavbarAdmin({
 
                 {/* Profile */}
                 <Box sx={{ display: "flex", alignItems: "center", p: { xs: 1.3, md: 2 }, px: { xs: 0, md: 4 } }}>
-                    <Avatar sx={{ bgcolor: "secondary.dark" }}>{data?.user.name?.at(0)}</Avatar>
+                    <Avatar sx={{ bgcolor: "primary.main" }}>{data?.user.name?.at(0)}</Avatar>
                     <Box sx={{ display: "flex", flexDirection: "column", ml: { xs: 1, md: 2 }, }}>
-                        <Box sx={{ color: "white", fontSize: 14, fontWeight: "600", width: "100px" }} className="line-clamp-1">
+                        <Box sx={{ color: "white", fontSize: 14, fontWeight: "600" }} className="line-clamp-1">
                             {data?.user.name}
                         </Box>
-                        <Box sx={{ color: "white", fontSize: 12 }}>{data?.user.role}</Box>
+                       <Box sx={{ color: "white", fontSize: 12 }}>{data?.user.role}</Box>
                     </Box>
                 </Box>
             </Box>

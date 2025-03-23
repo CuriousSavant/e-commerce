@@ -6,6 +6,8 @@ import { CalendarToday } from '@mui/icons-material'
 import { format } from 'date-fns';
 import { Order } from '@/types/order';
 
+// component สำหรับแสดงรายการคำสั่งซื้อทั้งหมด
+
 interface OrderListProps {
     order: Order;
     statusColors: { [key: string]: string };

@@ -2,7 +2,7 @@
 import React, { useState } from 'react'
 import axios from 'axios';
 import { Product } from '@/types/product';
-import CartProduct from './cart-product';
+import CartProduct from '../section/cart-product';
 
 const LatestProduct = () => {
     const [featureProduct, setFeatureProduct] = useState<Product[]>([])

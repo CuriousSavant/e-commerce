@@ -6,10 +6,6 @@ import { Brand } from '@/types/brand';
 
 interface BrandsTableRow {
     brands: Brand[];
-    // page: number; // หน้าแสดงผลของตาราง
-    // rowsPerPage: number; // จำนวนแถวที่แสดงต่อหน้า
-    // handleChangePage: (event: unknown, newPage: number) => void; // ฟังก์ชันสำหรับเปลี่ยนหน้า
-    // handleChangeRowsPerPage: (event: React.ChangeEvent<HTMLInputElement>) => void; // ฟังก์ชันสำหรับเปลี่ยนจำนวนแถวที่แสดงต่อหน้า
     loading: boolean;
     dialogOpen: boolean;
     setDialogOpen: React.Dispatch<React.SetStateAction<boolean>>;
@@ -19,8 +15,6 @@ interface BrandsTableRow {
 
 const BrandsTable: React.FC<BrandsTableRow> = ({
     brands,
-    // page,
-    // rowsPerPage,
     handleDeleteBrand,
     startEditingBrand,
     loading,

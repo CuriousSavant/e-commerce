@@ -42,6 +42,7 @@ const useCart = () => {
                     }
                     return acc;
                 }, []);
+                
                 setCartItems(combinedItems);
 
                 const savedQuantities = JSON.parse(localStorage.getItem("cartItemQuantities") || "{}");

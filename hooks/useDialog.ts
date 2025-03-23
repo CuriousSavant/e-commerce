@@ -29,4 +29,4 @@ const useDialog = () => {
     }
 }
 
-export default useDialog
+export default useDialog;

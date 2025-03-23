@@ -5,7 +5,7 @@ import { Product } from "@/types/product";
 import ProductTableHead from './table/product-table-head';
 import ProductTableRow from './table/product-table-row';
 
-interface RowPageProps {
+interface ProductTableProps {
     products: Product[];
     selectItem: string[];
     loading: boolean;
@@ -14,7 +14,7 @@ interface RowPageProps {
     handleDeleteProduct: (slug: string, productName: string) => void;
 }
 
-const ProductTable: React.FC<RowPageProps> = ({
+const ProductTable: React.FC<ProductTableProps> = ({
     products,
     selectItem,
     setSelectItem,

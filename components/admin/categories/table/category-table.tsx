@@ -6,10 +6,6 @@ import CategoriesTableRow from './categories-table-row';
 
 interface CategoriesTableProps {
     categories: Category[]; // ข้อมูลหมวดหมู่ทั้งหมด
-    // page: number; // หน้าแสดงผลของตาราง
-    // rowsPerPage: number; // จำนวนแถวที่แสดงต่อหน้า
-    // handleChangePage: (event: unknown, newPage: number) => void; // ฟังก์ชันสำหรับเปลี่ยนหน้า
-    // handleChangeRowsPerPage: (event: React.ChangeEvent<HTMLInputElement>) => void; // ฟังก์ชันสำหรับเปลี่ยนจำนวนแถวที่แสดงต่อหน้า
     dialogOpen: boolean;
     setDialogOpen: React.Dispatch<React.SetStateAction<boolean>>;
     startEditingCategory: (category: Category) => void; // ฟังก์ชันสำหรับแก้ไขหมวดหมู่ที่ถูกเลือก

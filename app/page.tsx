@@ -1,6 +1,6 @@
 import React from "react";
-import HeroSection from "@/components/client/section/hero";
-import LatestProduct from "@/components/client/section/latest-product";
+import HeroSection from "@/components/client/home/hero";
+import LatestProduct from "@/components/client/home/latest-product";
 import { BsCartX } from "react-icons/bs";
 import prisma from "@/lib/prisma";
 import CardCategorys from "@/components/client/section/categorys";

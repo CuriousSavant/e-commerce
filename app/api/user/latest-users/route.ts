@@ -1,7 +1,7 @@
 import prisma from "@/lib/prisma"
 import { NextRequest, NextResponse } from "next/server"
 import { startOfDay, endOfDay } from "date-fns"
-import { SortType } from "@/types/components/filter-sort";
+import { SortType } from "@/components/admin/users/types/filter-sort-search";
 
 export const GET = async (req: NextRequest) => {
     try {

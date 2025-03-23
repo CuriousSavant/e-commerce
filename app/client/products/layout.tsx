@@ -4,7 +4,13 @@ import { MenuItem, Select, IconButton } from '@mui/material';
 import { PiGridNineFill } from 'react-icons/pi';
 import { MdViewList } from 'react-icons/md';
 import { useSearchContext } from '@/app/context/ProductSearchContext';
-<MenuItem value="createdAt">ค่าเริ่มต้น</MenuItem>
+
+/*
+    Layout Component สำหรับการจัดเรียงและแสดงผลสินค้า
+    - มีการใช้ Select สำหรับเลือกหมวดหมู่สินค้า
+    - มีการใช้ IconButton สำหรับเปลี่ยนโหมดการแสดงผลสินค้า (Grid/List)
+    - มีการใช้ useSearchContext เพื่อจัดการสถานะของการค้นหาและการแสดงผลสินค้า
+*/
 
 const SearchLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
     const {

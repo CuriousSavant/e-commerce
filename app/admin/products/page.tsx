@@ -37,11 +37,6 @@ const Products = () => {
         pageSize,
     } = usePagination();
 
-    console.log("from page:", page, pageSize)
-
-    console.log("next:", (page * pageSize) >= countProducts)
-    console.log("prev:", page <= 1)
-
     return (
         <Box sx={{ py: 2, px: { xs: 2, md: 6 } }}>
             <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center", mb: { xs: 4, md: 2 } }}>

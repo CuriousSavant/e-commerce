@@ -1,9 +1,9 @@
 'use client'
 import React from 'react'
-import Navbar from "@/components/client/section/navbar";
+import Navbar from '@/components/client/home/navbar';
 import { usePathname } from "next/navigation";
 import { CssBaseline } from '@mui/material';
-import Footer from '@/components/client/section/footer';
+import Footer from '@/components/client/home/footer';
 import { ThemeProvider } from '@emotion/react';
 import theme from '@/lib/theme';
 import { SearchProvider } from './context/ProductSearchContext';

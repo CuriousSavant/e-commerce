@@ -6,6 +6,8 @@ import { useEffect, useState } from "react";
 import LatestOrderTable from "./orders/latest-order-table";
 import LatestOrderHead from "./orders/latest-order-head";
 
+// component สำหรับแสดงคำสั่งซื้อใหม่ล่าสุด
+
 export default function LatestOrders() {
     const [orders, setOrders] = useState<Order[]>([]);
     const [loading, setLoading] = useState<boolean>(true);

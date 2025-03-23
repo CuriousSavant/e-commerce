@@ -1,4 +1,3 @@
-'use client'
 import { Button } from '@mui/material';
 import React from 'react'
 
@@ -7,7 +6,7 @@ const HeroSection = () => {
         <div className="relative h-[50vh] md:h-[60vh] bg-cover bg-center transition-all mt-16 md:mt-24 px-2 lg:px-0">
             <div className="group overflow-hidden w-full h-full relative rounded-lg">
                 <img
-                    src={'/young-content-creator-girl-is-her-laptop-creating-new-vlog-sitting-sofa-working-with-video-from-home.jpg'}
+                    src={'/home-page.jpg'}
                     className="h-full w-full object-cover md:rounded-lg group-hover:scale-105 transition-transform duration-300"
                     alt="Online Shopping Background"
                 />

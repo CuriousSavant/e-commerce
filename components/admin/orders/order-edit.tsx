@@ -9,6 +9,11 @@ import { Product } from "@/types/product";
 import FormUserAddress from "./order-edit/form-user-address";
 import ProductList from "./order-edit/product-list";
 
+/*
+    component สำหรับแก้ไขคำสั่งซื้อ 
+    โดยจะมีการแก้ไขข้อมูลผู้ใช้ ที่อยู่ และรายการสินค้า
+*/
+
 interface OrderEditProps {
     order?: Order;
     user?: User;

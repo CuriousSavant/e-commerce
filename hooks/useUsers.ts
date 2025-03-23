@@ -2,8 +2,8 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { SelectChangeEvent } from '@mui/material';
 import { User } from '@/types/user';
-import { SortType, Role } from '@/types/components/filter-sort';
-import { UserFormStateProps } from '@/types/components/create-user-form';
+import { SortType, Role } from '@/components/admin/users/types/filter-sort-search';
+import { UserFormStateProps } from '@/components/admin/users/types/user-form-state-props';
 import { debounce } from "lodash";
 import Swal from 'sweetalert2'
 import { usePagination } from '@/app/context/PaginationContext';

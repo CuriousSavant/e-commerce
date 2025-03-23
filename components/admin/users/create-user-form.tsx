@@ -3,7 +3,7 @@ import { ArrowBack } from "@mui/icons-material";
 import React, { useState } from "react";
 import UserInfoFields from "./form/user-info-fields";
 import RoleSelection from "./form/role-section";
-import { UserFormStateProps } from "@/types/components/create-user-form";
+import { UserFormStateProps } from "./types/user-form-state-props";
 
 type CreateUserFormProps = {
     userForm: UserFormStateProps;

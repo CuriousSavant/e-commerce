@@ -14,8 +14,6 @@ export async function GET(req: Request) {
     const page = Math.max(1, parseInt(url.get("page") || "1"));
     const pageSize = Math.max(1, parseInt(url.get("pageSize") || "10"));
 
-    console.log("page:", page, "pageSize:", pageSize)
-
     // Validate sortOrder
     if (!["asc", "desc"].includes(sortOrder)) {
       throw new Error("Invalid sortOrder value");
@@ -69,8 +67,6 @@ export async function GET(req: Request) {
         take: pageSize,
       });
     }
-
-    console.log("products:", products.length)
 
     return NextResponse.json({ products, totalProducts });
   } catch (error) {

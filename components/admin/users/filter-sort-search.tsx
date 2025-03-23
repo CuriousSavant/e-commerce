@@ -1,5 +1,5 @@
 "use client"
-import { Role, SortType } from '@/types/components/filter-sort';
+import { Role, SortType } from '@/components/admin/users/types/filter-sort-search';
 import { Add, Search } from '@mui/icons-material';
 import {
     Box,

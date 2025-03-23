@@ -5,7 +5,6 @@ import NavbarAdmin from '@/components/admin/navbar';
 import { useState } from 'react';
 import { Category, Dashboard, Inventory, Person, ShoppingCart, Storefront } from '@mui/icons-material';
 import { useSession } from 'next-auth/react';
-import Link from 'next/link';
 
 const AdminLayoutPage = ({ children }: { children: React.ReactNode }) => {
     const [openDrawer, setOpenDrawer] = useState<boolean>(false);

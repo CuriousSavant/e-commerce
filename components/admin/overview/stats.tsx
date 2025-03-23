@@ -6,6 +6,8 @@ import { Product } from "@/types/product";
 import axios from "axios";
 import { useEffect, useState } from "react";
 
+// component สำหรับแสดงสถิติของผู้ใช้ในหน้า admin
+
 const Stats = () => {
     const [orders, setOrders] = useState<Order[]>([])
     const [users, setUsers] = useState<User[]>([])

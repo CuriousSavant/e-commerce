@@ -1,7 +1,7 @@
 import prisma from "@/lib/prisma";
 import { NextResponse } from "next/server";
 import bcrypt from "bcrypt";
-import { SortType } from "@/types/components/filter-sort";
+import { SortType } from "@/components/admin/users/types/filter-sort-search";
 
 export async function GET(req: Request) {
   try {

@@ -16,9 +16,6 @@ const useBrands = () => {
     const [query, setQuery] = useState<string>('');
     const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('asc');
 
-    // const [page, setPage] = useState<number>(0)
-    // const [rowsPerPage, setRowsPerPage] = useState<number>(10)
-
     const fetchBrands = () => {
         setLoading(true);
         axios.get(`/api/brand?q=${query}&sortOrder=${sortOrder}`)

@@ -36,15 +36,12 @@ export async function PUT(req: Request, { params }: { params: { id: string } }) 
     password,
   } = await req.json();
 
-  console.log("ค่าที่ส่งมา", firstname, lastname, email, role, password);
-
   try {
     const user = await prisma.user.findUnique({
       where: { id: Number(params.id) },
       select: { password: true }, // เนี่องจาก prisma ไม่สามารถเอา password ออกได้ จึงใช้ select เพื่อเอา password ออกมาด้วย
     });
 
-    console.log("ค่าที่หาได้", user);
 
     if (!user) {
       return NextResponse.json({ error: "User Not Found" }, { status: 404 });
@@ -60,7 +57,6 @@ export async function PUT(req: Request, { params }: { params: { id: string } }) 
         password: password ? await bcrypt.hash(password, 10) : user.password,
       },
     });
-    console.log("ค่าที่อัพเดต", updatedUser);
 
     return NextResponse.json(updatedUser, { status: 200 });
   } catch (error) {

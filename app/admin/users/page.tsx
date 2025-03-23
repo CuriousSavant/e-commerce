@@ -27,8 +27,6 @@ export default function Users() {
 
   const { handleChangePage, handleChangeRowsPerPage, page, pageSize, } = usePagination();
 
-  console.log(userCount)
-
   return (
     <Box sx={{ py: 2, px: { xs: 2, md: 6 } }}>
       <Typography variant="h5" mb={{ xs: 4, md: 2 }} fontWeight={800} gutterBottom>

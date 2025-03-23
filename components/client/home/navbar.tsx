@@ -2,7 +2,7 @@
 import React, { useState } from 'react';
 
 // components
-import Profile from './profile';
+import Profile from '@/components/client/section/profile';
 import AuthModel from '@/components/client/section/auth-form';
 import { AppBar, Toolbar, Typography, IconButton, Box, Button, Link as MuiLink, Dialog, DialogContent, Drawer, List, ListItem, ListItemButton, ListItemText, Avatar, Divider, ListItemIcon, TextField, InputAdornment, useMediaQuery, Backdrop, FormControl, Tooltip, Badge } from '@mui/material';
 import NextLink from 'next/link';

@@ -39,7 +39,6 @@ const ProductInfoFields: React.FC<ProductInfoFielsProps> = ({
 
     const handleChange = (e: any) => {
         const { name, value } = e.target;
-        console.log(name, value)
         setProductForm({ ...productForm, [name]: name === "price" || name === "stock" ? Number(value) : value });
         setErrors({ ...errors, [name]: '' });
     }
