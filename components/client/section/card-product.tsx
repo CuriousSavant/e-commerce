@@ -8,9 +8,11 @@ import Link from 'next/link';
 import React, { useEffect, useState } from 'react';
 import { BiHeart } from 'react-icons/bi';
 import { toast } from 'react-toastify';
-import AuthModal from '../section/auth-form';
+import AuthModal from './auth-form';
+import { Button, IconButton } from '@mui/material';
+import { Add, AddShoppingCart } from '@mui/icons-material';
 
-const CartProduct = ({ product, viewMode = 'grid' }: { product: Product, viewMode?: 'grid' | 'list' }) => {
+const CardProducts = ({ product, viewMode = 'grid' }: { product: Product, viewMode?: 'grid' | 'list' }) => {
     const { isDialogOpen, setIsDialogOpen } = useDialog()
     const [isFavorite, setIsFavorite] = useState<boolean>(false)
     const { status } = useSession()
@@ -22,7 +24,7 @@ const CartProduct = ({ product, viewMode = 'grid' }: { product: Product, viewMod
             .then((res) => {
                 const isFavorite = res.data.some((item: Wishlist) => item.productId === product?.id);
                 setIsFavorite(isFavorite);
-            })  
+            })
             .catch((err) => {
                 console.error("Error fetching wishlist:", err);
             });
@@ -75,14 +77,22 @@ const CartProduct = ({ product, viewMode = 'grid' }: { product: Product, viewMod
                     )}
                 </div>
 
+                {/* ส่วนแสดงชื่อสินค้า, ราคา, ปุ่มเพิ่มสินค้าเข้ารถเข็น */}
                 <div className="py-1 px-2 lg:p-3 min-w-full flex flex-col items-start group-hover:opacity-90 transition duration-300 ease-in-out">
-                    <h2 className={`text-xs text-neutral-700 ${viewMode === 'list' ? 'text-3xl' : ''} font-semibold line-clamp-2 text-start`}>
+                    <h2 className={`text-xs sm:text-sm text-neutral-700 ${viewMode === 'list' ? 'text-3xl' : ''} font-semibold line-clamp-2 text-start`}>
                         {product.title}
                     </h2>
-                    <p className="mt-2 md:mt-4 flex-grow font-medium text-blue-500">
-                        ฿{product.price.toLocaleString('th-TH')}
-                    </p>
-                    <p className="text-xs text-gray-400 mb-2">ส่งฟรีทั่วไทย</p>
+                    <div className='flex items-center justify-between w-full'>
+                        <div>
+                            <p className="mt-2 md:mt-4 flex-grow font-medium text-blue-500 text-sm md:text-lg">
+                                ฿{product.price.toLocaleString('th-TH')}
+                            </p>
+                            <p className="text-xs text-gray-400 mb-2">ส่งฟรีทั่วไทย</p>
+                        </div>
+                        <IconButton size='small'>
+                            <AddShoppingCart sx={{ ":hover": { color: "#3b82f6" } }} />
+                        </IconButton>
+                    </div>
                     {/* แจ้งเตือนสินค้าใกล์หมด */}
                     {product.stock <= 5 && (
                         <div className={`bg-gray-100 rounded-md pt-[2px] px-2 text-[10px] ${viewMode === 'grid' ? 'w-full' : ''}`}>
@@ -110,4 +120,4 @@ const CartProduct = ({ product, viewMode = 'grid' }: { product: Product, viewMod
     );
 };
 
-export default CartProduct;
+export default CardProducts;

@@ -7,7 +7,7 @@ import { useSession } from 'next-auth/react';
 import { MdPersonOutline } from 'react-icons/md';
 import MobileLayout from '@/components/client/section/mobile-layout';
 
-const UserProfile: React.FC = () => {
+const UserProfile = () => {
   const [users, setUsers] = useState<User>()
   const [loading, setLoading] = useState<boolean>(false)
   const { data: session } = useSession()
@@ -17,7 +17,7 @@ const UserProfile: React.FC = () => {
       if (!session?.user?.id) return;
       setLoading(true);
       try {
-        const res = await axios.get(`/api/user?userId=${session.user.id}`);
+        const res = await axios.get(`/api/user/${session.user.id}`);
         setUsers(res.data);
       } catch (err) {
         console.error('Failed to fetch user data:', err);

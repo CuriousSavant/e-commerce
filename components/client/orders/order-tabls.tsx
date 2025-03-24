@@ -40,7 +40,7 @@ const OrderTabs = ({ handleTabChange, tabIndex }: { tabIndex: number, handleTabC
                         justifyContent: { xs: "center", sm: "flex-start" },
                     }}
                 >
-                    {["ทั้งหมด", "จัดเตรียมสินค้า", "ส่งมอบสินค้า", "ยกเลิก/คืนเงิน"].map(
+                    {["ทั้งหมด", "จัดเตรียมสินค้า", "ส่งมอบสินค้า", "ยกเลิก"].map(
                         (label, index) => (
                             <Tab
                                 key={index}

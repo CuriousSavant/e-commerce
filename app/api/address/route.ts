@@ -3,10 +3,23 @@ import prisma from "@/lib/prisma";
 import { getServerSession } from "next-auth";
 import { NextResponse } from "next/server";
 
-export const GET = async () => {
+export const GET = async (req: Request) => {
   try {
-    const address = await prisma.address.findMany();
-    return NextResponse.json(address);
+    const { searchParams } = new URL(req.url);
+    const userId = searchParams.get("userId");
+
+    if (userId) {
+      const address = await prisma.address.findMany({
+        where: { userId: Number(userId) },
+        include: { user: true }
+      });
+      return NextResponse.json(address);
+    } else {
+      const address = await prisma.address.findMany({
+        include: { user: true }
+      });
+      return NextResponse.json(address);
+    }
   } catch (error) {
     return NextResponse.json({ msg: "Failed to fetch address", error: error }, { status: 500 });
   }

@@ -1,11 +1,9 @@
 'use client';
-import React, { useEffect } from 'react';
-import { useSession } from 'next-auth/react';
-import { useRouter } from 'next/navigation';
+import React from 'react';
 import { Typography, Box } from "@mui/material";
 import Stats from '@/components/admin/overview/stats';
-import LatestOrders from '@/components/admin/overview/overview-latest-orders';
-import LatestMembers from '@/components/admin/overview/overview-latest-users';
+import LatestOrders from '@/components/admin/overview/latest-orders';
+import LatestMembers from '@/components/admin/overview/latest-users';
 
 const AdminPage = () => {
   return (

@@ -1,22 +1,21 @@
 import { NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
 
-export async function DELETE(
+export async function PUT(
   request: Request,
   { params }: { params: { id: string } }
 ) {
   const orderId = Number(params.id);
 
   try {
-    await prisma.orderItem.deleteMany({
-      where: { orderId: orderId },
-    });
-
-    const deletedOrder = await prisma.order.delete({
+    const updated_order = await prisma.order.update({
       where: { id: orderId },
+      data: {
+        status: "CANCELED"
+      }
     });
 
-    return NextResponse.json(deletedOrder, { status: 200 });
+    return NextResponse.json(updated_order, { status: 200 });
   } catch (error) {
     console.error("Error deleting order:", error);
     return NextResponse.json(

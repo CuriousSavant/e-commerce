@@ -16,7 +16,7 @@ export default function LatestOrders() {
         const fetchOrders = async () => {
             setLoading(true);
             try {
-                await axios.get('/api/order').then((res) => setOrders(res.data.orders));
+                await axios.get('/api/order/latest-order').then((res) => { console.log(res.data), setOrders(res.data) });
             } catch (error) {
                 console.error(error);
             } finally {
@@ -49,7 +49,7 @@ export default function LatestOrders() {
                             {loading ? (
                                 Array.from({ length: 4 }).map((_, __) => <LatestOrderTable loading={loading} key={__} />)
                             ) : (
-                                orders.length > 0 ? orders.map((order, index) => (
+                                orders.length > 0 ? orders.slice(0, 5).map((order, index) => (
                                     <LatestOrderTable order={order} key={index} />
                                 )) : (
                                     <TableRow>

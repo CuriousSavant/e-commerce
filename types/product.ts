@@ -1,5 +1,3 @@
-import { Feature } from "@prisma/client";
-
 export interface Product {
   id: number;
   title: string;
@@ -13,7 +11,6 @@ export interface Product {
   category: Category;
   status: 'ACTIVE' | 'INACTIVE';
   
-  feature: Feature[]
   categoryId: number | null;
   createdAt?: Date;
   updatedAt?: Date;

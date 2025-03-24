@@ -37,8 +37,7 @@ const CheckoutPage = () => {
         updateItemQuantity,
         setItemQuantities,
     } = useCart()
-
-    return (
+        return (
         <Box sx={{ display: "flex", flexDirection: "column", gap: { xs: 2, md: 3 }, px: { xs: 2, md: 5 }, pt: { xs: 3, md: 5 }, }}>
             <Grid container spacing={3}>
                 <Grid item xs={12} md={8}>

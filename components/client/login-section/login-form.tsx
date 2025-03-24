@@ -113,7 +113,7 @@ const LoginForm: React.FC<LoginFormProps> = ({ formData, handleChange, onClose, 
                 type="submit"
                 fullWidth
                 variant="contained"
-                sx={{ mt: 2, bgcolor: "secondary.main" }}
+                sx={{ mt: 2, bgcolor: "primary.main" }}
             >
                 เข้าสู่ระบบ
             </Button>

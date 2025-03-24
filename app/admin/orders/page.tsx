@@ -45,14 +45,6 @@ export default function OrdersPage() {
     }
   }
 
-  const fetchAddressList = () => {
-    try {
-      axios.get('/api/address').then((res) => { setAddressList(res.data) })
-    } catch (err) {
-      console.error(err)
-    }
-  }
-
   const fetchProductList = () => {
     try {
       axios.get('/api/product').then((res) => setProductList(res.data.products))
@@ -61,8 +53,8 @@ export default function OrdersPage() {
     }
   }
 
-  useEffect(() => { fetchOrders() }, [activeTabs, sortOrder, query]);
-  useEffect(() => { Promise.all([fetchAddressList(), fetchProductList()]) }, []);
+  useEffect(() => fetchOrders(), [activeTabs, sortOrder, query]);
+  useEffect(() => fetchProductList(), []);
 
   const toggleExpand = (orderId: number) => {
     setExpandedOrders((prev) => {
@@ -100,11 +92,9 @@ export default function OrdersPage() {
           user={orders.find(order => order.id === editOrderDetailId)?.user}
           items={orders.find(order => order.id === editOrderDetailId)?.items}
           address={orders.find(order => order.id === editOrderDetailId)?.address}
-          addressList={addressList}
           productList={productList}
           onClose={() => setEditOrderDetailId(null)}
           fetchOrders={fetchOrders}
-          fetchAddressList={fetchAddressList}
         /> : (
           <>
             {!openDetail ? (

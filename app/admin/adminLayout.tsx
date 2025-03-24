@@ -33,7 +33,7 @@ const AdminLayoutPage = ({ children }: { children: React.ReactNode }) => {
                             m: 1,
                             borderRadius: 2,
                         }}>
-                            <Avatar sx={{ bgcolor: "secondary.main" }}>{session?.user.name?.at(0)}</Avatar>
+                            <Avatar sx={{ bgcolor: "primary.main" }}>{session?.user.name?.at(0)}</Avatar>
                             <Box display={'flex'} flexDirection={'column'}>
                                 <Typography variant='body1'>{session?.user.name}</Typography>
                                 <Typography variant='body2' sx={{ color: "#c3c3c3" }}>{session?.user.email}</Typography>

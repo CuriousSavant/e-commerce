@@ -141,7 +141,7 @@ const FormAddress: React.FC<FormAddressProps> = ({
                         <Button
                             type="submit"
                             variant="contained"
-                            sx={{ bgcolor: "secondary.main", px: 6 }}
+                            sx={{ bgcolor: "primary.main", px: 6 }}
                         >บันทึก</Button>
                     </Box>
                 </form>

@@ -8,8 +8,8 @@ interface SearchContextType {
     setViewMode: React.Dispatch<React.SetStateAction<'grid' | 'list'>>;
     sortOrder: string;
     setSortOrder: React.Dispatch<React.SetStateAction<string>>;
-    originalProducts: Product[];
-    setOriginalProducts: React.Dispatch<React.SetStateAction<Product[]>>;
+    productsList: Product[];
+    setProductsList: React.Dispatch<React.SetStateAction<Product[]>>;
     searchQuery: string;
     setSearchQuery: React.Dispatch<React.SetStateAction<string>>;
     query: string | null;
@@ -26,28 +26,33 @@ const SearchContext = createContext<SearchContextType | undefined>(undefined);
 
 // สร้าง Provider Component
 export const SearchProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-    const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
-    const [sortOrder, setSortOrder] = useState<string>('createdAt');
-    const [originalProducts, setOriginalProducts] = useState<Product[]>([]);
-    const [searchQuery, setSearchQuery] = useState('');
+    const [productsList, setProductsList] = useState<Product[]>([]);
     const [categories, setCategories] = useState<Category[]>([]);
+
     const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
-    const [loading, setLoading] = useState<boolean>(false)
     const [filteredProducts, setFilteredProducts] = useState<Product[]>([])
+
+    const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
+    const [sortOrder, setSortOrder] = useState<string>('asc');
+    const [searchQuery, setSearchQuery] = useState('');
+
+    const [loading, setLoading] = useState<boolean>(false)
 
     const searchParams = useSearchParams();
     const query = searchParams.get('q');
 
     useEffect(() => {
         setLoading(true)
+        // ถ้ากำลัง search
         if (query) {
             axios.get(`/api/product?search=${query}&sortBy=${sortOrder}`)
-                .then((res) => setOriginalProducts(res.data))
+                .then((res) => setProductsList(res.data))
                 .catch((err) => console.error(err))
                 .finally(() => setLoading(false))
         } else {
+            // ถ้าไม่ search
             axios.get(`/api/product?sortBy=${sortOrder}`)
-                .then((res) => setOriginalProducts(res.data.products))
+                .then((res) => setProductsList(res.data.products))
                 .catch((err) => console.error(err))
                 .finally(() => setLoading(false))
 
@@ -62,7 +67,7 @@ export const SearchProvider: React.FC<{ children: React.ReactNode }> = ({ childr
             .then((res) => setFilteredProducts(res.data))
             .catch((err) => console.error(err))
             .finally(() => setLoading(false))
-    }, [originalProducts, selectedCategory])
+    }, [productsList, selectedCategory])
 
     return (
         <SearchContext.Provider
@@ -71,8 +76,8 @@ export const SearchProvider: React.FC<{ children: React.ReactNode }> = ({ childr
                 setViewMode,
                 sortOrder,
                 setSortOrder,
-                originalProducts,
-                setOriginalProducts,
+                productsList,
+                setProductsList,
                 searchQuery,
                 setSearchQuery,
                 query,

@@ -42,7 +42,6 @@ const SearchBar = ({ setIsSearchOpen }: { setIsSearchOpen: React.Dispatch<SetSta
                 onChange={(e) => setSearchQuery(e.target.value)}
                 value={searchQuery}
                 InputProps={{
-                    disableUnderline: true,
                     startAdornment: (
                         <InputAdornment position="start" sx={{ borderRight: '1px solid #ddd', px: 1 }}>
                             <HiOutlineSearch size={20} className='text-[#6c757d]' />

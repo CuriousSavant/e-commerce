@@ -1,13 +1,13 @@
 'use client'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import axios from 'axios';
 import { Product } from '@/types/product';
-import CartProduct from '../section/cart-product';
+import CardProducts from '../section/card-product';
 
 const LatestProduct = () => {
     const [featureProduct, setFeatureProduct] = useState<Product[]>([])
 
-    React.useEffect(() => {
+    useEffect(() => {
         axios.get('/api/latest/').then((res) => setFeatureProduct(res.data))
     }, [])
 
@@ -18,7 +18,7 @@ const LatestProduct = () => {
             </div>
             <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3 md:gap-6 p-6">
                 {featureProduct.map((product) => (
-                    <CartProduct product={product} key={product.id} />
+                    <CardProducts product={product} key={product.id} />
                 ))}
             </div>
         </div>

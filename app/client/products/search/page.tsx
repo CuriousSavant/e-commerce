@@ -1,6 +1,6 @@
 'use client';
 import React from 'react';
-import CartProduct from '@/components/section/cart-product';
+import CardProducts from '@/components/client/section/card-product';
 import { useSearchContext } from '@/app/context/ProductSearchContext';
 import { CircularProgress } from '@mui/material';
 
@@ -29,7 +29,7 @@ const SearchPage = () => {
         ) : originalProducts.length > 0 ? (
             <div className={getContainerClass()}>
                 {originalProducts.map((product) => (
-                    <CartProduct product={product} viewMode={viewMode} key={product.id} />
+                    <CardProducts product={product} viewMode={viewMode} key={product.id} />
                 ))}
             </div>
         ) : (

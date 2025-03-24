@@ -19,8 +19,8 @@ const SidebarMenu: React.FC = () => {
     const linkStyles = (path: string) => {
         return ({
             borderLeft: "4px solid",
-            borderLeftColor: pathname === path ? '#635bff' : 'transparent',
-            color: pathname === path ? '#635bff' : '#C2C7D0',
+            borderLeftColor: pathname === path ? '#1f8ef1' : 'transparent',
+            color: pathname === path ? '#1f8ef1' : '#C2C7D0',
             borderRadius: 0,
             transition: 'background-color 0.3s ease, color 0.3s ease',
         })

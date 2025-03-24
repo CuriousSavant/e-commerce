@@ -1,25 +1,7 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
 import { Address } from "@/types/address";
-
-// interface UseAddressReturn {
-//   allAddress: Address[];
-//   formData: Address;
-//   formErrors: { [key: string]: boolean };
-//   loading: boolean;
-//   isEditMode: boolean;
-//   isFormOpen: boolean;
-//   setIsFormOpen: (open: boolean) => void;
-//   handleChange: (
-//     field: string
-//   ) => (e: React.ChangeEvent<HTMLInputElement>) => void;
-//   handleSubmit: (e: React.FormEvent<HTMLFormElement>) => void;
-//   handleEdit: (address: Address) => void;
-//   handleDelete: (id: number) => void;
-//   handleClose: () => void;
-//   handleSetDefaultAddress: (addressId: number) => void;
-//   defaultAddress: Address;
-// }
+import { useSession } from "next-auth/react";
 
 const useAddress = () => {
   const [isFormOpen, setIsFormOpen] = useState(false);
@@ -60,10 +42,12 @@ const useAddress = () => {
     postalCode: false,
   });
 
+  const { data: session } = useSession();
+
   const fetchAddresses = () => {
     setLoading(true);
     try {
-      axios.get("/api/address").then((res) => {
+      axios.get(`/api/address/${session?.user.id}`).then((res) => {
         setAllAddress(res.data);
         setDefaultAddress(res.data.find((i: Address) => i.isDefault));
       });

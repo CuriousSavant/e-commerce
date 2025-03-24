@@ -7,7 +7,7 @@ import { Order, OrderItem } from "@/types/order";
 import axios from "axios";
 import { Product } from "@/types/product";
 import FormUserAddress from "./order-edit/form-user-address";
-import ProductList from "./order-edit/product-list";
+import ProductList from "./order-edit/dialog/product-list";
 
 /*
     component สำหรับแก้ไขคำสั่งซื้อ 
@@ -19,11 +19,9 @@ interface OrderEditProps {
     user?: User;
     items?: OrderItem[];
     address?: Address;
-    addressList: Address[];
     productList: Product[];
     onClose: () => void;
     fetchOrders: () => void;
-    fetchAddressList: () => void;
 }
 
 export type UserInfo = {
@@ -32,21 +30,9 @@ export type UserInfo = {
     email?: string;
 }
 
-export type AddressInfo = {
-    id?: number;
-    fullName?: string;
-    address?: string;
-    phone?: string;
-    subDistrict?: string;
-    district?: string;
-    province?: string;
-    postalCode?: string;
-    isDefault?: boolean;
-}
-
 const OrderEdit: React.FC<OrderEditProps> = ({
     address, onClose, items, user, fetchOrders,
-    addressList, fetchAddressList, order, productList,
+    order, productList,
 }) => {
     // state สำหรับข้อมูลผู้ใช้
     const [userInfo, setUserInfo] = useState<UserInfo>({
@@ -55,8 +41,10 @@ const OrderEdit: React.FC<OrderEditProps> = ({
         email: user?.email,
     });
 
+    const [addressList, setAddressList] = useState<Address[]>([]);
+
     // state สำหรับที่อยู่
-    const [addressInfo, setAddressInfo] = useState<AddressInfo>({
+    const [addressInfo, setAddressInfo] = useState<Address>({
         id: address?.id,
         fullName: address?.fullName,
         address: address?.address,
@@ -66,6 +54,7 @@ const OrderEdit: React.FC<OrderEditProps> = ({
         province: address?.province,
         postalCode: address?.postalCode,
         isDefault: address?.isDefault || true,
+        userId: address?.userId,
     });
 
     const [updatedItems, setUpdatedItems] = useState<OrderItem[]>(items || []); // รายการสินค้าที่แก้ไข
@@ -78,6 +67,15 @@ const OrderEdit: React.FC<OrderEditProps> = ({
     const [addressErrors, setAddressErrors] = useState<{ [key: string]: string }>({});
 
     const [errorLowProduct, setErrorLowProduct] = useState<boolean>(false);
+
+    const handleChangeAddress = (userId: number) => {
+        axios.get(`/api/address?userId=${userId}`).then((res) => {
+            setAddressList(res.data)
+            console.log("ค่าที่อยากได้:", userId)
+            console.log("ค่าที่อยากได้:", res.data)
+        })
+        setOpenAddressDialog(true)
+    }
 
     // function สำหรับอัพเดท
     const handleSave = async (e: FormEvent) => {
@@ -107,7 +105,6 @@ const OrderEdit: React.FC<OrderEditProps> = ({
 
             // รีเฟรชข้อมูลหลังอัปเดต
             fetchOrders();
-            fetchAddressList();
             setUserInfo({});
             setAddressInfo({});
             onClose();
@@ -250,11 +247,12 @@ const OrderEdit: React.FC<OrderEditProps> = ({
             <Grid container spacing={4} sx={{ p: 0 }}>
                 <FormUserAddress
                     {...{
-                        addressFields, addressInfo, addressList,
+                        addressFields, addressInfo,
                         handleAddressChange, handleSave, handleSelectProduct,
                         handleUserChange, openAddressDialog, openProductListDialog,
                         productList, setAddressInfo, setOpenAddressDialog,
                         setOpenProductListDialog, userFields, userInfo, addressErrors, userErrors,
+                        addressList, handleChangeAddress,
                     }} />
                 <ProductList
                     {...{

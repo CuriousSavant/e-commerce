@@ -56,8 +56,8 @@ const FilterSortSearchProduct: React.FC<FilterSortSearchProductProps> = ({
                         variant="contained"
                         sx={{
                             textTransform: "none",
-                            backgroundColor: "#4F46E5",
-                            ":hover": { backgroundColor: "#4338CA" },
+                            backgroundColor: "primary.main",
+                            ":hover": { backgroundColor: "primary.main" },
                             color: "white",
                             width: { xs: "100%", md: "auto" },
                             whiteSpace: "pre",

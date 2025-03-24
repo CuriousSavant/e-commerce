@@ -38,7 +38,7 @@ export default function LatestUsers() {
                         size="small"
                         sx={{
                             textTransform: "none",
-                            bgcolor: "secondary.main"
+                            bgcolor: "primary.main"
                         }}
                         href="/admin/users"
                     >ดูทั้งหมด</Button>

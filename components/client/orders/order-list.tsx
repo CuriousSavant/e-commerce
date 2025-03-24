@@ -14,17 +14,20 @@ import {
 import { Order } from '@/types/order';
 import { format } from 'date-fns';
 import { useRouter } from 'next/navigation';
+import { Product } from '@/types/product';
 
 interface OrderListProps {
     order: Order;
     formatStatus: (status: string) => { label: string, color: string };
-    handleCancelOrder: (orderId: number, productName: string) => void;
+    handleCancelOrder: (orderId: number) => void;
+    handleAddToCart: (product: Product, quantity: number) => void;
 }
 
 const OrderList: React.FC<OrderListProps> = ({
     order,
     formatStatus,
     handleCancelOrder,
+    handleAddToCart,
 }) => {
     const router = useRouter()
 
@@ -47,15 +50,11 @@ const OrderList: React.FC<OrderListProps> = ({
                         component="span"
                         sx={{ color: "#1976d2", cursor: "pointer" }}
                     >
-                        #{order.id}
+                        #{order.orderId}
                     </Typography>
                 </Typography>
                 <Button
-                    sx={{
-                        textTransform: "none",
-                        borderRadius: 10,
-                        fontWeight: 600,
-                    }}
+                    sx={{ textTransform: "none", fontWeight: 600 }}
                     size='small'
                     onClick={() => router.push(`/client/profile/order-summary/${order.id}`)}
                 >
@@ -96,9 +95,9 @@ const OrderList: React.FC<OrderListProps> = ({
             </Box>
 
             {/* Product Items */}
-            {order.items.map((citem) => (
+            {order.items.map((citem, index) => (
                 <Card
-                    key={citem.product.id}
+                    key={index}
                     variant="outlined"
                     sx={{
                         display: "flex",
@@ -156,12 +155,7 @@ const OrderList: React.FC<OrderListProps> = ({
 
                             {/* ราคา */}
                             <Box display="flex" alignItems="center" flexDirection={'column'}>
-                                <Typography
-                                    variant="body1"
-                                    fontWeight="bold"
-                                    color="primary"
-                                    sx={{ fontSize: "1rem" }}
-                                >
+                                <Typography variant="body1" fontWeight="bold" color="primary">
                                     ฿{citem.total.toLocaleString("th-TH")}
                                 </Typography>
                             </Box>
@@ -185,20 +179,24 @@ const OrderList: React.FC<OrderListProps> = ({
                 </Box>
                 <Box>
                     {/* Cancel Order (จะแสดงเมื่อ order อยู่ในสภานะเตรียมจัดส่ง) */}
-                    {order.status !== 'COMPLETED' as any && <Button
+                    {order.status !== 'COMPLETED' as any && order.status !== 'CANCELED' as any && <Button
                         variant="outlined"
                         color="error"
                         size='small'
-                        // onClick={() => handleCancelOrder(order.id,
-                            // order.items.filter((item) => item.product.title).filter((item) => item.product.title).join(', ')
-                        // )}
+                        onClick={() => handleCancelOrder(order.id)}
                     >
                         ยกเลิกคำสั่งซื้อ
                     </Button>}
                     {order.status === 'COMPLETED' as any && <Button
                         variant="outlined"
                         size='small'
-                        // onClick={() => router.push(`/client/${order.items.filter((item) => item).map(order => order.product.slug)}`)}
+                        color='success'
+                        onClick={() => {
+                            order.items.forEach((item) => {
+                                handleAddToCart(item.product, 1)
+                                router.push('/client/checkout')
+                            })
+                        }}
                     >
                         สั่งซื้ออีกครั้ง
                     </Button>}

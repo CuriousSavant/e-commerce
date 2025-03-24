@@ -126,7 +126,7 @@ const OrderSummary: React.FC<OrderSummaryProps> = ({
                 <Button
                     variant="contained"
                     fullWidth
-                    sx={{ mt: 2, bgcolor: "secondary.main" }}
+                    sx={{ mt: 2, bgcolor: "primary.main" }}
                     onClick={handleOrder}
                 >
                     ยืนยันคำสั่งซื้อ

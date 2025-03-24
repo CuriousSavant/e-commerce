@@ -12,7 +12,7 @@ const ClientLayout = async ({ children }: { children: React.ReactNode }) => {
     const session = await getServerSession(authOptions)
     return (
         <SessionProvider session={session}>
-            <main className='max-w-screen-xl mt-16 min-h-screen'>
+            <main className='max-w-screen-xl mt-16 min-h-screen mx-auto'>
                 {children}
             </main>
         </SessionProvider>

@@ -2,12 +2,11 @@ import { Add } from "@mui/icons-material";
 import { Box, Dialog, DialogContent, DialogTitle, IconButton, Typography } from "@mui/material";
 import { Address } from "@/types/address";
 import React from "react";
-import { AddressInfo } from "../../order-edit";
 
 interface AddressDialogProps {
     openAddressDialog: boolean;
     setOpenAddressDialog: React.Dispatch<React.SetStateAction<boolean>>;
-    setAddressInfo: React.Dispatch<React.SetStateAction<AddressInfo>>
+    setAddressInfo: React.Dispatch<React.SetStateAction<Address>>
     addressList: Address[];
 }
 

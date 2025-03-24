@@ -30,14 +30,14 @@ export async function POST(req: Request) {
   try {
     const { userId, productId, quantity } = await req.json();
 
+    console.log(userId, productId, quantity);
+
     if (!userId || !productId || !quantity) {
       return NextResponse.json({ error: "Invalid data" }, { status: 400 });
     }
 
     const user = await prisma.user.findUnique({
-      where: {
-        id: userId
-      },
+      where: { id: userId }
     })
 
     if (!user) {

@@ -10,6 +10,7 @@ import OrderEmpty from "@/components/client/orders/oder-empty";
 import Swal from "sweetalert2";
 import { BiArrowBack } from "react-icons/bi";
 import { useRouter } from "next/navigation";
+import useCart from "@/hooks/useCart";
 
 const OrderSummary = () => {
   const [orders, setOrders] = useState<Order[]>([]);
@@ -19,6 +20,7 @@ const OrderSummary = () => {
 
   const { data: session } = useSession();
   const router = useRouter()
+  const { handleAddToCart } = useCart()
 
   useEffect(() => {
     if (!session?.user?.id) return;
@@ -26,8 +28,7 @@ const OrderSummary = () => {
       setLoading(true);
       try {
         const res = await axios.get(`/api/order?userId=${session.user.id}`);
-        const sortedOrders = res.data;
-        setOrders(sortedOrders);
+        setOrders(res.data.orders);
       } catch (err) {
         console.error(err);
       } finally {
@@ -41,13 +42,14 @@ const OrderSummary = () => {
     const statusMap: Record<string, { label: string; color: string }> = {
       // สำหรับใช้งานจริง
       // PENDING: { label: "กำลังจัดเตรียม", color: "warning" },
+      // DELIVERING: { label: "กำลังจัดส่ง", color: "warning" }, ควรเพิ่มสถานะนี้เพิ่มเติม
       // COMPLETED: { label: "จัดส่งเสร็จ", color: "success" },
-      // CANCELLED: { label: "ยกเลิกสินค้าแล้ว", color: "error" },
+      // CANCELED: { label: "ยกเลิกสินค้าแล้ว", color: "error" },
 
       // ใช้งานเล่นๆ ปลอบใจคนโสด
       PENDING: { label: "เป็นได้แค่พี่น้อง", color: "warning" },
       COMPLETED: { label: "เขาไปมีคนใหม่แล้ว", color: "success" },
-      CANCELLED: { label: "ได้แค่คุย", color: "error" },
+      CANCELED: { label: "ได้แค่คุย", color: "error" },
     };
     return statusMap[status] || { label: "ไม่ทราบสถานะ", color: "default" };
   };
@@ -57,7 +59,7 @@ const OrderSummary = () => {
       () => true,
       (order: Order) => order.status === "PENDING" as any,
       (order: Order) => order.status === "COMPLETED" as any,
-      (order: Order) => order.status === "CANCELLED" as any,
+      (order: Order) => order.status === "CANCELED" as any,
     ];
     return orders.filter(filters[tabIndex] || (() => true));
   };
@@ -70,10 +72,10 @@ const OrderSummary = () => {
     setTabIndex(newValue);
   };
 
-  const handleCancelOrder = async (orderId: number, productName: string) => {
+  const handleCancelOrder = async (orderId: number) => {
     try {
       const result = await Swal.fire({
-        title: `คุณต้องการยกเลิกสินค้าหมายเลขนี้ใช่ไหม #${productName}`,
+        title: `คุณต้องการยกเลิกคำสั่งซื้อนี้ใช่ไหม`,
         icon: "warning",
         showCancelButton: true,
         confirmButtonText: "ใช่",
@@ -82,10 +84,10 @@ const OrderSummary = () => {
 
       if (result.isConfirmed) {
         setLoading(true);
-        await axios.delete(`/api/order/${orderId}/cancel`);
+        await axios.put(`/api/order/${orderId}/cancel`);
         Swal.fire({
           icon: "success",
-          title: "ทำการยกเลิกสินค้าแล้ว",
+          title: "ทำการยกเลิกคำสั่งซื้อแล้ว",
         });
         setOrders((prev) => prev.filter((order) => order.id !== orderId));
       }
@@ -102,15 +104,8 @@ const OrderSummary = () => {
   };
 
   return (
-    <Box
-      sx={{
-        backgroundColor: "#fff",
-        overflowX: "auto",
-        px: 3,
-        maxWidth: "100%",
-      }}
-    >
-      <IconButton sx={{ mb: 4 }} onClick={() => router.back()}>
+    <Box sx={{ backgroundColor: "#fff", overflowX: "auto", px: 3, maxWidth: "100%" }}>
+      <IconButton sx={{ mb: 2 }} onClick={() => router.push('/client/profile/overview')}>
         <BiArrowBack />
       </IconButton>
 
@@ -127,6 +122,7 @@ const OrderSummary = () => {
             formatStatus={formatStatus}
             order={order}
             handleCancelOrder={handleCancelOrder}
+            handleAddToCart={handleAddToCart}
           />
         ))
       ) : (

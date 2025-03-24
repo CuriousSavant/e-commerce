@@ -31,7 +31,7 @@ const AccountInformation = () => {
 
   useEffect(() => {
     if (session?.user.id) {
-      axios.get(`/api/user?userId=${session?.user.id}`)
+      axios.get(`/api/user/${session?.user.id}`)
         .then((res) => {
           const user = res.data;
           setUserDetails({

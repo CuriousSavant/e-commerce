@@ -7,9 +7,9 @@ export async function GET(req: NextRequest) {
   const query = searchParams.get("q")?.trim();
   const sortOrder = searchParams.get("sortOrder") || "asc";
   const filterStatus = searchParams.get("filterStatus");
-  const userId = searchParams.get("userId");
-  const page = parseInt(searchParams.get("page") || "1");
-  const pageSize = parseInt(searchParams.get("pageSize") || "10");
+  const userId = Number(searchParams.get("userId"));
+  const page = Number(searchParams.get("page") || 1);
+  const pageSize = Number(searchParams.get("pageSize") || 10);
 
   let whereClause: any = {};
 
@@ -47,6 +47,9 @@ function generateOrderId(): string {
 
 export async function POST(request: Request) {
   const { userId, orderItems, totalAmount, addressId } = await request.json();
+
+  console.log(userId, orderItems, totalAmount, addressId)
+
 
   if (!Array.isArray(orderItems) || orderItems.length === 0) {
     return NextResponse.json(
@@ -101,7 +104,6 @@ export async function POST(request: Request) {
       // หลังจากสร้าง order เสร็จ ให้ลบ cartItem ที่มี productId ตรงกับ orderItems ออก
       await tx.cartItem.deleteMany({
         where: {
-          cartId: userId,
           productId: {
             in: orderItems.map((item) => item.productId),
           },

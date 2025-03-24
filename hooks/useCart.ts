@@ -7,6 +7,8 @@ import Swal from 'sweetalert2'
 import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 import useAddress from './useAddress';
+import { Product } from '@/types/product';
+import useDialog from './useDialog';
 
 type CartQuantities = Record<number, number>;
 
@@ -17,8 +19,9 @@ const useCart = () => {
     const [selectedItems, setSelectedItems] = useState<number[]>([]);
     const [loading, setLoading] = useState<boolean>(false)
 
-    const { data: session } = useSession()
+    const { data: session, status } = useSession()
     const { defaultAddress } = useAddress();
+    const { setIsDialogOpen } = useDialog()
 
     const router = useRouter()
 
@@ -42,7 +45,7 @@ const useCart = () => {
                     }
                     return acc;
                 }, []);
-                
+
                 setCartItems(combinedItems);
 
                 const savedQuantities = JSON.parse(localStorage.getItem("cartItemQuantities") || "{}");
@@ -158,7 +161,7 @@ const useCart = () => {
                 quantity: itemQuantities[item.productId],
             }));
 
-            axios.post('/api/order', { userId: session?.user.id, orderItems, totalAmount: cartTotalPrice, addressId: defaultAddress.id }).then(() => {
+            axios.post('/api/order', { userId: session?.user.id, orderItems, totalAmount: cartTotalPrice, addressId: defaultAddress?.id }).then(() => {
                 Swal.fire({
                     icon: "success",
                     title: "ทำการสั่งซื้อเรียบร้อยแล้ว🥳",
@@ -184,6 +187,38 @@ const useCart = () => {
         }
     };
 
+    // เพิ่มสินค้าลงตะกร้า
+    const handleAddToCart = async (product: Product, quantity: number) => {
+        if (status === 'unauthenticated') {
+            setIsDialogOpen(true)
+            return;
+        }
+
+        try {
+            if (product) {
+                if (product?.stock <= 0) {
+                    toast.error("สินค้าหมดแล้ว😭", {
+                        autoClose: 1200
+                    });
+                } else {
+                    await axios.post("/api/cart", {
+                        userId: session?.user?.id,
+                        productId: product?.id,
+                        quantity: quantity
+                    })
+                    toast.success("เพิ่มสินค้าลงตะกร้าแล้ว 🎉", {
+                        autoClose: 1200
+                    });
+                }
+            }
+        } catch (error) {
+            console.error(error)
+            toast.error("เกิดข้อผิดพลาดไม่สามารถเพิ่มสินค้าลงตะกร้าได้", {
+                autoClose: 1200
+            });
+        }
+    }
+
     useEffect(() => {
         toggleSelectAllItems();
     }, [cartItems])
@@ -200,6 +235,7 @@ const useCart = () => {
         removeItemFromCart,
         handleOrder,
         loading,
+        handleAddToCart,
     };
 };
 

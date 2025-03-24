@@ -8,11 +8,7 @@ export const GET = async (
   try {
     const products = await prisma.product.findUnique({
       where: { slug: params.slug },
-      include: {
-        category: true,
-        properties: true,
-        feature: true,
-      },
+      include: { category: true, properties: true },
     });
 
     return NextResponse.json(products);

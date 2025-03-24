@@ -4,7 +4,7 @@ const theme = () =>
   createTheme({
     palette: {
       primary: {
-        main: "#635bff",
+        main: "#1f8ef1",
         dark: "#1e1e2f", // dasboard background
       },
       secondary: {

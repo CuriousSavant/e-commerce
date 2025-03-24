@@ -45,7 +45,7 @@ const OrderList: React.FC<OrderListProps> = ({
                         <Typography variant='subtitle2'>{order.user.firstname} {order.user.lastname}</Typography>
                     </Typography>
                     <Typography variant='body2' sx={{ display: "flex", alignItems: "center", color: "#c3c3c3" }}>
-                        วันที่คาดว่าจะได้รับ : <span className='text-[#635bff] ml-1'>ไม่มีกำหนด</span>
+                        วันที่คาดว่าจะได้รับ : <span className='text-[#1976d2] ml-1'>ไม่มีกำหนด</span>
                     </Typography>
                 </Box>
 

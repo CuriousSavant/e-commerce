@@ -8,7 +8,7 @@ export const GET = async (
   { params }: { params: { id: string } }
 ) => {
   try {
-    const address = await prisma.address.findUnique({
+    const address = await prisma.address.findMany({
       where: { id: Number(params.id) },
     });
     return NextResponse.json(address);
