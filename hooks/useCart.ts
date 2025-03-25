@@ -9,6 +9,7 @@ import { useRouter } from 'next/navigation';
 import useAddress from './useAddress';
 import { Product } from '@/types/product';
 import useDialog from './useDialog';
+import AddressFormEdit from '@/components/admin/orders/order-edit/form/address-form-edit';
 
 type CartQuantities = Record<number, number>;
 
@@ -156,12 +157,27 @@ const useCart = () => {
                 return;
             }
 
+            if (!defaultAddress?.id) {
+                Swal.fire({
+                    icon: "warning",
+                    title: "กรุณาเลือกที่อยู่จัดส่งก่อนทำการสั่งซื้อ",
+                });
+                return;
+            }
+
             const orderItems = selectedOrderItems.map(item => ({
                 productId: item.productId,
                 quantity: itemQuantities[item.productId],
             }));
 
-            axios.post('/api/order', { userId: session?.user.id, orderItems, totalAmount: cartTotalPrice, addressId: defaultAddress?.id }).then(() => {
+            const payload = {
+                userId: session?.user.id,
+                orderItems: orderItems,
+                totalAmount: cartTotalPrice,
+                addressId: defaultAddress?.id
+            }
+
+            axios.post('/api/order', payload).then(() => {
                 Swal.fire({
                     icon: "success",
                     title: "ทำการสั่งซื้อเรียบร้อยแล้ว🥳",

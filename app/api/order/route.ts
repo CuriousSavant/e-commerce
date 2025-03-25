@@ -13,12 +13,16 @@ export async function GET(req: NextRequest) {
 
   let whereClause: any = {};
 
+  let whereCountClause: any = {};
+
   if (filterStatus && filterStatus !== 'all') whereClause.status = filterStatus.toUpperCase();
   if (query) whereClause.orderId = { contains: query, mode: "insensitive" };
   if (userId) whereClause.userId = userId;
 
-  const ordersCount = await prisma.order.count({})
+  if (userId) whereCountClause.userId = userId;
 
+  const ordersCount = await prisma.order.count({ where: whereClause })
+  
   try {
     const orders = await prisma.order.findMany({
       where: whereClause,

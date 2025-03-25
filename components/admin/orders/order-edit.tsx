@@ -41,8 +41,6 @@ const OrderEdit: React.FC<OrderEditProps> = ({
         email: user?.email,
     });
 
-    const [addressList, setAddressList] = useState<Address[]>([]);
-
     // state สำหรับที่อยู่
     const [addressInfo, setAddressInfo] = useState<Address>({
         id: address?.id,
@@ -54,28 +52,16 @@ const OrderEdit: React.FC<OrderEditProps> = ({
         province: address?.province,
         postalCode: address?.postalCode,
         isDefault: address?.isDefault || true,
-        userId: address?.userId,
     });
 
     const [updatedItems, setUpdatedItems] = useState<OrderItem[]>(items || []); // รายการสินค้าที่แก้ไข
 
-    // สำหรับเลือกสินค้า หรือ ที่อยู่ใน dialog popup
-    const [openAddressDialog, setOpenAddressDialog] = useState<boolean>(false);
     const [openProductListDialog, setOpenProductListDialog] = useState<boolean>(false);
 
     const [userErrors, setUserErrors] = useState<{ [key: string]: string }>({});
     const [addressErrors, setAddressErrors] = useState<{ [key: string]: string }>({});
 
     const [errorLowProduct, setErrorLowProduct] = useState<boolean>(false);
-
-    const handleChangeAddress = (userId: number) => {
-        axios.get(`/api/address?userId=${userId}`).then((res) => {
-            setAddressList(res.data)
-            console.log("ค่าที่อยากได้:", userId)
-            console.log("ค่าที่อยากได้:", res.data)
-        })
-        setOpenAddressDialog(true)
-    }
 
     // function สำหรับอัพเดท
     const handleSave = async (e: FormEvent) => {
@@ -249,10 +235,9 @@ const OrderEdit: React.FC<OrderEditProps> = ({
                     {...{
                         addressFields, addressInfo,
                         handleAddressChange, handleSave, handleSelectProduct,
-                        handleUserChange, openAddressDialog, openProductListDialog,
-                        productList, setAddressInfo, setOpenAddressDialog,
+                        handleUserChange, openProductListDialog,
+                        productList, setAddressInfo,
                         setOpenProductListDialog, userFields, userInfo, addressErrors, userErrors,
-                        addressList, handleChangeAddress,
                     }} />
                 <ProductList
                     {...{

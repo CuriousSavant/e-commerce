@@ -1,6 +1,4 @@
-import { authOptions } from "@/lib/auth";
 import prisma from "@/lib/prisma";
-import { getServerSession } from "next-auth";
 import { NextResponse } from "next/server";
 
 export const GET = async (req: Request) => {
@@ -11,12 +9,14 @@ export const GET = async (req: Request) => {
     if (userId) {
       const address = await prisma.address.findMany({
         where: { userId: Number(userId) },
-        include: { user: true }
+        include: { user: true },
+        orderBy: { isDefault: "desc" }
       });
       return NextResponse.json(address);
     } else {
       const address = await prisma.address.findMany({
-        include: { user: true }
+        include: { user: true },
+        orderBy: { isDefault: "desc" }
       });
       return NextResponse.json(address);
     }
@@ -26,7 +26,6 @@ export const GET = async (req: Request) => {
 };
 
 export const POST = async (req: Request) => {
-  const session = await getServerSession(authOptions);
   const {
     fullName,
     phone,
@@ -40,6 +39,19 @@ export const POST = async (req: Request) => {
     userId,
   } = await req.json();
 
+  console.log({
+    fullName,
+    phone,
+    address,
+    subDistrict,
+    district,
+    province,
+    postalCode,
+    type,
+    isDefault,
+    userId,
+  })
+
   try {
     const create_address = await prisma.address.create({
       data: {
@@ -52,7 +64,7 @@ export const POST = async (req: Request) => {
         postalCode,
         type,
         isDefault,
-        userId: session?.user.role === "admin" ? userId : session?.user.id,
+        userId: Number(userId),
       },
     });
     return NextResponse.json(create_address);

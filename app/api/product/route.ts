@@ -7,9 +7,9 @@ export async function GET(req: Request) {
     const url = new URL(req.url).searchParams;
     const query = url.get("q")?.trim();
     const sortOrder = url.get("sortOrder") || "desc";
-    const status = url.get("status");
-    const categoryId = url.get("categoryId");
-    const price = url.get("price");
+    const status = url.get("status") || "all";
+    const categoryId = url.get("categoryId") || "all";
+    const price = url.get("price") || "all";
 
     const page = Math.max(1, parseInt(url.get("page") || "1"));
     const pageSize = Math.max(1, parseInt(url.get("pageSize") || "10"));

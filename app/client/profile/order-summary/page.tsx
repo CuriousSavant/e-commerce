@@ -1,6 +1,6 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import { Box, CircularProgress, IconButton } from "@mui/material";
+import { Box, CircularProgress, IconButton, TablePagination } from "@mui/material";
 import { Order } from "@/types/order";
 import axios from "axios";
 import { useSession } from "next-auth/react";
@@ -11,12 +11,18 @@ import Swal from "sweetalert2";
 import { BiArrowBack } from "react-icons/bi";
 import { useRouter } from "next/navigation";
 import useCart from "@/hooks/useCart";
+import { usePagination } from "@/app/context/PaginationContext";
 
 const OrderSummary = () => {
   const [orders, setOrders] = useState<Order[]>([]);
   const [tabIndex, setTabIndex] = useState(0);
   const [filteredOrders, setFilteredOrders] = useState<Order[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
+
+  const [countOrders, setCountOrders] = useState(0);
+
+  const [page, setPage] = useState(1);
+  const [pageSize, setPageSize] = useState(5);
 
   const { data: session } = useSession();
   const router = useRouter()
@@ -27,8 +33,9 @@ const OrderSummary = () => {
     const fetchOrders = async () => {
       setLoading(true);
       try {
-        const res = await axios.get(`/api/order?userId=${session.user.id}`);
+        const res = await axios.get(`/api/order?userId=${session.user.id}&sortOrder=desc&page=${page}&pageSize=${pageSize}`);
         setOrders(res.data.orders);
+        setCountOrders(res.data.ordersCount);
       } catch (err) {
         console.error(err);
       } finally {
@@ -36,7 +43,7 @@ const OrderSummary = () => {
       }
     };
     fetchOrders();
-  }, [session?.user?.id]);
+  }, [session?.user?.id, page, pageSize]);
 
   const formatStatus = (status: string) => {
     const statusMap: Record<string, { label: string; color: string }> = {
@@ -128,6 +135,19 @@ const OrderSummary = () => {
       ) : (
         <OrderEmpty />
       )}
+
+      <TablePagination
+        rowsPerPageOptions={[5, 10, 25]}
+        component="div"
+        count={countOrders}
+        rowsPerPage={pageSize}
+        page={page - 1}
+        onPageChange={(_, newPage) => setPage(newPage + 1)}
+        onRowsPerPageChange={(e: React.ChangeEvent<HTMLInputElement>) => { setPageSize(Number(e.target.value)), setPage(1) }}
+        nextIconButtonProps={{ disabled: (page * pageSize) >= countOrders }}
+        backIconButtonProps={{ disabled: page <= 1 }}
+      />
+
     </Box>
   );
 };

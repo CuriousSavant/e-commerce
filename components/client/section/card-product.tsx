@@ -9,13 +9,15 @@ import React, { useEffect, useState } from 'react';
 import { BiHeart } from 'react-icons/bi';
 import { toast } from 'react-toastify';
 import AuthModal from './auth-form';
-import { Button, IconButton } from '@mui/material';
-import { Add, AddShoppingCart } from '@mui/icons-material';
+import { IconButton } from '@mui/material';
+import { AddShoppingCart } from '@mui/icons-material';
+import useCart from '@/hooks/useCart';
 
 const CardProducts = ({ product, viewMode = 'grid' }: { product: Product, viewMode?: 'grid' | 'list' }) => {
     const { isDialogOpen, setIsDialogOpen } = useDialog()
     const [isFavorite, setIsFavorite] = useState<boolean>(false)
     const { status } = useSession()
+    const { handleAddToCart } = useCart()
 
     useEffect(() => {
         if (!product?.id) return;
@@ -89,7 +91,7 @@ const CardProducts = ({ product, viewMode = 'grid' }: { product: Product, viewMo
                             </p>
                             <p className="text-xs text-gray-400 mb-2">ส่งฟรีทั่วไทย</p>
                         </div>
-                        <IconButton size='small'>
+                        <IconButton size='small' onClick={(e) => { handleAddToCart(product, 1), e.preventDefault() }}>
                             <AddShoppingCart sx={{ ":hover": { color: "#3b82f6" } }} />
                         </IconButton>
                     </div>

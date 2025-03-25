@@ -46,7 +46,7 @@ const LatestOrderTable: FC<ILatestOrderTable> = ({ order, loading }) => {
                 </>
             ) : (
                 <>
-                    <TableCell sx={{ color: "white", borderBottom: "1px solid #50575E", px: 2 }}>{order?.id}</TableCell>
+                    <TableCell sx={{ color: "white", borderBottom: "1px solid #50575E", px: 2 }}>{order?.orderId}</TableCell>
                     <TableCell sx={{ color: "white", borderBottom: "1px solid #50575E" }}>
                         <Box display="flex" alignItems="center">
                             <Avatar sx={{ bgcolor: "#4F4F4F" }} sizes="small">

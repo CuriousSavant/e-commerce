@@ -9,7 +9,7 @@ export const GET = async (
 ) => {
   try {
     const address = await prisma.address.findMany({
-      where: { id: Number(params.id) },
+      where: { userId: Number(params.id) },
     });
     return NextResponse.json(address);
   } catch (error) {
@@ -85,6 +85,6 @@ export const DELETE = async (
     });
     return NextResponse.json(delete_address);
   } catch (error) {
-    return NextResponse.json({ msg: "Failed to delete address",error: error }, { status: 500 });
+    return NextResponse.json({ msg: "Failed to delete address", error: error }, { status: 500 });
   }
 };

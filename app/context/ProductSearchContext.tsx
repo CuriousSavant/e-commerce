@@ -19,6 +19,8 @@ interface SearchContextType {
     selectedCategory: string | null;
     setSelectedCategory: React.Dispatch<React.SetStateAction<string | null>>;
     filteredProducts: Product[];
+    filterPrice: string;
+    setFilterPrice: React.Dispatch<React.SetStateAction<string>>
 }
 
 // สร้าง Context และตั้งค่า default เป็น undefined
@@ -34,6 +36,7 @@ export const SearchProvider: React.FC<{ children: React.ReactNode }> = ({ childr
 
     const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
     const [sortOrder, setSortOrder] = useState<string>('asc');
+    const [filterPrice, setFilterPrice] = useState<string>('all');
     const [searchQuery, setSearchQuery] = useState('');
 
     const [loading, setLoading] = useState<boolean>(false)
@@ -45,8 +48,8 @@ export const SearchProvider: React.FC<{ children: React.ReactNode }> = ({ childr
         setLoading(true)
         // ถ้ากำลัง search
         if (query) {
-            axios.get(`/api/product?search=${query}&sortBy=${sortOrder}`)
-                .then((res) => setProductsList(res.data))
+            axios.get(`/api/product?q=${query}&sortBy=${sortOrder}&price=${filterPrice}`)
+                .then((res) => setProductsList(res.data.products))
                 .catch((err) => console.error(err))
                 .finally(() => setLoading(false))
         } else {
@@ -58,17 +61,17 @@ export const SearchProvider: React.FC<{ children: React.ReactNode }> = ({ childr
 
             axios.get('/api/categories').then((res) => setCategories(res.data.categories))
         }
-    }, [query, sortOrder]);
+    }, [query, sortOrder, filterPrice]);
 
     useEffect(() => {
         if (!selectedCategory) return;
         setLoading(true)
         axios.get(`/api/product?categoryId=${selectedCategory}&sortBy=${sortOrder}`)
-            .then((res) => setFilteredProducts(res.data))
+            .then((res) => setFilteredProducts(res.data.categories))
             .catch((err) => console.error(err))
             .finally(() => setLoading(false))
     }, [productsList, selectedCategory])
-
+    
     return (
         <SearchContext.Provider
             value={{
@@ -87,6 +90,8 @@ export const SearchProvider: React.FC<{ children: React.ReactNode }> = ({ childr
                 selectedCategory,
                 setSelectedCategory,
                 filteredProducts,
+                filterPrice,
+                setFilterPrice
             }}
         >
             {children}

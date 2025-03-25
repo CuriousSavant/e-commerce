@@ -126,9 +126,9 @@ const useAddress = () => {
     setLoading(true);
     try {
       if (isEditMode && formData.id) {
-        await axios.put(`/api/address/${formData.id}`, formData);
+        await axios.put(`/api/address/${formData.id}`, { ...formData, userId: session?.user.id });
       } else {
-        await axios.post("/api/address", formData);
+        await axios.post("/api/address", { ...formData, userId: session?.user.id });
       }
       fetchAddresses();
       handleClose();

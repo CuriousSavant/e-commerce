@@ -1,10 +1,9 @@
-import React, { FormEvent, useState } from "react";
+import React, { FormEvent } from "react";
 import { Grid, Button, Box } from "@mui/material";
 import { Address } from "@/types/address";
 import { Product } from "@/types/product";
 import UserFormEdit from "./form/user-form-edit";
 import ProductDialog from "./dialog/product-dialog";
-import AddressDialog from "./dialog/address-dialog";
 import { UserInfo } from "../order-edit";
 import AddressFormEdit from "./form/address-form-edit";
 
@@ -14,39 +13,31 @@ interface FormUserAddressProps {
     userInfo: UserInfo;
     addressInfo: Address;
     openProductListDialog: boolean;
-    openAddressDialog: boolean;
     productList: Product[];
     userErrors: { [key: string]: string };
     addressErrors: { [key: string]: string };
-    addressList: Address[];
     handleSelectProduct: (product: Product) => void;
     handleUserChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
     handleAddressChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
     handleSave: (e: FormEvent) => void;
-    setOpenAddressDialog: React.Dispatch<React.SetStateAction<boolean>>;
-    setAddressInfo: React.Dispatch<React.SetStateAction<Address>>;
     setOpenProductListDialog: React.Dispatch<React.SetStateAction<boolean>>;
-    handleChangeAddress: (userId: number) => void;
 }
 
 const FormUserAddress: React.FC<FormUserAddressProps> = ({
     userFields, addressFields, addressInfo,
     handleAddressChange, handleUserChange, userInfo,
     handleSave, handleSelectProduct, productList,
-    openAddressDialog, openProductListDialog, setAddressInfo,
-    setOpenAddressDialog, setOpenProductListDialog, addressErrors,
-    userErrors, addressList, handleChangeAddress,
+    openProductListDialog, setOpenProductListDialog,
+    addressErrors, userErrors,
 }) => {
     return (
         <Grid item xs={12} md={6} sx={{ p: 0, m: 0 }}>
             <Box component={"form"} sx={{ backgroundColor: "secondary.dark", p: 3 }} onSubmit={handleSave}>
-                <UserFormEdit {...{ handleUserChange, userFields, userInfo, userErrors }} />
-                <AddressFormEdit {...{ addressFields, addressInfo, handleAddressChange, addressErrors, handleChangeAddress }} />
 
-                {openAddressDialog && <AddressDialog {...{
-                    addressList, openAddressDialog,
-                    setOpenAddressDialog, setAddressInfo,
-                }} />}
+                <UserFormEdit {...{ handleUserChange, userFields, userInfo, userErrors }} />
+
+                <AddressFormEdit {...{ addressFields, addressInfo, handleAddressChange, addressErrors }} />
+
                 {openProductListDialog && <ProductDialog {...{
                     handleSelectProduct, openProductListDialog,
                     productList, setOpenProductListDialog,
