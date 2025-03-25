@@ -1,28 +1,48 @@
-'use client'
-import { useEffect, useState } from 'react';
+'use client';
+import { createContext, useContext, useEffect, useState } from 'react';
 import axios from 'axios';
 import { toast } from 'react-toastify';
 import { CartItem } from '@/types/cart';
-import Swal from 'sweetalert2'
+import Swal from 'sweetalert2';
 import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
-import useAddress from './useAddress';
+import useAddress from '@/hooks/useAddress';
 import { Product } from '@/types/product';
-import useDialog from './useDialog';
-import AddressFormEdit from '@/components/admin/orders/order-edit/form/address-form-edit';
+import useDialog from '@/hooks/useDialog';
 
 type CartQuantities = Record<number, number>;
 
-const useCart = () => {
+type CartContextType = {
+    cartItems: CartItem[];
+    itemQuantities: CartQuantities;
+    setItemQuantities: React.Dispatch<React.SetStateAction<CartQuantities>>;
+    cartTotalPrice: number;
+    selectedItems: number[];
+    updateItemQuantity: (productId: number, increment: boolean) => void;
+    toggleSelectAllItems: () => void;
+    toggleSelectItem: (productId: number) => void;
+    removeItemFromCart: (productId: number) => void;
+    handleOrder: () => void;
+    loading: boolean;
+    handleAddToCart: (product: Product, quantity: number) => void;
+    selectedCartItems: CartItem[];
+};
+
+const CartContext = createContext<CartContextType | undefined>(undefined);
+
+export const CartProvider = ({ children }: { children: React.ReactNode }) => {
     const [cartItems, setCartItems] = useState<CartItem[]>([]);
     const [itemQuantities, setItemQuantities] = useState<CartQuantities>({});
     const [cartTotalPrice, setCartTotalPrice] = useState<number>(0);
     const [selectedItems, setSelectedItems] = useState<number[]>([]);
     const [loading, setLoading] = useState<boolean>(false)
+    const [selectedCartItems, setSelectedCartItems] = useState<CartItem[]>([]);
 
     const { data: session, status } = useSession()
     const { defaultAddress } = useAddress();
     const { setIsDialogOpen } = useDialog()
+
+    console.log(selectedCartItems)
 
     const router = useRouter()
 
@@ -101,9 +121,11 @@ const useCart = () => {
     const toggleSelectAllItems = () => {
         if (selectedItems.length === cartItems.length) {
             setSelectedItems([]);
+            setSelectedCartItems([]);
         } else {
             const allItemIds = cartItems.map(item => item.productId);
             setSelectedItems(allItemIds);
+            setSelectedCartItems(cartItems);
         }
     };
 
@@ -111,6 +133,12 @@ const useCart = () => {
     const toggleSelectItem = (productId: number) => {
         setSelectedItems((prev) =>
             prev.includes(productId) ? prev.filter((selectedId) => selectedId !== productId) : [...prev, productId]
+        );
+
+        setSelectedCartItems((prev) =>
+            prev.some((item) => item.productId === productId) // ถ้ามีสินค้าใน selectedCartItems ที่มี productId เหมือนกับ productId ที่ถูกเลือก
+                ? prev.filter((item) => item.productId !== productId) // ลบสินค้าที่ถูกเลือกออก
+                : [...prev, cartItems.find((item) => item.productId === productId)!] // ใช้ find เพื่อหาสินค้าตาม productId ที่ส่งมาและเพิ่มเข้าไปใน selectedCartItems
         );
     };
 
@@ -183,7 +211,10 @@ const useCart = () => {
                     title: "ทำการสั่งซื้อเรียบร้อยแล้ว🥳",
                 }).then(() => {
                     router.push('/client/profile/order-summary')
+                    console.log("ก่อนโดน selectedCartItems",selectedCartItems)
+                    console.log("ก่อนโดน selectedItems",selectedItems)
                     setCartItems(prev => prev.filter(item => !selectedItems.includes(item.productId)));
+                    setSelectedCartItems([]);
                     setSelectedItems([]);
                 })
             }).catch((err) => {
@@ -239,20 +270,30 @@ const useCart = () => {
         toggleSelectAllItems();
     }, [cartItems])
 
-    return {
-        cartItems,
-        itemQuantities,
-        setItemQuantities,
-        cartTotalPrice,
-        selectedItems,
-        updateItemQuantity,
-        toggleSelectAllItems,
-        toggleSelectItem,
-        removeItemFromCart,
-        handleOrder,
-        loading,
-        handleAddToCart,
-    };
+    return (
+        <CartContext.Provider value={{
+            cartItems,
+            itemQuantities,
+            setItemQuantities,
+            cartTotalPrice,
+            selectedItems,
+            updateItemQuantity,
+            toggleSelectAllItems,
+            toggleSelectItem,
+            removeItemFromCart,
+            handleOrder,
+            loading,
+            handleAddToCart,
+            selectedCartItems,
+        }
+        }>
+            {children}
+        </CartContext.Provider>
+    )
 };
 
-export default useCart;
+export const useCart = () => {
+    const context = useContext(CartContext);
+    if (!context) throw new Error("useCart must be used within a CartProvider");
+    return context;
+};

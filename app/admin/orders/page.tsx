@@ -9,7 +9,7 @@ import OrderDetail from '@/components/admin/orders/order-detail';
 import OrderEdit from '@/components/admin/orders/order-edit';
 import { Address } from '@/types/address';
 import { Product } from '@/types/product';
-import { usePagination } from '@/app/context/PaginationContext';
+import { usePagination } from '@/context/PaginationContext';
 
 export type ActiveTabs = 'all' | 'completed' | 'pending' | 'canceled';
 

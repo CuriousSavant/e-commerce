@@ -6,7 +6,7 @@ import ProductForm from "@/components/admin/products/form/product-form";
 import { MdDelete } from "react-icons/md";
 import FilterSortSearchProduct from "@/components/admin/products/filter-sort-search-product";
 import { useProducts } from "@/hooks/useProducts";
-import { usePagination } from "@/app/context/PaginationContext";
+import { usePagination } from "@/context/PaginationContext";
 import useBrands from "@/hooks/useBrands";
 
 const Products = () => {

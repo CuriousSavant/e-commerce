@@ -1,7 +1,7 @@
 'use client';
 import React from 'react';
 import CardProducts from '@/components/client/section/card-product';
-import { useSearchContext } from '@/app/context/ProductSearchContext';
+import { useSearchContext } from '@/context/ProductSearchContext';
 import { CircularProgress } from '@mui/material';
 
 const SearchPage = () => {

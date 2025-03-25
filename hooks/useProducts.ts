@@ -4,7 +4,7 @@ import { Category, Product } from "@/types/product";
 import { useImageUpload } from "./useImageUpload";
 import { debounce } from "lodash";
 import Swal from 'sweetalert2'
-import { usePagination } from "../app/context/PaginationContext";
+import { usePagination } from "../context/PaginationContext";
 
 export const useProducts = () => {
     const [products, setProducts] = useState<Product[]>([]); // เก็บสินค้าที่ดึงมาจาก API

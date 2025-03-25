@@ -1,5 +1,5 @@
-import useCart from "@/hooks/useCart";
 import { Badge } from "@mui/material";
+import { useCart } from "@/context/CartContext";
 import { CartItem } from "@/types/cart";
 import { FaCartShopping } from "react-icons/fa6";
 

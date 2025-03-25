@@ -6,7 +6,7 @@ import { MdCreditCard } from "react-icons/md";
 import PaymentMethod from "@/components/client/checkout/payment-method";
 import OrderSummary from "@/components/client/checkout/order-summary";
 import AddAddress from "@/components/client/checkout/add-address";
-import useCart from "@/hooks/useCart";
+import { useCart } from "@/context/CartContext";
 
 const paymentMethods = [
     {
@@ -30,7 +30,7 @@ const CheckoutPage = () => {
     };
 
     const {
-        cartItems,
+        selectedCartItems,
         itemQuantities,
         cartTotalPrice,
         handleOrder,
@@ -55,7 +55,7 @@ const CheckoutPage = () => {
                 {/* สรุปคำสั่งซื้อ */}
                 <Grid item xs={12} md={4}>
                     <OrderSummary
-                        cartItems={cartItems}
+                        cartItems={selectedCartItems}
                         itemQuantities={itemQuantities}
                         cartTotalPrice={cartTotalPrice}
                         handleOrder={handleOrder}

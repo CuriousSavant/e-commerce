@@ -2,7 +2,7 @@ import React, { SetStateAction } from 'react';
 import { Typography, IconButton, Box, Button, Dialog, DialogContent, TextField } from '@mui/material';
 import { MdClose } from 'react-icons/md';
 
-import { useSearchContext } from '@/app/context/ProductSearchContext';
+import { useSearchContext } from '@/context/ProductSearchContext';
 import { useRouter } from 'next/navigation';
 import { HiOutlineSearch } from 'react-icons/hi';
 

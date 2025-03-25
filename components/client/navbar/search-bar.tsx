@@ -2,7 +2,7 @@
 import React, { SetStateAction } from 'react';
 import { Box, TextField, InputAdornment } from '@mui/material';
 import { HiOutlineSearch } from 'react-icons/hi';
-import { useSearchContext } from '@/app/context/ProductSearchContext';
+import { useSearchContext } from '@/context/ProductSearchContext';
 import { useRouter } from 'next/navigation';
 
 const SearchBar = ({ setIsSearchOpen }: { setIsSearchOpen: React.Dispatch<SetStateAction<boolean>> }) => {

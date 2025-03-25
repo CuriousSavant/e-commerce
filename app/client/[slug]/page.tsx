@@ -3,25 +3,16 @@ import React, { useEffect, useState } from "react";
 import { useParams, notFound, useRouter } from "next/navigation";
 import { Product } from "@/types/product";
 import axios from "axios";
-import {
-  Box,
-  CircularProgress,
-  IconButton,
-  Button,
-  useMediaQuery,
-} from "@mui/material";
-import { MdAdd, MdArrowBackIos, MdArrowForwardIos, MdShoppingCart } from "react-icons/md";
-import { BiHeart, BiMinus } from "react-icons/bi";
-import { Typography } from "@mui/material";
+import { Box, CircularProgress, IconButton, useMediaQuery } from "@mui/material";
+import { MdArrowBackIos } from "react-icons/md";
 import { useSession } from "next-auth/react";
 import useDialog from "@/hooks/useDialog";
 import AuthModal from "@/components/client/section/auth-form";
-import { FaHeart } from "react-icons/fa6";
 import { Wishlist } from "@prisma/client";
 import RandomProducts from "@/components/client/section/random-product";
 import { toast } from 'react-toastify';
 import PropertiesTable from "@/components/client/section/properties-table";
-import useCart from "@/hooks/useCart";
+import { useCart } from "@/context/CartContext";
 import ImageSection from "@/components/client/product-detail/image-section";
 import ProductInfo from "@/components/client/product-detail/product-info";
 import MobileOrder from "@/components/client/product-detail/mobile-order";
@@ -55,8 +46,6 @@ const ProductDetailPage = () => {
 
   useEffect(() => {
     if (!product?.id) return;
-
-    console.log("test debug")
 
     axios.get(`/api/wishlist`)
       .then((res) => {

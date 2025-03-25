@@ -5,7 +5,7 @@ import UsersTable from '@/components/admin/users/user-table';
 import FilterSortSearch from '@/components/admin/users/filter-sort-search';
 import CreateUserForm from '@/components/admin/users/create-user-form';
 import useUser from '@/hooks/useUsers';
-import { usePagination } from '@/app/context/PaginationContext';
+import { usePagination } from '@/context/PaginationContext';
 
 export default function Users() {
   const {

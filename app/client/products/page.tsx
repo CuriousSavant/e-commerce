@@ -1,7 +1,7 @@
 'use client';
 import CardProducts from '@/components/client/section/card-product';
 import React, { useEffect } from 'react';
-import { useSearchContext } from '@/app/context/ProductSearchContext';
+import { useSearchContext } from '@/context/ProductSearchContext';
 import { Skeleton } from '@mui/material';
 import { useSearchParams } from 'next/navigation';
 

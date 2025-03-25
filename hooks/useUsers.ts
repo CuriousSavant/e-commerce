@@ -6,7 +6,7 @@ import { SortType, Role } from '@/components/admin/users/types/filter-sort-searc
 import { UserFormStateProps } from '@/components/admin/users/types/user-form-state-props';
 import { debounce } from "lodash";
 import Swal from 'sweetalert2'
-import { usePagination } from '@/app/context/PaginationContext';
+import { usePagination } from '@/context/PaginationContext';
 
 const useUser = () => {
     const [userList, setUserList] = useState<User[]>([]);

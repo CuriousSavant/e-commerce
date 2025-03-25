@@ -11,7 +11,7 @@ import { toast } from 'react-toastify';
 import AuthModal from './auth-form';
 import { IconButton } from '@mui/material';
 import { AddShoppingCart } from '@mui/icons-material';
-import useCart from '@/hooks/useCart';
+import { useCart } from "@/context/CartContext";
 
 const CardProducts = ({ product, viewMode = 'grid' }: { product: Product, viewMode?: 'grid' | 'list' }) => {
     const { isDialogOpen, setIsDialogOpen } = useDialog()

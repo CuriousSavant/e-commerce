@@ -7,7 +7,7 @@ import { Category } from '@/types/product';
 import { Box, TablePagination, Typography } from '@mui/material';
 import FormCreateCategory from '@/components/admin/categories/form-create-category';
 import FilterSortSearchCategories from '@/components/admin/categories/filter-sort-search-categories';
-import { usePagination } from '@/app/context/PaginationContext';
+import { usePagination } from '@/context/PaginationContext';
 
 const Categories = () => {
   const [categories, setCategories] = useState<Category[]>([]);

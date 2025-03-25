@@ -10,8 +10,7 @@ import OrderEmpty from "@/components/client/orders/oder-empty";
 import Swal from "sweetalert2";
 import { BiArrowBack } from "react-icons/bi";
 import { useRouter } from "next/navigation";
-import useCart from "@/hooks/useCart";
-import { usePagination } from "@/app/context/PaginationContext";
+import { useCart } from "@/context/CartContext";
 
 const OrderSummary = () => {
   const [orders, setOrders] = useState<Order[]>([]);

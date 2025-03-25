@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import "./globals.css";
-import SessionProvider from '@/app/context/sessionProvider'
+import SessionProvider from '@/context/sessionProvider'
 import { getServerSession } from "next-auth";
 import LayoutSetting from "./layoutSetting";
 import { ToastContainer } from "react-toastify";

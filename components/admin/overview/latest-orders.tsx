@@ -16,7 +16,7 @@ export default function LatestOrders() {
         const fetchOrders = async () => {
             setLoading(true);
             try {
-                await axios.get('/api/order/latest-order').then((res) => { console.log(res.data), setOrders(res.data) });
+                await axios.get('/api/order/latest-order').then((res) => setOrders(res.data));
             } catch (error) {
                 console.error(error);
             } finally {

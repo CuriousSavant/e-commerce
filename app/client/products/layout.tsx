@@ -3,7 +3,7 @@ import React from 'react';
 import { MenuItem, Select, IconButton } from '@mui/material';
 import { PiGridNineFill } from 'react-icons/pi';
 import { MdViewList } from 'react-icons/md';
-import { useSearchContext } from '@/app/context/ProductSearchContext';
+import { useSearchContext } from '@/context/ProductSearchContext';
 
 /*
     Layout Component สำหรับการจัดเรียงและแสดงผลสินค้า

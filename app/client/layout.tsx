@@ -1,6 +1,6 @@
 import React from 'react'
 import { Metadata } from 'next';
-import SessionProvider from '@/app/context/sessionProvider';
+import SessionProvider from '@/context/sessionProvider';
 import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/auth';
 
