@@ -26,6 +26,9 @@ type CartContextType = {
     loading: boolean;
     handleAddToCart: (product: Product, quantity: number) => void;
     selectedCartItems: CartItem[];
+    setSelectedCartItems: React.Dispatch<React.SetStateAction<CartItem[]>>;
+    productOrder: Product | null;
+    handleProductorder: (product: Product) => void;
 };
 
 const CartContext = createContext<CartContextType | undefined>(undefined);
@@ -36,7 +39,11 @@ export const CartProvider = ({ children }: { children: React.ReactNode }) => {
     const [cartTotalPrice, setCartTotalPrice] = useState<number>(0);
     const [selectedItems, setSelectedItems] = useState<number[]>([]);
     const [loading, setLoading] = useState<boolean>(false)
+
+    // สินค้าที่ถูกเลือก
     const [selectedCartItems, setSelectedCartItems] = useState<CartItem[]>([]);
+    // สินค้าที่ต้องการส่งซื้อ
+    const [productOrder, setProductOrder] = useState<Product | null>(null);
 
     const { data: session, status } = useSession()
     const { defaultAddress } = useAddress();
@@ -50,42 +57,43 @@ export const CartProvider = ({ children }: { children: React.ReactNode }) => {
         localStorage.setItem("cartItemQuantities", JSON.stringify(itemQuantities));
     }, [itemQuantities]);
 
+    const fetchCartItems = async () => {
+        try {
+            const res = await axios.get(`/api/cart?userId=${session?.user.id}`);
+            setCartItems(res.data);
+
+            const combinedItems = res.data.reduce((acc: CartItem[], cart: CartItem) => {
+                const existingItem = acc.find(item => item.productId === cart.productId);
+                if (existingItem) {
+                    existingItem.quantity += cart.quantity;
+                } else {
+                    acc.push(cart);
+                }
+                return acc;
+            }, []);
+
+            setCartItems(combinedItems);
+
+            const savedQuantities = JSON.parse(localStorage.getItem("cartItemQuantities") || "{}");
+            const initialQuantities = combinedItems.reduce((acc: CartQuantities, cart: CartItem) => {
+                acc[cart.productId] = savedQuantities[cart.productId] || cart.quantity;
+                return acc;
+            }, {});
+            setItemQuantities(initialQuantities);
+
+            const total = combinedItems.reduce((sum: number, cart: CartItem) => {
+                return sum + cart.product.price * cart.quantity;
+            }, 0);
+            setCartTotalPrice(total);
+        } catch (error) {
+            console.error("Error fetching cart items:", error);
+        } finally {
+            setLoading(false);
+        }
+    };
+
     useEffect(() => {
         setLoading(true);
-        const fetchCartItems = async () => {
-            try {
-                const res = await axios.get(`/api/cart?userId=${session?.user.id}`);
-                setCartItems(res.data);
-
-                const combinedItems = res.data.reduce((acc: CartItem[], cart: CartItem) => {
-                    const existingItem = acc.find(item => item.productId === cart.productId);
-                    if (existingItem) {
-                        existingItem.quantity += cart.quantity;
-                    } else {
-                        acc.push(cart);
-                    }
-                    return acc;
-                }, []);
-
-                setCartItems(combinedItems);
-
-                const savedQuantities = JSON.parse(localStorage.getItem("cartItemQuantities") || "{}");
-                const initialQuantities = combinedItems.reduce((acc: CartQuantities, cart: CartItem) => {
-                    acc[cart.productId] = savedQuantities[cart.productId] || cart.quantity;
-                    return acc;
-                }, {});
-                setItemQuantities(initialQuantities);
-
-                const total = combinedItems.reduce((sum: number, cart: CartItem) => {
-                    return sum + cart.product.price * cart.quantity;
-                }, 0);
-                setCartTotalPrice(total);
-            } catch (error) {
-                console.error("Error fetching cart items:", error);
-            } finally {
-                setLoading(false);
-            }
-        };
         fetchCartItems();
     }, []);
 
@@ -211,8 +219,6 @@ export const CartProvider = ({ children }: { children: React.ReactNode }) => {
                     title: "ทำการสั่งซื้อเรียบร้อยแล้ว🥳",
                 }).then(() => {
                     router.push('/client/profile/order-summary')
-                    console.log("ก่อนโดน selectedCartItems",selectedCartItems)
-                    console.log("ก่อนโดน selectedItems",selectedItems)
                     setCartItems(prev => prev.filter(item => !selectedItems.includes(item.productId)));
                     setSelectedCartItems([]);
                     setSelectedItems([]);
@@ -266,9 +272,13 @@ export const CartProvider = ({ children }: { children: React.ReactNode }) => {
         }
     }
 
-    useEffect(() => {
-        toggleSelectAllItems();
-    }, [cartItems])
+    const handleProductorder = async (product: Product) => {
+        await handleAddToCart(product, 1)
+        setSelectedItems([product.id])
+        fetchCartItems()
+        router.push('/client/cart')
+    }
+
 
     return (
         <CartContext.Provider value={{
@@ -285,8 +295,10 @@ export const CartProvider = ({ children }: { children: React.ReactNode }) => {
             loading,
             handleAddToCart,
             selectedCartItems,
-        }
-        }>
+            productOrder,
+            setSelectedCartItems,
+            handleProductorder,
+        }}>
             {children}
         </CartContext.Provider>
     )

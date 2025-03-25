@@ -14,7 +14,7 @@ import { MdAdd } from 'react-icons/md';
 import { BiMinus } from 'react-icons/bi';
 
 interface OrderSummaryProps {
-    cartItems: CartItem[],
+    cartItems?: CartItem[],
     itemQuantities: Record<number, number>;
     cartTotalPrice: number
     setItemQuantities: React.Dispatch<React.SetStateAction<Record<number, number>>>;
@@ -48,7 +48,7 @@ const OrderSummary: React.FC<OrderSummaryProps> = ({
                 <Typography variant="h6">สรุปคำสั่งซื้อ</Typography>
                 <Divider sx={{ my: 2 }} />
 
-                {cartItems.map((item) => (
+                {cartItems?.map((item) => (
                     <Box key={item.productId} mb={2}>
                         <Box display="flex" justifyContent="space-between" alignItems={'center'}>
                             <Box sx={{ height: { xs: "50px", md: "60px" }, minWidth: "60px", mr: 1 }}>
@@ -94,7 +94,7 @@ const OrderSummary: React.FC<OrderSummaryProps> = ({
                 ))}
                 {/* ยอดรวม */}
                 <Box display="flex" justifyContent="space-between">
-                    <Typography variant="body2" color='gray'>ยอดรวมสินค้า ({cartItems.length} ชิ้น)</Typography>
+                    <Typography variant="body2" color='gray'>ยอดรวมสินค้า ({cartItems?.length} ชิ้น)</Typography>
                     <Typography variant="body2">
                         ฿{cartTotalPrice.toLocaleString()}
                     </Typography>

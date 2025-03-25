@@ -91,9 +91,9 @@ const ProductInfo: React.FC<ProductInfoProps> = ({
                             </Button>
                             <Button
                                 variant="contained"
-                                // onClick={() => status === 'unauthenticated' ? setIsDialogOpen(true) : handleOrder()}
                                 className="bg-[#0f63e9] w-full py-3"
                                 size="medium"
+                            // onClick={() => handleProductorder(product)}
                             >
                                 สั่งซื้อ
                             </Button>

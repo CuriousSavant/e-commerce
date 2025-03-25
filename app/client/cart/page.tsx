@@ -17,8 +17,7 @@ const CartPage = () => {
         removeItemFromCart,
         loading,
     } = useCart();
-
-    return (
+return (
         <Box sx={{ mt: 14 }}>
             {cartItems.length > 0 ? (
                 <>

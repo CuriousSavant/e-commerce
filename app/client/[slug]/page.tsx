@@ -30,9 +30,7 @@ const ProductDetailPage = () => {
   const { status } = useSession();
   const { isDialogOpen, setIsDialogOpen } = useDialog();
   const [isFavorite, setIsFavorite] = useState(false);
-  const { handleAddToCart } = useCart();
-
-  console.log(slug)
+  const { handleAddToCart, handleProductorder } = useCart();
 
   // เรียกข้อมูลสินค้าจาก API
   // slug = id ของสินค้า
@@ -158,6 +156,7 @@ const ProductDetailPage = () => {
           handleAddToCart,
           handleAddToWishlist,
           isFavorite,
+          handleProductorder,
         }} />
 
         <RandomProducts />
