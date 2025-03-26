@@ -15,13 +15,13 @@ import { useCart } from "@/context/CartContext";
 const CardProducts = ({ product, viewMode = 'grid' }: { product: Product, viewMode?: 'grid' | 'list' }) => {
     const { setIsDialogOpen } = useDialog()
     const [isFavorite, setIsFavorite] = useState<boolean>(false)
-    const { status } = useSession()
+    const { data: session, status } = useSession()
     const { handleAddToCart } = useCart()
 
     useEffect(() => {
         if (!product?.id) return;
 
-        axios.get(`/api/wishlist`)
+        axios.get(`/api/wishlist?userId=${session?.user?.id}`)
             .then((res) => {
                 const isFavorite = res.data.some((item: Wishlist) => item.productId === product?.id);
                 setIsFavorite(isFavorite);

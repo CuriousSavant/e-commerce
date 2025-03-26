@@ -1,15 +1,13 @@
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
-import { getServerSession } from "next-auth";
-import { authOptions } from "@/lib/auth";
 
 export async function GET(
-  request: Request,
+  request: NextRequest,
   { params }: { params: { id: string } }
 ) {
-  const session = await getServerSession(authOptions);
+  const userId = request.nextUrl.searchParams.get("userId");
 
-  if (!session || !session.user?.id) {
+  if (!userId) {
     return NextResponse.json({ error: "ไม่ได้รับอนุญาต" }, { status: 401 });
   }
 
@@ -17,7 +15,7 @@ export async function GET(
     const wishlistItem = await prisma.wishlist.findFirst({
       where: {
         id: Number(params.id),
-        userId: Number(session.user.id),
+        userId: Number(userId),
       },
     });
 
@@ -35,19 +33,17 @@ export async function PUT(
   request: Request,
   { params }: { params: { id: string } }
 ) {
-  const session = await getServerSession(authOptions);
+  const { productId, userId } = await request.json();
 
-  if (!session || !session.user?.id) {
+  if (!userId) {
     return NextResponse.json({ error: "ไม่ได้รับอนุญาต" }, { status: 401 });
   }
-
-  const { productId } = await request.json();
 
   try {
     const updatedItem = await prisma.wishlist.updateMany({
       where: {
         id: Number(params.id),
-        userId: Number(session.user.id),
+        userId: Number(userId),
       },
       data: { productId },
     });
@@ -63,15 +59,15 @@ export async function PUT(
 }
 
 export async function DELETE(
-  req: Request,
+  request: NextRequest,
   { params }: { params: { id: string } }
 ) {
-  const session = await getServerSession(authOptions);
+  const userId = request.nextUrl.searchParams.get("userId");
   const productId = parseInt(params.id, 10);
 
   try {
     const deletedWishlist = await prisma.wishlist.deleteMany({
-      where: { userId: Number(session?.user.id), productId },
+      where: { userId: Number(userId), productId },
     });
 
     if (deletedWishlist.count === 0) {

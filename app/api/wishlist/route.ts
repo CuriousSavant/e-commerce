@@ -1,18 +1,15 @@
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
-import { getServerSession } from "next-auth";
-import { authOptions } from "@/lib/auth";
 
-export async function GET(request: Request) {
-  const session = await getServerSession(authOptions);
-
-  if (!session || !session.user?.id) {
+export async function GET(request: NextRequest) {
+  const userId = request.nextUrl.searchParams.get("userId");
+  if (userId) {
     return NextResponse.json({ error: "ไม่ได้รับอนุญาต" }, { status: 401 });
   }
 
   try {
     const wishlistItems = await prisma.wishlist.findMany({
-      where: { userId: Number(session.user.id) },
+      where: { userId: Number(userId) },
       include: { product: true },
     });
 
@@ -23,17 +20,16 @@ export async function GET(request: Request) {
 }
 
 export async function POST(request: Request) {
-  const session = await getServerSession(authOptions);
-  const { productId } = await request.json();
+  const { productId, userId } = await request.json();
 
   try {
-    if (!session || !session.user?.id) {
+    if (!userId) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
     const existingItem = await prisma.wishlist.findFirst({
       where: {
-        userId: Number(session.user.id),
+        userId: Number(userId),
         productId,
       },
     });
@@ -47,7 +43,7 @@ export async function POST(request: Request) {
 
     const wishlistItem = await prisma.wishlist.create({
       data: {
-        userId: Number(session.user.id),
+        userId: Number(userId),
         productId,
       },
     });

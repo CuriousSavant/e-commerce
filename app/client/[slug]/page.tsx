@@ -26,7 +26,7 @@ const ProductDetailPage = () => {
 
   const router = useRouter();
   const { slug } = useParams();
-  const { status } = useSession();
+  const { data: session, status } = useSession();
   const { setIsDialogOpen } = useDialog();
   const [isFavorite, setIsFavorite] = useState(false);
   const { handleAddToCart, handleProductOrder } = useCart();
@@ -44,7 +44,7 @@ const ProductDetailPage = () => {
   useEffect(() => {
     if (!slug) return;
 
-    axios.get(`/api/wishlist`)
+    axios.get(`/api/wishlist?userId=${session?.user?.id}`)
       .then((res) => {
         const isFavorite = res.data.some((item: Wishlist) => item.product.slug === slug);
         setIsFavorite(isFavorite);
@@ -61,9 +61,9 @@ const ProductDetailPage = () => {
     }
 
     try {
-      const url = isFavorite ? `/api/wishlist/${productId}` : `/api/wishlist`;
+      const url = isFavorite ? `/api/wishlist/${productId}?userId=${session?.user?.id}` : `/api/wishlist?userId=${session?.user?.id}`;
       const method = isFavorite ? 'DELETE' : 'POST';
-      const data = isFavorite ? undefined : { productId };
+      const data = isFavorite ? undefined : { productId, userId: session?.user?.id };
 
       const response = await axios({ method, url, data });
 
