@@ -19,7 +19,7 @@ const CardProducts = ({ product, viewMode = 'grid' }: { product: Product, viewMo
     const { handleAddToCart } = useCart()
 
     useEffect(() => {
-        if (!product?.id) return;
+        if (!session?.user.id) return;
 
         axios.get(`/api/wishlist?userId=${session?.user?.id}`)
             .then((res) => {
