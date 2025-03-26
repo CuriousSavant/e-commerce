@@ -18,7 +18,7 @@ const Stats = () => {
             const [ordersRes, usersRes, productsRes] = await Promise.all([
                 axios.get('/api/order'),
                 axios.get('/api/user/latest-users'),
-                axios.get('/api/product/latest-product')
+                axios.get('/api/product/latest-products')
             ]);
 
             setOrders(ordersRes.data.orders);

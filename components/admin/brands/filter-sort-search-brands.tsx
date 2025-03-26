@@ -23,7 +23,7 @@ const FilterSortSearchBrand: React.FC<FilterSortSearchProductProps> = ({
                 <TextField
                     size="small"
                     placeholder="Search by name"
-                    sx={{ bgcolor: "secondary.dark", borderRadius: 2, border: "2px solid #4F4F4F" }}
+                    sx={{ bgcolor: "secondary.dark", borderRadius: 2, border: "2px solid #4F4F4F", width: { xs: "100%", md: "auto" } }}
                     onChange={(e) => setQuery(e.target.value)}
                     value={query || ""}
                     InputProps={{
@@ -33,7 +33,7 @@ const FilterSortSearchBrand: React.FC<FilterSortSearchProductProps> = ({
                                 opacity: 1,
                                 fontSize: 14,
                             },
-                            color: "white"
+                            color: "white",
                         },
                         startAdornment: (
                             <InputAdornment position="start" >
@@ -51,6 +51,7 @@ const FilterSortSearchBrand: React.FC<FilterSortSearchProductProps> = ({
                         border: "2px solid #4F4F4F",
                         color: "#C2C2C2",
                         "& .MuiSelect-icon": { color: "white" },
+                        width: { xs: "100%", md: "auto" },
                     }}>
                     <MenuItem value={"asc"}>เก่า - ใหม่</MenuItem>
                     <MenuItem value={"desc"}>ใหม่ - เก่า</MenuItem>
@@ -62,6 +63,7 @@ const FilterSortSearchBrand: React.FC<FilterSortSearchProductProps> = ({
                     color: "white",
                     px: 3,
                     alignSelf: "end",
+                    mt: { xs: 4, md: 0 },
                     whiteSpace: "pre",
                 }}
                 startIcon={<Add />}
