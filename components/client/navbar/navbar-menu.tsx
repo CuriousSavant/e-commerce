@@ -1,6 +1,6 @@
 import { Box, Button, Link as MuiLink } from "@mui/material";
 
-export default function NavbarMenu({ LinkInfo, setIsDialogOpen, isDialogOpen }: { LinkInfo: any, setIsDialogOpen: any, isDialogOpen: any }) {
+export default function NavbarMenu({ LinkInfo }: { LinkInfo: any }) {
     return (
         <Box
             sx={{
@@ -15,7 +15,6 @@ export default function NavbarMenu({ LinkInfo, setIsDialogOpen, isDialogOpen }: 
                         key={index}
                         component={Button}
                         href={link.href || "#"}
-                        onClick={() => setIsDialogOpen(true)}
                         sx={{
                             textDecoration: "none",
                             color: "gray",

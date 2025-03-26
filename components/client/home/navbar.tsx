@@ -71,7 +71,7 @@ const Navbar = () => {
                     </Typography>
 
                     {/* แสดงหน้าหลัก, เกี่ยวกับเรา, ติดต่อ */}
-                    <NavbarMenu LinkInfo={LinkInfo} setIsDialogOpen={setIsDialogOpen} isDialogOpen={isDialogOpen} />
+                    <NavbarMenu LinkInfo={LinkInfo} />
 
                     {/* แสดงหน้าค้นหาในขนาดเล็ก */}
                     {isSearchOpen && <SearchBox isSearchOpen={isSearchOpen} setIsSearchOpen={setIsSearchOpen} />}
