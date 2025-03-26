@@ -22,28 +22,3 @@ body {
 image {
   min-height: 100%;
 }
-
-::-webkit-scrollbar {
-  width: 8px;
-}
-
-::-webkit-scrollbar-track {
-  background: #1e1e2f;
-  border-radius: 10px;
-}
-
-::-webkit-scrollbar-thumb {
-  background: #4a4a6a;
-  border-radius: 10px; 
-  border: 2px solid #1e1e2f;
-}
-
-::-webkit-scrollbar-thumb:hover {
-  background: #63638a;
-}
-
-/* Firefox */
-* {
-  scrollbar-width: thin;
-  scrollbar-color: #4a4a6a #1e1e2f;
-}

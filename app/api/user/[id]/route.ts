@@ -33,6 +33,8 @@ export async function PUT(req: Request, { params }: { params: { id: string } }) 
     lastname,
     email,
     role,
+    phone,
+    birthday,
     password,
   } = await req.json();
 
@@ -54,6 +56,8 @@ export async function PUT(req: Request, { params }: { params: { id: string } }) 
         lastname,
         email,
         role,
+        phone: phone || null,
+        birthday: birthday || null,
         password: password ? await bcrypt.hash(password, 10) : user.password,
       },
     });

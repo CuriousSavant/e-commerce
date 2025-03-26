@@ -9,9 +9,12 @@ import theme from '@/lib/theme';
 import { SearchProvider } from '../context/ProductSearchContext';
 import { PaginationProvider } from '../context/PaginationContext';
 import { CartProvider } from '@/context/CartContext';
+import AuthModal from '@/components/client/section/auth-form';
+import useDialog from '@/context/DialogContext';
 
 const LayoutSetting = ({ children }: { children: React.ReactNode }) => {
     const pathname = usePathname()
+    const { isDialogOpen } = useDialog();
 
     return (
         <>
@@ -28,6 +31,7 @@ const LayoutSetting = ({ children }: { children: React.ReactNode }) => {
                         </SearchProvider>
                     </CartProvider>
                 </PaginationProvider>
+                {isDialogOpen && <AuthModal />}
             </ThemeProvider>
         </>
     )

@@ -1,25 +1,12 @@
-import React, { useEffect } from 'react';
-import {
-    Box,
-    Typography,
-    Button,
-    Card,
-    CardContent,
-    Divider,
-    Tooltip,
-    IconButton,
-} from "@mui/material";
+import React from 'react';
+import { Box, Typography, Button, Card, CardContent, Divider, Tooltip } from "@mui/material";
 import { CartItem } from '@/types/cart';
-import { MdAdd } from 'react-icons/md';
-import { BiMinus } from 'react-icons/bi';
 
 interface OrderSummaryProps {
     cartItems?: CartItem[],
     itemQuantities: Record<number, number>;
     cartTotalPrice: number
-    setItemQuantities: React.Dispatch<React.SetStateAction<Record<number, number>>>;
     handleOrder: () => void
-    updateItemQuantity: (productId: number, increment: boolean) => void;
 }
 
 const OrderSummary: React.FC<OrderSummaryProps> = ({
@@ -27,21 +14,7 @@ const OrderSummary: React.FC<OrderSummaryProps> = ({
     cartTotalPrice,
     handleOrder,
     itemQuantities,
-    updateItemQuantity,
-    setItemQuantities,
 }) => {
-    useEffect(() => {
-        try {
-            const savedQuantities = JSON.parse(localStorage.getItem("cartItemQuantities") || "{}");
-            if (typeof savedQuantities === "object" && savedQuantities !== null) {
-                setItemQuantities(savedQuantities);
-            }
-        } catch (error) {
-            console.error("Error parsing cartItemQuantities from localStorage:", error);
-            localStorage.removeItem("cartItemQuantities");
-        }
-    }, []);
-    
     return (
         <Card variant="outlined">
             <CardContent>
@@ -62,30 +35,14 @@ const OrderSummary: React.FC<OrderSummaryProps> = ({
                                     <Typography variant="body2" color="primary">
                                         ฿{item.product.price.toLocaleString()}
                                     </Typography>
-                                    <Box>
-                                        <IconButton
-                                            size="small"
-                                            disabled={itemQuantities[item.productId!] <= 1}
-                                            onClick={() => updateItemQuantity(item.product.id, false)}
-                                        >
-                                            <BiMinus />
-                                        </IconButton>
-                                        <Typography
-                                            variant='caption'
-                                            textAlign="center"
-                                            className="w-6 font-bold"
-                                            color='text.secondary'
-                                        >
-                                            {itemQuantities[item.productId!]}
-                                        </Typography>
-                                        <IconButton
-                                            size="small"
-                                            onClick={() => updateItemQuantity(item.product.id, true)}
-                                            disabled={itemQuantities[item.productId!] >= item.product.stock}
-                                        >
-                                            <MdAdd />
-                                        </IconButton>
-                                    </Box>
+                                    <Typography
+                                        variant='caption'
+                                        textAlign="center"
+                                        className="w-6 font-bold"
+                                        color='text.secondary'
+                                    >
+                                        x{itemQuantities[item.productId!]}
+                                    </Typography>
                                 </div>
                             </Box>
                         </Box>

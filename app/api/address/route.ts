@@ -39,19 +39,6 @@ export const POST = async (req: Request) => {
     userId,
   } = await req.json();
 
-  console.log({
-    fullName,
-    phone,
-    address,
-    subDistrict,
-    district,
-    province,
-    postalCode,
-    type,
-    isDefault,
-    userId,
-  })
-
   try {
     const create_address = await prisma.address.create({
       data: {

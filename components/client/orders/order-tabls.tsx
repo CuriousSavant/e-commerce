@@ -2,7 +2,16 @@ import { Box, Tab, Tabs, Typography } from '@mui/material'
 import React from 'react'
 import { FaRegFileLines } from 'react-icons/fa6'
 
-const OrderTabs = ({ handleTabChange, tabIndex }: { tabIndex: number, handleTabChange: (_event: React.SyntheticEvent, newValue: number) => void }) => {
+type OrderStatus = 'all' | 'PENDING' | 'COMPLETED' | 'CANCELED';
+
+const OrderTabs = ({ handleTabChange, tabIndex }: { tabIndex: OrderStatus, handleTabChange: (_event: React.SyntheticEvent, newValue: OrderStatus) => void }) => {
+    const tabs = [
+        { value: 'all', label: 'ทั้งหมด' },
+        { value: 'PENDING', label: 'จัดเตรียมสินค้า' },
+        { value: 'COMPLETED', label: 'ส่งมอบสินค้า' },
+        { value: 'CANCELED', label: 'ยกเลิก' }
+    ];
+
     return (
         <>
             <Typography
@@ -26,7 +35,6 @@ const OrderTabs = ({ handleTabChange, tabIndex }: { tabIndex: number, handleTabC
                 width="100%"
                 maxWidth={'100%'}
             >
-                {/* Tabs as Buttons */}
                 <Tabs
                     value={tabIndex}
                     onChange={handleTabChange}
@@ -40,18 +48,17 @@ const OrderTabs = ({ handleTabChange, tabIndex }: { tabIndex: number, handleTabC
                         justifyContent: { xs: "center", sm: "flex-start" },
                     }}
                 >
-                    {["ทั้งหมด", "จัดเตรียมสินค้า", "ส่งมอบสินค้า", "ยกเลิก"].map(
-                        (label, index) => (
-                            <Tab
-                                key={index}
-                                sx={{
-                                    textTransform: "none",
-                                    minWidth: { xs: "100px", sm: "100px" },
-                                }}
-                                label={label}
-                            />
-                        )
-                    )}
+                    {tabs.map((tab) => (
+                        <Tab
+                            key={tab.value}
+                            value={tab.value}
+                            label={tab.label}
+                            sx={{
+                                textTransform: "none",
+                                minWidth: { xs: "100px", sm: "100px" },
+                            }}
+                        />
+                    ))}
                 </Tabs>
             </Box>
         </>

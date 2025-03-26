@@ -20,6 +20,10 @@ export async function middleware(req: NextRequest) {
     return NextResponse.rewrite(new URL("/404", req.url));
   }
 
+  if (pathname.startsWith("/client/checkout") && !token) {
+    return NextResponse.rewrite(new URL("/404", req.url));
+  }
+
   const response = NextResponse.next();
   response.cookies.set("session-token", token ? JSON.stringify(token) : "", {
     httpOnly: true,
@@ -34,6 +38,7 @@ export const config = {
   matcher: [
     "/client/profile/:path*",
     "/client/cart",
+    "/client/checkout",
     "/admin/:path*",
     "/api/:path*",
   ],

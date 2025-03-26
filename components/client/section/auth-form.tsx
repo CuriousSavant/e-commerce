@@ -6,6 +6,7 @@ import SignupForm from '@/components/client/login-section/sign-form';
 import Header from '@/components/client/login-section/header';
 import axios from 'axios';
 import { signIn } from 'next-auth/react';
+import useDialog from "@/context/DialogContext";
 
 export interface FormDataProps {
     firstname: string;
@@ -23,9 +24,11 @@ export interface FormErrorProps {
     confirmPassword: boolean;
 }
 
-function AuthModal({ onClose }: { onClose: () => void }) {
+function AuthModal() {
     const [activeTab, setActiveTab] = useState<'login' | 'signup'>('signup');
     const [errorMsg, setErrorMsg] = useState<string>('');
+
+    const { handleDialogToggle } = useDialog();
 
     const [formData, setFormData] = useState<FormDataProps>({
         firstname: "",
@@ -87,7 +90,7 @@ function AuthModal({ onClose }: { onClose: () => void }) {
         if (res?.status === 401) {
             setErrorMsg(res.error as any)
         }
-        onClose()
+        handleDialogToggle();
     }
 
     const handleSignUp = async (e: FormEvent<HTMLFormElement>) => {
@@ -103,7 +106,6 @@ function AuthModal({ onClose }: { onClose: () => void }) {
 
         setFormError(errors);
 
-
         // ตรวจสอบว่ามีข้อผิดพลาดหรือไม่
         const hasError = Object.values(errors).some((error) => error);
         if (hasError) {
@@ -116,7 +118,7 @@ function AuthModal({ onClose }: { onClose: () => void }) {
             await handleLogin(formData.email, formData.password);
 
             window.location.reload();
-            onClose();
+            handleDialogToggle();
         } catch (err: any) {
             if (err.response?.status === 400) {
                 setErrorMsg(err.response.data.msg);
@@ -153,7 +155,7 @@ function AuthModal({ onClose }: { onClose: () => void }) {
                     overflowY: 'auto',
                 }}
             >
-                <Header activeTab={activeTab} onClose={onClose} />
+                <Header activeTab={activeTab} handleDialogToggle={handleDialogToggle} />
                 <Tabs
                     value={activeTab === 'login' ? 0 : 1}
                     onChange={(_, value) => handleTabChange(value === 0 ? 'login' : 'signup')}
@@ -176,10 +178,10 @@ function AuthModal({ onClose }: { onClose: () => void }) {
                     <LoginForm
                         formData={formData}
                         handleChange={handleChange}
-                        onClose={onClose}
                         setFormError={setFormError}
                         setErrorMsg={setErrorMsg}
                         formError={formError}
+                        handleDialogToggle={handleDialogToggle}
                     />
                 ) : (
                     <SignupForm

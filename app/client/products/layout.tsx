@@ -19,8 +19,8 @@ const SearchLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => 
         setViewMode,
         setSortOrder,
         categories,
-        setSelectedCategory,
-        selectedCategory,
+        categoryId,
+        setCategoryId,
         filterPrice,
         setFilterPrice,
     } = useSearchContext();
@@ -34,11 +34,11 @@ const SearchLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => 
                     <Select
                         size="small"
                         className="bg-white border border-gray-300 rounded w-full md:w-auto"
-                        value={selectedCategory || "สินค้าแนะนำ"}
-                        onChange={(e) => setSelectedCategory(e.target.value)}
+                        value={categoryId || "สินค้าแนะนำ"}
+                        onChange={(e) => setCategoryId(e.target.value)}
                         displayEmpty
                     >
-                        <MenuItem value="สินค้าแนะนำ">สินค้าแนะนำ</MenuItem>
+                        <MenuItem value="all">สินค้าแนะนำ</MenuItem>
                         {categories.map((item) => {
                             return (
                                 <MenuItem key={item.id} value={item.id}>{item.name}</MenuItem>

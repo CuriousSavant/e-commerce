@@ -72,6 +72,12 @@ const UserProfile = () => {
                   {users?.phone ? users.phone : "ไม่มีโทรศัพท์"}
                 </Typography>
               </Grid>
+              <Grid item xs={12} md={6}>
+                <Typography fontWeight={600}>วันเกิด</Typography>
+                <Typography>
+                  {users?.birthday ? users.birthday : "ไม่มีวันเกิด"}
+                </Typography>
+              </Grid>
             </Grid>
             <Box>
               <Button

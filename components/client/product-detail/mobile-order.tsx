@@ -1,5 +1,5 @@
 import { Product } from "@/types/product";
-import { Add, Favorite, FavoriteBorder, Remove } from "@mui/icons-material";
+import { Add, Remove } from "@mui/icons-material";
 import { Button, IconButton, Typography } from "@mui/material";
 
 const MobileOrder: React.FC<{
@@ -9,10 +9,8 @@ const MobileOrder: React.FC<{
     handleDecrease: () => void;
     handleIncrease: () => void;
     handleAddToCart: (product: Product, quantity: number) => void;
-    handleAddToWishlist: (productId: number) => void;
-    isFavorite: boolean;
-    handleProductorder: (product: Product) => void;
-}> = ({ isMediumScreen, quantity, handleDecrease, handleIncrease, handleAddToCart, handleAddToWishlist, isFavorite, product, handleProductorder }) => {
+    handleProductOrder: (product: Product) => void;
+}> = ({ isMediumScreen, quantity, handleDecrease, handleIncrease, handleAddToCart, product, handleProductOrder }) => {
     return (
         <div className="fixed bottom-0 left-0 right-0 bg-white shadow-md z-[9999]">
             {/* แสดงเมื่อขนาด 600px ลงไป */}
@@ -52,7 +50,7 @@ const MobileOrder: React.FC<{
                     {/* cols 2 */}
                     <div className="flex justify-end items-center gap-2">
                         <Button variant="outlined" sx={{ color: "#0f63e9", px: "32px" }} onClick={() => handleAddToCart(product, quantity)}>ใส่รถเข็น</Button>
-                        <Button variant="contained" className="px-8 bg-[#0f63e9]" onClick={() => handleProductorder(product)}>ซื้อเลย</Button>
+                        <Button variant="contained" className="px-8 bg-[#0f63e9]" onClick={() => handleProductOrder(product)}>ซื้อเลย</Button>
                     </div>
                 </div>
             )}

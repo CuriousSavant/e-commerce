@@ -71,6 +71,7 @@ const SignUpForm: React.FC<SignUpFormProps> = ({
                 onChange={handleChange}
                 error={!!formError.email}
                 helperText={formError.email && "กรุณากรอกอีเมลที่ถูกต้อง"}
+                autoComplete='email'
                 fullWidth
             />
             <TextField
@@ -86,6 +87,7 @@ const SignUpForm: React.FC<SignUpFormProps> = ({
                 error={!!formError.password}
                 helperText={formError.password && "รหัสผ่านต้องมีความยาวอย่างน้อย 8 ตัวอักษร"}
                 fullWidth
+                autoComplete='current-password'
                 InputProps={{
                     endAdornment: (
                         <InputAdornment position="end">
@@ -109,6 +111,7 @@ const SignUpForm: React.FC<SignUpFormProps> = ({
                 onChange={handleChange}
                 error={!!formError.confirmPassword}
                 helperText={formError.confirmPassword && "รหัสผ่านและยืนยันรหัสผ่านไม่ตรงกัน"}
+                autoComplete='current-password'
                 InputProps={{
                     endAdornment: (
                         <InputAdornment position="end">

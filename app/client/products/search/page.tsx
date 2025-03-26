@@ -2,7 +2,8 @@
 import React from 'react';
 import CardProducts from '@/components/client/section/card-product';
 import { useSearchContext } from '@/context/ProductSearchContext';
-import { CircularProgress } from '@mui/material';
+import { CircularProgress, Typography } from '@mui/material';
+import ProductEmpty from '../product-empty';
 
 const SearchPage = () => {
     const { productsList, viewMode, query, loading } = useSearchContext()
@@ -33,7 +34,7 @@ const SearchPage = () => {
                 ))}
             </div>
         ) : (
-            <div className="text-center text-gray-500 py-4">ไม่พบสินค้าที่ตรงกับคำค้นหา</div>
+            <ProductEmpty />
         )
     );
 

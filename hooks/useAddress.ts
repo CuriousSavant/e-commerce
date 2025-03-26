@@ -40,6 +40,7 @@ const useAddress = () => {
     district: false,
     province: false,
     postalCode: false,
+    isDefault: false,
   });
 
   const { data: session } = useSession();
@@ -95,7 +96,7 @@ const useAddress = () => {
     Object.entries(formData).forEach(([key, value]) => {
       const valueAsString = String(value || "");
 
-      if (key === 'type') return;
+      if (key === 'type' || key === 'isDefault') return;
 
       if (!valueAsString.trim()) {
         errors[key] = true;
@@ -121,7 +122,8 @@ const useAddress = () => {
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    if (!validateForm()) return;
+    const isValid = validateForm();
+    if (!isValid) return;
 
     setLoading(true);
     try {
@@ -188,6 +190,7 @@ const useAddress = () => {
   };
 
   useEffect(() => {
+    if (!session?.user.id) return;
     fetchAddresses();
   }, []);
 

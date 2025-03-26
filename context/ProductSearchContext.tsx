@@ -16,9 +16,8 @@ interface SearchContextType {
     loading: boolean;
     setLoading: React.Dispatch<React.SetStateAction<boolean>>;
     categories: Category[];
-    selectedCategory: string | null;
-    setSelectedCategory: React.Dispatch<React.SetStateAction<string | null>>;
-    filteredProducts: Product[];
+    categoryId: string;
+    setCategoryId: React.Dispatch<React.SetStateAction<string>>;
     filterPrice: string;
     setFilterPrice: React.Dispatch<React.SetStateAction<string>>
 }
@@ -31,13 +30,12 @@ export const SearchProvider: React.FC<{ children: React.ReactNode }> = ({ childr
     const [productsList, setProductsList] = useState<Product[]>([]);
     const [categories, setCategories] = useState<Category[]>([]);
 
-    const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
-    const [filteredProducts, setFilteredProducts] = useState<Product[]>([])
 
     const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
     const [sortOrder, setSortOrder] = useState<string>('asc');
     const [filterPrice, setFilterPrice] = useState<string>('all');
     const [searchQuery, setSearchQuery] = useState('');
+    const [categoryId, setCategoryId] = useState<string>('all');
 
     const [loading, setLoading] = useState<boolean>(false)
 
@@ -48,30 +46,21 @@ export const SearchProvider: React.FC<{ children: React.ReactNode }> = ({ childr
         setLoading(true)
         // ถ้ากำลัง search
         if (query) {
-            axios.get(`/api/product?q=${query}&sortBy=${sortOrder}&price=${filterPrice}`)
+            axios.get(`/api/product?q=${query}&sortBy=${sortOrder}&price=${filterPrice}&categoryId=${categoryId}`)
                 .then((res) => setProductsList(res.data.products))
                 .catch((err) => console.error(err))
                 .finally(() => setLoading(false))
         } else {
             // ถ้าไม่ search
-            axios.get(`/api/product?sortBy=${sortOrder}`)
+            axios.get(`/api/product?sortBy=${sortOrder}&price=${filterPrice}&categoryId=${categoryId}`)
                 .then((res) => setProductsList(res.data.products))
                 .catch((err) => console.error(err))
                 .finally(() => setLoading(false))
 
             axios.get('/api/categories').then((res) => setCategories(res.data.categories))
         }
-    }, [query, sortOrder, filterPrice]);
+    }, [query, sortOrder, filterPrice, categoryId]);
 
-    useEffect(() => {
-        if (!selectedCategory) return;
-        setLoading(true)
-        axios.get(`/api/product?categoryId=${selectedCategory}&sortBy=${sortOrder}`)
-            .then((res) => setFilteredProducts(res.data.categories))
-            .catch((err) => console.error(err))
-            .finally(() => setLoading(false))
-    }, [productsList, selectedCategory])
-    
     return (
         <SearchContext.Provider
             value={{
@@ -87,9 +76,8 @@ export const SearchProvider: React.FC<{ children: React.ReactNode }> = ({ childr
                 loading,
                 setLoading,
                 categories,
-                selectedCategory,
-                setSelectedCategory,
-                filteredProducts,
+                categoryId,
+                setCategoryId,
                 filterPrice,
                 setFilterPrice
             }}

@@ -1,5 +1,5 @@
 'use client';
-import useDialog from '@/hooks/useDialog';
+import useDialog from "@/context/DialogContext";
 import { Product } from '@/types/product';
 import { Wishlist } from '@prisma/client';
 import axios from 'axios';
@@ -8,13 +8,12 @@ import Link from 'next/link';
 import React, { useEffect, useState } from 'react';
 import { BiHeart } from 'react-icons/bi';
 import { toast } from 'react-toastify';
-import AuthModal from './auth-form';
 import { IconButton } from '@mui/material';
 import { AddShoppingCart } from '@mui/icons-material';
 import { useCart } from "@/context/CartContext";
 
 const CardProducts = ({ product, viewMode = 'grid' }: { product: Product, viewMode?: 'grid' | 'list' }) => {
-    const { isDialogOpen, setIsDialogOpen } = useDialog()
+    const { setIsDialogOpen } = useDialog()
     const [isFavorite, setIsFavorite] = useState<boolean>(false)
     const { status } = useSession()
     const { handleAddToCart } = useCart()
@@ -103,11 +102,6 @@ const CardProducts = ({ product, viewMode = 'grid' }: { product: Product, viewMo
                     )}
                 </div>
             </Link>
-
-            {/* เปิด form สำหรับ login/register */}
-            {isDialogOpen && (
-                <AuthModal onClose={() => setIsDialogOpen(!isDialogOpen)} />
-            )}
 
             <button
                 onClick={(e) => { e.stopPropagation(), handleWishlist(product.id) }}

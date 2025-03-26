@@ -13,10 +13,10 @@ interface LoginFormProps {
     formError: FormErrorProps;
     setErrorMsg: React.Dispatch<SetStateAction<string>>;
     handleChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
-    onClose: () => void;
+    handleDialogToggle: () => void;
 }
 
-const LoginForm: React.FC<LoginFormProps> = ({ formData, handleChange, onClose, setFormError, setErrorMsg, formError }) => {
+const LoginForm: React.FC<LoginFormProps> = ({ formData, handleChange, handleDialogToggle, setFormError, setErrorMsg, formError }) => {
     const [passwordVisible, setPasswordVisible] = useState(false);
 
     const togglePasswordVisibility = () => {
@@ -64,7 +64,7 @@ const LoginForm: React.FC<LoginFormProps> = ({ formData, handleChange, onClose, 
             setErrorMsg('')
             router.push('/client/profile/overview')
             window.location.reload()
-            onClose()
+            handleDialogToggle()
         } catch (err) {
             console.error(err)
         }
@@ -85,6 +85,7 @@ const LoginForm: React.FC<LoginFormProps> = ({ formData, handleChange, onClose, 
                 onChange={handleChange}
                 error={formError.email}
                 helperText={formError.email && "กรุณากรอกอีเมล"}
+                autoComplete='email'
             />
             <TextField
                 label="รหัสผ่าน"
@@ -99,6 +100,7 @@ const LoginForm: React.FC<LoginFormProps> = ({ formData, handleChange, onClose, 
                 onChange={handleChange}
                 error={formError.password}
                 helperText={formError.password && "รหัสผ่านต้องมีความยาวอย่างน้อย 8 ตัวอักษร"}
+                autoComplete='current-password'
                 InputProps={{
                     endAdornment: (
                         <InputAdornment position="end">

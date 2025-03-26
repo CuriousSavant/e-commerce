@@ -2,18 +2,19 @@
 import CardProducts from '@/components/client/section/card-product';
 import React, { useEffect } from 'react';
 import { useSearchContext } from '@/context/ProductSearchContext';
-import { Skeleton } from '@mui/material';
+import { Skeleton, Typography } from '@mui/material';
 import { useSearchParams } from 'next/navigation';
+import ProductEmpty from './product-empty';
 
 const Products = () => {
-    const { viewMode, loading, productsList, filteredProducts, selectedCategory, setSelectedCategory } = useSearchContext();
+    const { viewMode, loading, productsList, setCategoryId } = useSearchContext();
 
     const params = useSearchParams()
-    const categoryId = params.get('categoryId')
+    const category_id = params.get('categoryId')
 
     useEffect(() => {
-        setSelectedCategory(categoryId)
-    }, [categoryId])
+        setCategoryId(category_id || "all")
+    }, [category_id])
 
     const getContainerClass = (viewMode: string) => (
         viewMode === 'grid'
@@ -49,21 +50,17 @@ const Products = () => {
         );
     };
 
-    const products = selectedCategory === null ? productsList : filteredProducts
-
     const ProductList = () => (
         loading ? (
-            renderSkeletons(products.length)
-        ) : products.length > 0 ? (
+            renderSkeletons(productsList.length)
+        ) : productsList.length > 0 ? (
             <div className={getContainerClass(viewMode)}>
-                {products.map((product) => (
+                {productsList.map((product) => (
                     <CardProducts product={product} viewMode={viewMode} key={product.id} />
                 ))}
             </div>
         ) : (
-            <div className="text-center text-gray-500 py-4 min-h-screen flex justify-center items-center">
-                ไม่พบสินค้าที่ตรงกับคำค้นหา
-            </div>
+            <ProductEmpty />
         )
     );
 

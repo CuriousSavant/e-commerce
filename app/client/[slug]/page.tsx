@@ -6,9 +6,8 @@ import axios from "axios";
 import { Box, CircularProgress, IconButton, useMediaQuery } from "@mui/material";
 import { MdArrowBackIos } from "react-icons/md";
 import { useSession } from "next-auth/react";
-import useDialog from "@/hooks/useDialog";
-import AuthModal from "@/components/client/section/auth-form";
-import { Wishlist } from "@prisma/client";
+import useDialog from "@/context/DialogContext";
+import { Wishlist } from "@/types/wishlist";
 import RandomProducts from "@/components/client/section/random-product";
 import { toast } from 'react-toastify';
 import PropertiesTable from "@/components/client/section/properties-table";
@@ -28,9 +27,9 @@ const ProductDetailPage = () => {
   const router = useRouter();
   const { slug } = useParams();
   const { status } = useSession();
-  const { isDialogOpen, setIsDialogOpen } = useDialog();
+  const { setIsDialogOpen } = useDialog();
   const [isFavorite, setIsFavorite] = useState(false);
-  const { handleAddToCart, handleProductorder } = useCart();
+  const { handleAddToCart, handleProductOrder } = useCart();
 
   // เรียกข้อมูลสินค้าจาก API
   // slug = id ของสินค้า
@@ -43,17 +42,17 @@ const ProductDetailPage = () => {
   }, [slug]);
 
   useEffect(() => {
-    if (!product?.id) return;
+    if (!slug) return;
 
     axios.get(`/api/wishlist`)
       .then((res) => {
-        const isFavorite = res.data.some((item: Wishlist) => item.productId === product?.id);
+        const isFavorite = res.data.some((item: Wishlist) => item.product.slug === slug);
         setIsFavorite(isFavorite);
       })
       .catch((err) => {
         console.error("Error fetching wishlist:", err);
       });
-  }, []);
+  }, [slug]);
 
   const handleAddToWishlist = async (productId: number) => {
     if (status === 'unauthenticated') {
@@ -132,14 +131,11 @@ const ProductDetailPage = () => {
             product, setActiveImage,
           }} />
 
-          {/* เปิด form สำหรับ login/signup */}
-          {isDialogOpen && <AuthModal onClose={() => setIsDialogOpen(!isDialogOpen)} />}
-
           {/* ข้อมูลสินค้า */}
           <ProductInfo {...{
             handleAddToCart, handleAddToWishlist, handleDecrease,
             handleIncrease, isFavorite, isMediumScreen,
-            product, quantity,
+            product, quantity, handleProductOrder,
           }} />
         </div>
 
@@ -156,7 +152,7 @@ const ProductDetailPage = () => {
           handleAddToCart,
           handleAddToWishlist,
           isFavorite,
-          handleProductorder,
+          handleProductOrder,
         }} />
 
         <RandomProducts />

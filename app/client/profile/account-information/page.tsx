@@ -11,8 +11,8 @@ import { LuEyeClosed } from 'react-icons/lu'
 
 const AccountInformation = () => {
   const [userDetails, setUserDetails] = useState({
-    name: '',
-    lastName: '',
+    firstname: '',
+    lastname: '',
     email: '',
     phone: '',
     birthday: ''
@@ -35,8 +35,8 @@ const AccountInformation = () => {
         .then((res) => {
           const user = res.data;
           setUserDetails({
-            name: user.firstname || '',
-            lastName: user.lastname || '',
+            firstname: user.firstname || '',
+            lastname: user.lastname || '',
             email: user.email || '',
             phone: user.phone || '',
             birthday: user.birthday ? new Date(user.birthday).toISOString().slice(0, 10) : ''
@@ -92,6 +92,7 @@ const AccountInformation = () => {
         setSnackOpen(true);
         setOpenDialog(false);
         setCurrentPassword('')
+        router.refresh()
       } else {
         setErrors({ currentPassword: 'รหัสผ่านไม่ถูกต้อง' });
       }
@@ -122,8 +123,8 @@ const AccountInformation = () => {
                 fullWidth
                 label="ชื่อ"
                 variant="standard"
-                name="name"
-                value={userDetails.name}
+                name="firstname"
+                value={userDetails.firstname}
                 onChange={handleInputChange}
               />
             </Grid>
@@ -134,8 +135,8 @@ const AccountInformation = () => {
                 fullWidth
                 label="นามสกุล"
                 variant="standard"
-                name="lastName"
-                value={userDetails.lastName}
+                name="lastname"
+                value={userDetails.lastname}
                 onChange={handleInputChange}
               />
             </Grid>

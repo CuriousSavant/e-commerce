@@ -7,6 +7,7 @@ import { ToastContainer } from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
 import { authOptions } from "@/lib/auth";
 import TopProgressBar from "@/components/TopProgressbar";
+import { DialogProvider } from "@/context/DialogContext";
 
 export const metadata: Metadata = {
   title: "Ecommerce-website",
@@ -29,10 +30,12 @@ export default async function RootLayout({
         </head>
         <body className="bg-white text-black">
           <SessionProvider session={session}>
-            <LayoutSetting>
-              <TopProgressBar />
-              {children}
-            </LayoutSetting>
+            <DialogProvider>
+              <LayoutSetting>
+                <TopProgressBar />
+                {children}
+              </LayoutSetting>
+            </DialogProvider>
             <ToastContainer
               position="top-right"
               autoClose={1500}

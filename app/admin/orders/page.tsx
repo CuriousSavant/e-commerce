@@ -7,7 +7,6 @@ import axios from 'axios';
 import OrderList from '@/components/admin/orders/order-list';
 import OrderDetail from '@/components/admin/orders/order-detail';
 import OrderEdit from '@/components/admin/orders/order-edit';
-import { Address } from '@/types/address';
 import { Product } from '@/types/product';
 import { usePagination } from '@/context/PaginationContext';
 
@@ -15,8 +14,6 @@ export type ActiveTabs = 'all' | 'completed' | 'pending' | 'canceled';
 
 export default function OrdersPage() {
   const [orders, setOrders] = useState<Order[]>([]);
-
-  const [addressList, setAddressList] = useState<Address[]>([])
   const [productList, setProductList] = useState<Product[]>([])
 
   const [expandedOrders, setExpandedOrders] = useState<Set<number>>(new Set());
@@ -148,7 +145,7 @@ export default function OrdersPage() {
                   page={page - 1}
                   onPageChange={handleChangePage}
                   onRowsPerPageChange={handleChangeRowsPerPage}
-                  sx={{ color: "white", "& .MuiSvgIcon-root": { color: "white" }, "& .MuiSelect-icon": { color: "white" }, "& .Mui-disabled": { color: "gray" } }}
+                  sx={{ color: "white", "& .MuiSvgIcon-root": { color: "white" }, "& .MuiSelect-icon": { color: "white" }, "& .Mui-disabled": { color: "gray" }, overflowX: "hidden" }}
                 />
               </>
             ) : (

@@ -38,7 +38,7 @@ const RandomProducts: React.FC = () => {
                 {products.map((product, index) => (
                     <Box
                         key={index}
-                        sx={{ width: { xs: 140, sm: 180 }, flex: "0 0 auto" }}
+                        sx={{ width: { xs: 160, sm: 180 }, flex: "0 0 auto" }}
                         height={"auto"}
                     >
                         <Link

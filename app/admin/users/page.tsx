@@ -1,6 +1,6 @@
 'use client'
 import React from 'react';
-import { Box, TablePagination, Typography, } from '@mui/material';
+import { Box, Pagination, PaginationItem, TablePagination, Typography, } from '@mui/material';
 import UsersTable from '@/components/admin/users/user-table';
 import FilterSortSearch from '@/components/admin/users/filter-sort-search';
 import CreateUserForm from '@/components/admin/users/create-user-form';
@@ -69,6 +69,7 @@ export default function Users() {
               "& .MuiSvgIcon-root": { color: "white" },
               "& .MuiSelect-icon": { color: "white" },
               "& .Mui-disabled": { color: "gray" },
+              overflowX: "hidden"
             }}
           />
         </>

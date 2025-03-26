@@ -29,15 +29,7 @@ const CheckoutPage = () => {
         setSelectedPayment(methodValue);
     };
 
-    const {
-        selectedCartItems,
-        itemQuantities,
-        cartTotalPrice,
-        handleOrder,
-        updateItemQuantity,
-        setItemQuantities,
-        productOrder,
-    } = useCart()
+    const { selectedCartItems, itemQuantities, cartTotalPrice, handleOrder } = useCart()
 
     return (
         <Box sx={{ display: "flex", flexDirection: "column", gap: { xs: 2, md: 3 }, px: { xs: 2, md: 5 }, pt: { xs: 3, md: 5 }, }}>
@@ -60,8 +52,6 @@ const CheckoutPage = () => {
                         itemQuantities={itemQuantities}
                         cartTotalPrice={cartTotalPrice}
                         handleOrder={handleOrder}
-                        updateItemQuantity={updateItemQuantity}
-                        setItemQuantities={setItemQuantities}
                     />
                 </Grid>
             </Grid>

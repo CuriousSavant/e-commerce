@@ -1,14 +1,13 @@
 "use client"
-
 import { Box, IconButton, Typography } from '@mui/material';
 import { BiArrowBack } from 'react-icons/bi';
 
 type HeaderProps = {
   activeTab: 'login' | 'signup';
-  onClose: () => void;
+  handleDialogToggle: () => void;
 };
 
-function Header({ activeTab, onClose }: HeaderProps) {
+function Header({ activeTab, handleDialogToggle }: HeaderProps) {
   return (
     <Box
       display="flex"
@@ -16,7 +15,7 @@ function Header({ activeTab, onClose }: HeaderProps) {
       justifyContent="space-between"
       mb={3}
     >
-      <IconButton size="small" onClick={onClose}>
+      <IconButton size="small" onClick={handleDialogToggle}>
         <BiArrowBack />
       </IconButton>
       <Typography variant="h6" fontWeight="bold" sx={{ flexGrow: 1, textAlign: 'center' }}>

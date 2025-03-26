@@ -1,5 +1,5 @@
 import { Product } from "@/types/product";
-import { Add, Favorite, FavoriteBorder, Remove, ShoppingCart } from "@mui/icons-material";
+import { Add, Favorite, FavoriteBorderOutlined, Remove, ShoppingCart } from "@mui/icons-material";
 import { Box, Button, IconButton, Typography } from "@mui/material";
 
 interface ProductInfoProps {
@@ -11,12 +11,14 @@ interface ProductInfoProps {
     handleAddToWishlist: (productId: number) => void;
     handleIncrease: () => void;
     handleDecrease: () => void;
+    handleProductOrder: (product: Product) => void;
 }
 
 const ProductInfo: React.FC<ProductInfoProps> = ({
     product, handleAddToCart, handleAddToWishlist,
     handleDecrease, handleIncrease,
     isFavorite, isMediumScreen, quantity,
+    handleProductOrder,
 }) => {
     return (
         <div className="flex flex-col bg-white p-2 md:p-4 rounded-lg">
@@ -25,8 +27,7 @@ const ProductInfo: React.FC<ProductInfoProps> = ({
             </Typography>
             <Typography sx={{ mb: 2, color: 'gray' }} variant="subtitle2">{product.description}</Typography>
 
-            {/* แสดงราคาสินค้า(ในขนาดใหญ่) */}
-            <div className="flex items-center gap-2 mb-2">
+            <div className="flex justify-between items-center gap-2 mb-2">
                 <Typography
                     color="primary"
                     fontSize={"26px"}
@@ -35,6 +36,13 @@ const ProductInfo: React.FC<ProductInfoProps> = ({
                 >
                     ฿{product.price.toLocaleString('th-Th')}
                 </Typography>
+                <IconButton
+                    onClick={() => handleAddToWishlist(product.id)}
+                    className={`${isFavorite ? 'border-red-500 text-red-500' : 'border-gray-400 text-gray-400'}`}
+                    size={"large"}
+                >
+                    {isFavorite ? <Favorite /> : <FavoriteBorderOutlined />}
+                </IconButton>
             </div>
 
             {/* รายละเอียดสินค้า */}
@@ -74,13 +82,6 @@ const ProductInfo: React.FC<ProductInfoProps> = ({
                         )}
 
                         <div className="flex flex-col sm:flex-row gap-2">
-                            <IconButton
-                                onClick={() => handleAddToWishlist(product.id)}
-                                className={`${isFavorite ? 'border-red-500 text-red-500' : 'border-gray-400 text-gray-400'}`}
-                                size={"large"}
-                            >
-                                {isFavorite ? <Favorite /> : <FavoriteBorder />}
-                            </IconButton>
                             <Button
                                 startIcon={<ShoppingCart />}
                                 className="bg-[#0f63e929] text-blue-500 w-full py-3"
@@ -93,7 +94,7 @@ const ProductInfo: React.FC<ProductInfoProps> = ({
                                 variant="contained"
                                 className="bg-[#0f63e9] w-full py-3"
                                 size="medium"
-                            // onClick={() => handleProductorder(product)}
+                                onClick={() => handleProductOrder(product)}
                             >
                                 สั่งซื้อ
                             </Button>

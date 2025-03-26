@@ -14,7 +14,7 @@ import { useCart } from "@/context/CartContext";
 
 const OrderSummary = () => {
   const [orders, setOrders] = useState<Order[]>([]);
-  const [tabIndex, setTabIndex] = useState(0);
+  const [tabStatus, setTabStatus] = useState<'all' | 'PENDING' | 'COMPLETED' | 'CANCELED'>('all');
   const [filteredOrders, setFilteredOrders] = useState<Order[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
 
@@ -32,7 +32,7 @@ const OrderSummary = () => {
     const fetchOrders = async () => {
       setLoading(true);
       try {
-        const res = await axios.get(`/api/order?userId=${session.user.id}&sortOrder=desc&page=${page}&pageSize=${pageSize}`);
+        const res = await axios.get(`/api/order?userId=${session.user.id}&sortOrder=desc&page=${page}&pageSize=${pageSize}&filterStatus=${tabStatus}`);
         setOrders(res.data.orders);
         setCountOrders(res.data.ordersCount);
       } catch (err) {
@@ -42,7 +42,7 @@ const OrderSummary = () => {
       }
     };
     fetchOrders();
-  }, [session?.user?.id, page, pageSize]);
+  }, [session?.user?.id, page, pageSize, tabStatus]);
 
   const formatStatus = (status: string) => {
     const statusMap: Record<string, { label: string; color: string }> = {
@@ -60,22 +60,23 @@ const OrderSummary = () => {
     return statusMap[status] || { label: "ไม่ทราบสถานะ", color: "default" };
   };
 
-  const filterOrders = (tabIndex: number, orders: Order[]) => {
-    const filters = [
-      () => true,
-      (order: Order) => order.status === "PENDING" as any,
-      (order: Order) => order.status === "COMPLETED" as any,
-      (order: Order) => order.status === "CANCELED" as any,
-    ];
-    return orders.filter(filters[tabIndex] || (() => true));
+  const filterOrders = (status: string, orders: Order[]) => {
+    const filters = {
+      all: () => true,
+      PENDING: (order: Order) => order.status === "PENDING",
+      COMPLETED: (order: Order) => order.status === "COMPLETED",
+      CANCELED: (order: Order) => order.status === "CANCELED",
+    };
+    return orders.filter(filters[status as keyof typeof filters] || (() => true));
   };
 
   useEffect(() => {
-    setFilteredOrders(filterOrders(tabIndex, orders));
-  }, [orders, tabIndex]);
+    setFilteredOrders(filterOrders(tabStatus, orders));
+  }, [orders, tabStatus]);
 
-  const handleTabChange = (_event: React.SyntheticEvent, newValue: number) => {
-    setTabIndex(newValue);
+  const handleTabChange = (_event: React.SyntheticEvent, newValue: 'all' | 'PENDING' | 'COMPLETED' | 'CANCELED') => {
+    setTabStatus(newValue);
+  setPage(1);
   };
 
   const handleCancelOrder = async (orderId: number) => {
@@ -115,7 +116,7 @@ const OrderSummary = () => {
         <BiArrowBack />
       </IconButton>
 
-      <OrderTabs handleTabChange={handleTabChange} tabIndex={tabIndex} />
+      <OrderTabs handleTabChange={handleTabChange} tabIndex={tabStatus} />
 
       {loading ? (
         <Box display="flex" justifyContent="center" alignItems="center" height="80vh">
@@ -145,6 +146,7 @@ const OrderSummary = () => {
         onRowsPerPageChange={(e: React.ChangeEvent<HTMLInputElement>) => { setPageSize(Number(e.target.value)), setPage(1) }}
         nextIconButtonProps={{ disabled: (page * pageSize) >= countOrders }}
         backIconButtonProps={{ disabled: page <= 1 }}
+        sx={{ overflowX: "hidden" }}
       />
 
     </Box>

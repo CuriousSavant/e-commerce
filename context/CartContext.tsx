@@ -8,7 +8,7 @@ import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 import useAddress from '@/hooks/useAddress';
 import { Product } from '@/types/product';
-import useDialog from '@/hooks/useDialog';
+import useDialog from "@/context/DialogContext";
 
 type CartQuantities = Record<number, number>;
 
@@ -27,8 +27,7 @@ type CartContextType = {
     handleAddToCart: (product: Product, quantity: number) => void;
     selectedCartItems: CartItem[];
     setSelectedCartItems: React.Dispatch<React.SetStateAction<CartItem[]>>;
-    productOrder: Product | null;
-    handleProductorder: (product: Product) => void;
+    handleProductOrder: (product: Product) => void;
 };
 
 const CartContext = createContext<CartContextType | undefined>(undefined);
@@ -42,14 +41,10 @@ export const CartProvider = ({ children }: { children: React.ReactNode }) => {
 
     // สินค้าที่ถูกเลือก
     const [selectedCartItems, setSelectedCartItems] = useState<CartItem[]>([]);
-    // สินค้าที่ต้องการส่งซื้อ
-    const [productOrder, setProductOrder] = useState<Product | null>(null);
 
     const { data: session, status } = useSession()
     const { defaultAddress } = useAddress();
-    const { setIsDialogOpen } = useDialog()
-
-    console.log(selectedCartItems)
+    const { handleDialogToggle } = useDialog()
 
     const router = useRouter()
 
@@ -93,6 +88,7 @@ export const CartProvider = ({ children }: { children: React.ReactNode }) => {
     };
 
     useEffect(() => {
+        if (!session?.user.id) return;
         setLoading(true);
         fetchCartItems();
     }, []);
@@ -242,8 +238,8 @@ export const CartProvider = ({ children }: { children: React.ReactNode }) => {
 
     // เพิ่มสินค้าลงตะกร้า
     const handleAddToCart = async (product: Product, quantity: number) => {
-        if (status === 'unauthenticated') {
-            setIsDialogOpen(true)
+        if (status === 'unauthenticated' || !session?.user.id) {
+            handleDialogToggle();
             return;
         }
 
@@ -272,11 +268,13 @@ export const CartProvider = ({ children }: { children: React.ReactNode }) => {
         }
     }
 
-    const handleProductorder = async (product: Product) => {
+    const handleProductOrder = async (product: Product) => {
         await handleAddToCart(product, 1)
         setSelectedItems([product.id])
         fetchCartItems()
-        router.push('/client/cart')
+        const cart = cartItems.find(item => item.productId === product.id)
+        setSelectedCartItems([cart!])
+        router.push('/client/checkout')
     }
 
 
@@ -295,9 +293,8 @@ export const CartProvider = ({ children }: { children: React.ReactNode }) => {
             loading,
             handleAddToCart,
             selectedCartItems,
-            productOrder,
             setSelectedCartItems,
-            handleProductorder,
+            handleProductOrder,
         }}>
             {children}
         </CartContext.Provider>
