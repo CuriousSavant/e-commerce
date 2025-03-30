@@ -6,7 +6,7 @@ import { CartItem } from '@/types/cart';
 import Swal from 'sweetalert2';
 import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
-import { useAddress } from './AddressContext';
+import useAddress from '@/hooks/useAddress';
 import { Product } from '@/types/product';
 import useDialog from "@/context/DialogContext";
 
