@@ -1,4 +1,5 @@
 import prisma from "@/lib/prisma";
+import { Propertie } from "@/types/product";
 import { NextResponse } from "next/server";
 
 export const GET = async (
@@ -32,6 +33,7 @@ export const PUT = async (
     categoryId,
     brandId,
     stock,
+    properties,
   } = await req.json();
 
   try {
@@ -44,13 +46,20 @@ export const PUT = async (
         categoryId,
         brandId,
         stock,
+        properties: { // ยังไม่รู้วิธี update properties เลยทำแบบนี้ไปก่อน
+          deleteMany: {}, // ลบ properties เดิมทั้งหมดก่อน
+          create: properties.map((property: Propertie) => ({ // แล้วสร้างใหม่
+            name: property.name,
+            value: property.value,
+          })),
+        },
       },
       where: { slug: params.slug },
     });
     return NextResponse.json(update_product);
   } catch (error) {
     return NextResponse.json(
-      { msg: "Failed to update product", error: error },
+      { msg: "Failed to update product", error: String(error) },
       { status: 500 }
     );
   }

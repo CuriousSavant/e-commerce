@@ -3,7 +3,7 @@ import prisma from "@/lib/prisma";
 
 export async function GET(request: NextRequest) {
   const userId = request.nextUrl.searchParams.get("userId");
-  if (userId) {
+  if (!userId) {
     return NextResponse.json({ error: "ไม่ได้รับอนุญาต" }, { status: 401 });
   }
 

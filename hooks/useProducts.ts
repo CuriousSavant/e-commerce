@@ -5,6 +5,7 @@ import { useImageUpload } from "./useImageUpload";
 import { debounce } from "lodash";
 import Swal from 'sweetalert2'
 import { usePagination } from "../context/PaginationContext";
+import { ProductFormStateProps } from "@/components/admin/products/types/create-product-form";
 
 export const useProducts = () => {
     const [products, setProducts] = useState<Product[]>([]); // เก็บสินค้าที่ดึงมาจาก API
@@ -25,7 +26,7 @@ export const useProducts = () => {
         imageUrl, setImageUrl, handleUploadImage,
         loadingImage, selectedImage, setSelectedImage,
         setSnackbarOpen, snackbarOpen, deletedImages,
-        deletedIndex, setDeletedImages, setDeletedIndex,
+        setDeletedImages,
     } = useImageUpload();
 
     const { page, pageSize } = usePagination();
@@ -37,8 +38,9 @@ export const useProducts = () => {
         brandId: null,
         stock: 0,
         categoryId: null,
+        properties: []
     });
-
+    
     const [countProducts, setCountProducts] = useState<number>(0)
 
     const fetchProducts = () => {
@@ -82,6 +84,7 @@ export const useProducts = () => {
             stock: product.stock,
             brandId: product.brandId,
             categoryId: product.categoryId,
+            properties: product.properties,
         });
         setImageUrl(product.image || []);
         setSlug(product.slug);
@@ -96,6 +99,7 @@ export const useProducts = () => {
             stock: 0,
             brandId: null,
             categoryId: null,
+            properties: [],
         });
         setSlug(null);
         setFormOpen(false);
@@ -112,7 +116,10 @@ export const useProducts = () => {
             stock: productForm.stock,
             brandId: productForm.brandId,
             categoryId: productForm.categoryId,
+            properties: productForm.properties,
         };
+
+        console.log(productData)
 
         try {
             if (slug) {
@@ -215,7 +222,7 @@ export const useProducts = () => {
         handleAllDelete, handleDeleteProduct, imageUrl,
         setImageUrl, handleRemoveImage, handleUndoDelete,
         handleUploadImage, loadingImage, selectedImage, setSelectedImage,
-        setSnackbarOpen, snackbarOpen, deletedImages, countProducts, 
+        setSnackbarOpen, snackbarOpen, deletedImages, countProducts,
         setDeletedImages,
     };
 };

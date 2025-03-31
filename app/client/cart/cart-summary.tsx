@@ -1,10 +1,24 @@
 import { Box, Typography, Divider, Button } from '@mui/material';
 import { useRouter } from 'next/navigation';
 import { useCart } from '@/context/CartContext';
+import Swal from 'sweetalert2'
 
 const CartSummary = () => {
     const router = useRouter();
-    const { selectedItems, cartTotalPrice } = useCart();
+    const { selectedCartItems, cartTotalPrice } = useCart();
+
+    const handleNextToCheckout = () => {
+        if (selectedCartItems.length > 0) {
+            router.push('/client/checkout')
+        } else {
+            Swal.fire({
+                title: "กรุณาเลือกสินค้าที่ต้องการชำระ",
+                icon: "warning",
+            })
+        }
+
+    }
+
     return (
         <Box flex={0.4} sx={{ p: 3, border: '1px solid #f0f0f0', borderRadius: '8px' }}>
             <Typography variant="h6" mb={2}>
@@ -13,7 +27,7 @@ const CartSummary = () => {
             <Box sx={{ display: "flex", flexDirection: "column", gap: 1 }}>
                 <Box display="flex" justifyContent="space-between">
                     <Typography color='gray' variant='body2'>จำนวนสินค้า</Typography>
-                    <Typography variant='body2'>{selectedItems.length > 0 ? selectedItems.length + " ชิ้น" : "-"}</Typography>
+                    <Typography variant='body2'>{selectedCartItems.length > 0 ? selectedCartItems.length + " ชิ้น" : "-"}</Typography>
                 </Box>
                 <Box display="flex" justifyContent="space-between">
                     <Typography color='gray' variant='body2'>ค่าจัดส่ง</Typography>
@@ -33,7 +47,7 @@ const CartSummary = () => {
                 fullWidth
                 variant="contained"
                 sx={{ mt: 2, bgcolor: '#0f63e9' }}
-                onClick={() => router.push('/client/checkout')}
+                onClick={handleNextToCheckout}
             >
                 ชำระเงิน
             </Button>

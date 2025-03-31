@@ -11,16 +11,15 @@ import useBrands from "@/hooks/useBrands";
 
 const Products = () => {
     const {
-        categories, fetchProducts, formOpen,
-        handleResetState, productForm,
-        products, setFormOpen, setProductForm,
-        setProducts, slug, sortOrder,
+        categories, formOpen,
+        productForm, products, setFormOpen,
+        setProductForm, slug, sortOrder,
         startEditing, toggleSortOrder,
         handleCreateProductAndUpdate,
         query, selectItem, setQuery, setSelectItem,
         categoryFilter, priceFilter, setCategoryFilter,
         setPriceFilter, setStatusFilter, statusFilter,
-        setSlug, loading, setLoading, handleAllDelete,
+        setSlug, loading, handleAllDelete,
         handleDeleteProduct, imageUrl, setImageUrl,
         deletedImages, handleRemoveImage, handleUndoDelete,
         handleUploadImage, loadingImage, selectedImage,
@@ -30,12 +29,7 @@ const Products = () => {
 
     const { brands } = useBrands();
 
-    const {
-        handleChangePage,
-        handleChangeRowsPerPage,
-        page,
-        pageSize,
-    } = usePagination();
+    const { handleChangePage, handleChangeRowsPerPage, page, pageSize } = usePagination();
 
     return (
         <Box sx={{ py: 2, px: { xs: 2, md: 6 } }}>

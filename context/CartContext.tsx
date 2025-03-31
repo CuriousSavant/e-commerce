@@ -28,6 +28,7 @@ type CartContextType = {
     selectedCartItems: CartItem[];
     setSelectedCartItems: React.Dispatch<React.SetStateAction<CartItem[]>>;
     handleProductOrder: (product: Product) => void;
+    directOrderItem: CartItem | null;
 };
 
 const CartContext = createContext<CartContextType | undefined>(undefined);
@@ -38,6 +39,8 @@ export const CartProvider = ({ children }: { children: React.ReactNode }) => {
     const [cartTotalPrice, setCartTotalPrice] = useState<number>(0);
     const [selectedItems, setSelectedItems] = useState<number[]>([]);
     const [loading, setLoading] = useState<boolean>(false)
+
+    const [directOrderItem, setDirectOrderItem] = useState<CartItem | null>(null);
 
     // สินค้าที่ถูกเลือก
     const [selectedCartItems, setSelectedCartItems] = useState<CartItem[]>([]);
@@ -96,16 +99,15 @@ export const CartProvider = ({ children }: { children: React.ReactNode }) => {
     // คำนวณยอดรวมสินค้า
     useEffect(() => {
         const calculateCartTotalPrice = () => {
-            const selectedCartItems = cartItems.filter(item => selectedItems.includes(item.productId));
-
             const total = selectedCartItems.reduce((sum, item) => {
-                return sum + item.product.price * itemQuantities[item.productId];
+                const quantity = directOrderItem ? directOrderItem.quantity : itemQuantities[item.productId];
+                return sum + item.product.price * quantity;
             }, 0);
 
             setCartTotalPrice(total);
         };
         calculateCartTotalPrice();
-    }, [itemQuantities, selectedItems, cartItems]);
+    }, [itemQuantities, selectedCartItems]);
 
     // เพิ่ม, ลบ จำนวณสินค้า
     const updateItemQuantity = (productId: number, increment: boolean) => {
@@ -123,26 +125,19 @@ export const CartProvider = ({ children }: { children: React.ReactNode }) => {
 
     // เลือกสินค้าทั้งหมด
     const toggleSelectAllItems = () => {
-        if (selectedItems.length === cartItems.length) {
-            setSelectedItems([]);
+        if (selectedCartItems.length === cartItems.length) {
             setSelectedCartItems([]);
         } else {
-            const allItemIds = cartItems.map(item => item.productId);
-            setSelectedItems(allItemIds);
             setSelectedCartItems(cartItems);
         }
     };
 
     // เลือกสินค้าที่ต้องการชำระ
     const toggleSelectItem = (productId: number) => {
-        setSelectedItems((prev) =>
-            prev.includes(productId) ? prev.filter((selectedId) => selectedId !== productId) : [...prev, productId]
-        );
-
         setSelectedCartItems((prev) =>
-            prev.some((item) => item.productId === productId) // ถ้ามีสินค้าใน selectedCartItems ที่มี productId เหมือนกับ productId ที่ถูกเลือก
-                ? prev.filter((item) => item.productId !== productId) // ลบสินค้าที่ถูกเลือกออก
-                : [...prev, cartItems.find((item) => item.productId === productId)!] // ใช้ find เพื่อหาสินค้าตาม productId ที่ส่งมาและเพิ่มเข้าไปใน selectedCartItems
+            prev.some((item) => item.productId === productId)
+                ? prev.filter((item) => item.productId !== productId)
+                : [...prev, cartItems.find((item) => item.productId === productId)!]
         );
     };
 
@@ -179,9 +174,7 @@ export const CartProvider = ({ children }: { children: React.ReactNode }) => {
             ในที่นี้ผมจะขอแค่ส่วนของการสั่งซื้อสินค้าเท่านั้น เพื่อความปลอดภัยของข้อมูลนะครับ
         */
         try {
-            const selectedOrderItems = cartItems.filter(item => selectedItems.includes(item.productId));
-
-            if (selectedOrderItems.length === 0) {
+            if (selectedCartItems.length === 0) {
                 Swal.fire({
                     icon: "warning",
                     title: "กรุณาเลือกสินค้าก่อนทำการสั่งซื้อ",
@@ -197,9 +190,9 @@ export const CartProvider = ({ children }: { children: React.ReactNode }) => {
                 return;
             }
 
-            const orderItems = selectedOrderItems.map(item => ({
+            const orderItems = selectedCartItems.map(item => ({
                 productId: item.productId,
-                quantity: itemQuantities[item.productId],
+                quantity: directOrderItem ? directOrderItem.quantity : itemQuantities[item.productId],
             }));
 
             const payload = {
@@ -245,10 +238,11 @@ export const CartProvider = ({ children }: { children: React.ReactNode }) => {
 
         try {
             if (product) {
-                if (product?.stock <= 0) {
-                    toast.error("สินค้าหมดแล้ว😭", {
+                if (product?.stock === 0) {
+                    toast.warning("สินค้าหมดแล้ว", {
                         autoClose: 1200
                     });
+                    return;
                 } else {
                     await axios.post("/api/cart", {
                         userId: session?.user?.id,
@@ -269,14 +263,24 @@ export const CartProvider = ({ children }: { children: React.ReactNode }) => {
     }
 
     const handleProductOrder = async (product: Product) => {
-        await handleAddToCart(product, 1)
-        setSelectedItems([product.id])
-        fetchCartItems()
-        const cart = cartItems.find(item => item.productId === product.id)
-        setSelectedCartItems([cart!])
-        router.push('/client/checkout')
-    }
+        try {
+            const newOrderItem: CartItem = {
+                id: 1,
+                cartId: 1,
+                productId: product.id,
+                quantity: 1,
+                product,
+            };
 
+            setDirectOrderItem(newOrderItem);
+            setSelectedCartItems([newOrderItem]);
+            setCartTotalPrice(product.price)
+            router.push('/client/checkout');
+        } catch (err) {
+            toast.error("เกิดข้อผิดพลาดไม่สามารถสั่งซื้อสินค้าได้", { autoClose: 1200 });
+            console.error(err)
+        }
+    }
 
     return (
         <CartContext.Provider value={{
@@ -295,6 +299,7 @@ export const CartProvider = ({ children }: { children: React.ReactNode }) => {
             selectedCartItems,
             setSelectedCartItems,
             handleProductOrder,
+            directOrderItem,
         }}>
             {children}
         </CartContext.Provider>

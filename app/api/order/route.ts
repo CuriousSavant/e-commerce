@@ -22,7 +22,7 @@ export async function GET(req: NextRequest) {
   if (userId) whereCountClause.userId = userId;
 
   const ordersCount = await prisma.order.count({ where: whereClause })
-  
+
   try {
     const orders = await prisma.order.findMany({
       where: whereClause,
@@ -51,6 +51,8 @@ function generateOrderId(): string {
 
 export async function POST(request: Request) {
   const { userId, orderItems, totalAmount, addressId } = await request.json();
+
+  console.log({ userId, orderItems, totalAmount, addressId })
 
   if (!Array.isArray(orderItems) || orderItems.length === 0) {
     return NextResponse.json(
@@ -106,8 +108,11 @@ export async function POST(request: Request) {
       await tx.cartItem.deleteMany({
         where: {
           productId: {
-            in: orderItems.map((item) => item.productId),
+            in: orderItems.map((item) => item.productId)
           },
+          quantity: {
+            in: orderItems.map((item) => item.quantity)
+          }
         },
       });
 

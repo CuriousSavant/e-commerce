@@ -4,13 +4,13 @@ import { Propertie } from "@/types/product";
 
 interface PropertiesSectionProps {
     properties: Propertie[];
-    handlePropertyChange: (index: number, field: string, value: string) => void;
     handleRemoveProperty: (index: number) => void;
+    handlePropertyChange: (index: number, field: string, value: string) => void;
     handleAddProperty: () => void;
     errorProperties: string
 }
 
-const PropertiesSection = ({ properties, handlePropertyChange, handleRemoveProperty, handleAddProperty, errorProperties }: PropertiesSectionProps) => {
+const PropertiesSection = ({ properties, handleRemoveProperty, handleAddProperty, errorProperties, handlePropertyChange }: PropertiesSectionProps) => {
     return (
         <Box mt={3} p={2} border="1px solid #4a4a5c" borderRadius={2}>
             <Typography variant="h6" fontWeight={500} className="mb-2">
@@ -25,9 +25,10 @@ const PropertiesSection = ({ properties, handlePropertyChange, handleRemovePrope
                             size="small"
                             sx={{ bgcolor: "secondary.dark", borderRadius: 2, border: "1px solid #4a4a5c", input: { color: "white" }, "& .MuiInputBase-root": { color: "white" } }}
                             InputLabelProps={{ style: { color: "#C0C0C0" } }}
+                            name="name"
                             fullWidth
                             value={prop.name}
-                            onChange={(e) => handlePropertyChange(index, "name", e.target.value)}
+                            onChange={(e) => handlePropertyChange(index, 'name', e.target.value)}
                         />
                     </Grid>
                     <Grid item xs={5} mb={1}>
@@ -37,9 +38,10 @@ const PropertiesSection = ({ properties, handlePropertyChange, handleRemovePrope
                             size="small"
                             sx={{ bgcolor: "secondary.dark", borderRadius: 2, border: "1px solid #4a4a5c", input: { color: "white" }, "& .MuiInputBase-root": { color: "white" } }}
                             fullWidth
+                            name="wvname"
                             value={prop.value}
                             InputLabelProps={{ style: { color: "#C0C0C0" } }}
-                            onChange={(e) => handlePropertyChange(index, "value", e.target.value)}
+                            onChange={(e) => handlePropertyChange(index, 'value', e.target.value)}
                         />
                     </Grid>
                     <Grid item xs={2}>

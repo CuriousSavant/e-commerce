@@ -4,8 +4,10 @@ import { BiUpload } from 'react-icons/bi';
 import { Button, TextField, Select, MenuItem, InputLabel, FormControl, Box, Typography, Grid, Modal, IconButton, Snackbar } from '@mui/material';
 import { Close } from '@mui/icons-material';
 import { fieldsProps } from './product-form';
-import { Category } from '@/types/product';
+import { Category, Propertie } from '@/types/product';
 import { Brand } from '@/types/brand';
+import PropertiesSection from './properties-section';
+import { ProductFormStateProps } from '../types/create-product-form';
 
 interface ProductInfoFielsProps {
     formFields: fieldsProps[];
@@ -36,12 +38,20 @@ const ProductInfoFields: React.FC<ProductInfoFielsProps> = ({
     deletedImages, setDeletedImages,
 }) => {
     const [errors, setErrors] = useState<{ [key: string]: string }>({});
+    const [properties, setProperties] = useState<Propertie[]>([])
+    const [errorProperties, setErrorProperties] = useState<string>('')
 
     const handleChange = (e: any) => {
         const { name, value } = e.target;
         setProductForm({ ...productForm, [name]: name === "price" || name === "stock" ? Number(value) : value });
         setErrors({ ...errors, [name]: '' });
     }
+
+    const handlePropertyChange = (index: number, field: string, value: string) => {
+        const newProperties = [...productForm.properties];
+        newProperties[index] = { ...newProperties[index], [field]: value };
+        setProductForm({ ...productForm, properties: newProperties });
+    };
 
     const validateForm = () => {
         const errors: { [key: string]: string } = {};
@@ -50,19 +60,29 @@ const ProductInfoFields: React.FC<ProductInfoFielsProps> = ({
         if (!productForm.productDesc) errors.productDesc = 'ต้องกรอกคำอธิบายสินค้า';
         if (!productForm.price) errors.price = 'ต้องกรอกราคาสินค้า';
         if (!productForm.stock) errors.stock = 'ต้องกรอกจำนวนสินค้าในสต๊อก';
+        if (!productForm.properties) setErrorProperties("ต้องกรอกคุณสมบัติสินค้า")
 
         setErrors(errors);
 
-        return Object.keys(errors).length === 0;
+        return Object.keys(errors).length === 0; // return true เมื่อใน object ไม่มี error
     }
 
     const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-
-        if (validateForm()) {
-            handleCreateProductAndUpdate(e);
-        }
+        if (validateForm()) handleCreateProductAndUpdate(e)
     }
+
+    // สร้าง textfield ปล่่าวๆ สำหรับเพิ่ม property
+    const handleAddProperty = () => {
+        setProductForm({ ...productForm, properties: [...productForm.properties, { name: "", value: "" }] });
+    };
+
+    // ลบ field
+    const handleRemoveProperty = (index: number) => {
+        const newProperties = productForm.properties.filter((_, i) => i !== index);
+        setProductForm({ ...productForm, properties: newProperties });
+    };
+
 
     return (
         <form onSubmit={handleSubmit}>
@@ -153,6 +173,13 @@ const ProductInfoFields: React.FC<ProductInfoFielsProps> = ({
                     </Grid>
                 ))}
             </Grid>
+            <PropertiesSection
+                errorProperties={errorProperties}
+                handleAddProperty={handleAddProperty}
+                handlePropertyChange={handlePropertyChange}
+                handleRemoveProperty={handleRemoveProperty}
+                properties={productForm.properties}
+            />
 
             <Button type="submit" variant="contained" sx={{ bgcolor: "primary.main" }} className="mt-10 rounded-lg px-14">
                 {slug ? "อัพเดตสินค้า" : "เพิ่มสินค้า"}

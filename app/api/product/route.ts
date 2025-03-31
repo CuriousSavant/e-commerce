@@ -1,4 +1,5 @@
 import prisma from "@/lib/prisma";
+import { Propertie } from "@/types/product";
 import { NextResponse } from "next/server";
 import slugify from "slugify";
 
@@ -85,6 +86,7 @@ export const POST = async (req: Request) => {
       brandId,
       stock,
       categoryId,
+      properties,
     } = await req.json();
 
     const slug = slugify(title, { lower: true, strict: true });
@@ -99,8 +101,19 @@ export const POST = async (req: Request) => {
         stock,
         categoryId,
         slug,
-      },
+        properties: {
+          create: properties.map((item: Propertie) => {
+            return {
+              name: item.name,
+              value: item.value,
+            }
+          }),
+        }
+      }
     });
+
+    console.log(properties)
+    console.log(create_product)
 
     return NextResponse.json(create_product);
   } catch (error) {

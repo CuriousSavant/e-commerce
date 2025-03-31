@@ -7,7 +7,7 @@ export interface Product {
   brandId: number | null;
   stock: number;
   slug: string;
-  properties: Propertie;
+  properties: Propertie[];
   category: Category;
   status: 'ACTIVE' | 'INACTIVE';
   

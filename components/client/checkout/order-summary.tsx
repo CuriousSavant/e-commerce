@@ -6,6 +6,7 @@ interface OrderSummaryProps {
     cartItems?: CartItem[],
     itemQuantities: Record<number, number>;
     cartTotalPrice: number
+    directOrderItem: CartItem | null;
     handleOrder: () => void
 }
 
@@ -14,6 +15,7 @@ const OrderSummary: React.FC<OrderSummaryProps> = ({
     cartTotalPrice,
     handleOrder,
     itemQuantities,
+    directOrderItem,
 }) => {
     return (
         <Card variant="outlined">
@@ -41,7 +43,7 @@ const OrderSummary: React.FC<OrderSummaryProps> = ({
                                         className="w-6 font-bold"
                                         color='text.secondary'
                                     >
-                                        x{itemQuantities[item.productId!]}
+                                        x{directOrderItem ? directOrderItem.quantity : itemQuantities[item.productId!]}
                                     </Typography>
                                 </div>
                             </Box>

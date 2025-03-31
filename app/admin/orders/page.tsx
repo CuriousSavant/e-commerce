@@ -27,7 +27,7 @@ export default function OrdersPage() {
   const [openDetail, setOpenDetail] = useState<boolean>(false);
   const [editOrderDetailId, setEditOrderDetailId] = useState<number | null>(null);
 
-  const { page, pageSize, handleChangePage, handleChangeRowsPerPage } = usePagination();
+  const { page, pageSize, handleChangePage, handleChangeRowsPerPage, setPage } = usePagination();
   const [ordersCount, setOrdersCount] = useState<number>(0);
 
   const fetchOrders = () => {
@@ -50,7 +50,7 @@ export default function OrdersPage() {
     }
   }
 
-  useEffect(() => fetchOrders(), [activeTabs, sortOrder, query]);
+  useEffect(() => fetchOrders(), [activeTabs, sortOrder, query, page, pageSize]);
   useEffect(() => fetchProductList(), []);
 
   const toggleExpand = (orderId: number) => {
@@ -63,6 +63,7 @@ export default function OrdersPage() {
 
   const handleChangeTab = (value: ActiveTabs) => {
     setActiveTabs(value);
+    setPage(1);
   }
 
   const statusColors = {

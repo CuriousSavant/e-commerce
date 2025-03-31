@@ -14,10 +14,8 @@ import { useSearchContext } from '@/context/ProductSearchContext';
 
 const SearchLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
     const {
-        sortOrder,
         viewMode,
         setViewMode,
-        setSortOrder,
         categories,
         categoryId,
         setCategoryId,
@@ -48,30 +46,17 @@ const SearchLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => 
                 </div>
 
                 {/* Sort Options */}
-                <div className="flex gap-1 items-center mr-3 w-full md:w-auto">
-                    <h1 className="text-gray-400 whitespace-pre w-[5rem] md:w-auto">กรอง: </h1>
-                    <Select
-                        size="small"
-                        className="bg-white border border-gray-300 rounded w-full md:w-auto"
-                        value={sortOrder}
-                        onChange={(e) => setSortOrder(e.target.value)}
-                    >
-                        <MenuItem value="asc">เก่า - ใหม่</MenuItem>
-                        <MenuItem value="desc">ใหม่ - เก่า</MenuItem>
-                    </Select>
-
-                    <h1 className="text-gray-400 whitespace-pre w-[5rem] md:w-auto">กรองตามราคา: </h1>
-                    <Select
-                        size="small"
-                        className="bg-white border border-gray-300 rounded w-full md:w-auto"
-                        value={filterPrice}
-                        onChange={(e) => setFilterPrice(e.target.value)}
-                    >
-                        <MenuItem value="all">ค่าเริ่มต้น</MenuItem>
-                        <MenuItem value="low-high">เรียงตามราคาที่ต่ำที่สุด</MenuItem>
-                        <MenuItem value="high-low">เรียงตามราคาที่สูงที่สุด</MenuItem>
-                    </Select>
-                </div>
+                <h1 className="text-gray-400 whitespace-pre w-[5rem] md:w-auto">กรองตามราคา: </h1>
+                <Select
+                    size="small"
+                    className="bg-white border border-gray-300 rounded w-full md:w-auto"
+                    value={filterPrice}
+                    onChange={(e) => setFilterPrice(e.target.value)}
+                >
+                    <MenuItem value="all">ค่าเริ่มต้น</MenuItem>
+                    <MenuItem value="low-high">เรียงตามราคาที่ต่ำที่สุด</MenuItem>
+                    <MenuItem value="high-low">เรียงตามราคาที่สูงที่สุด</MenuItem>
+                </Select>
 
                 {/* View Options */}
                 <div className="flex gap-1 items-center text-gray-400">

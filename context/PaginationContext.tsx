@@ -3,6 +3,7 @@ import { createContext, useContext, useState, ReactNode } from "react";
 interface PaginationContextType {
     page: number;
     pageSize: number;
+    setPage: React.Dispatch<React.SetStateAction<number>>;
     handleChangePage: (_: unknown, newPage: number) => void;
     handleChangeRowsPerPage: (event: React.ChangeEvent<HTMLInputElement>) => void;
 }
@@ -23,7 +24,7 @@ export const PaginationProvider = ({ children }: { children: ReactNode }) => {
     };
 
     return (
-        <PaginationContext.Provider value={{ page, pageSize, handleChangePage, handleChangeRowsPerPage }}>
+        <PaginationContext.Provider value={{ page, pageSize, handleChangePage, handleChangeRowsPerPage, setPage }}>
             {children}
         </PaginationContext.Provider>
     );

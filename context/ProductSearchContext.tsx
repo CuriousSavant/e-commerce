@@ -6,8 +6,6 @@ import axios from 'axios';
 interface SearchContextType {
     viewMode: 'grid' | 'list';
     setViewMode: React.Dispatch<React.SetStateAction<'grid' | 'list'>>;
-    sortOrder: string;
-    setSortOrder: React.Dispatch<React.SetStateAction<string>>;
     productsList: Product[];
     setProductsList: React.Dispatch<React.SetStateAction<Product[]>>;
     searchQuery: string;
@@ -32,7 +30,6 @@ export const SearchProvider: React.FC<{ children: React.ReactNode }> = ({ childr
 
 
     const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
-    const [sortOrder, setSortOrder] = useState<string>('asc');
     const [filterPrice, setFilterPrice] = useState<string>('all');
     const [searchQuery, setSearchQuery] = useState('');
     const [categoryId, setCategoryId] = useState<string>('all');
@@ -46,28 +43,26 @@ export const SearchProvider: React.FC<{ children: React.ReactNode }> = ({ childr
         setLoading(true)
         // ถ้ากำลัง search
         if (query) {
-            axios.get(`/api/product?q=${query}&sortBy=${sortOrder}&price=${filterPrice}&categoryId=${categoryId}`)
+            axios.get(`/api/product?q=${query}&sortBy=all&price=${filterPrice}&categoryId=${categoryId}`)
                 .then((res) => setProductsList(res.data.products))
                 .catch((err) => console.error(err))
                 .finally(() => setLoading(false))
         } else {
             // ถ้าไม่ search
-            axios.get(`/api/product?sortBy=${sortOrder}&price=${filterPrice}&categoryId=${categoryId}`)
+            axios.get(`/api/product?sortBy=all&price=${filterPrice}&categoryId=${categoryId}`)
                 .then((res) => setProductsList(res.data.products))
                 .catch((err) => console.error(err))
                 .finally(() => setLoading(false))
 
             axios.get('/api/categories').then((res) => setCategories(res.data.categories))
         }
-    }, [query, sortOrder, filterPrice, categoryId]);
+    }, [query, filterPrice, categoryId]);
 
     return (
         <SearchContext.Provider
             value={{
                 viewMode,
                 setViewMode,
-                sortOrder,
-                setSortOrder,
                 productsList,
                 setProductsList,
                 searchQuery,

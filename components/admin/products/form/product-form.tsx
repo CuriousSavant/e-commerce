@@ -5,6 +5,7 @@ import { Box, IconButton } from '@mui/material';
 import { ArrowBack } from '@mui/icons-material';
 import { Category } from '@/types/product';
 import { Brand } from '@/types/brand';
+import { ProductFormStateProps } from '../types/create-product-form';
 
 interface ProductFormProps {
     productForm: ProductFormStateProps;
@@ -65,6 +66,7 @@ const ProductForm: React.FC<ProductFormProps> = ({
             stock: 0,
             brandId: null,
             categoryId: null,
+            properties: []
         });
         setImageUrl([]);
         setFormOpen(!formOpen);

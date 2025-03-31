@@ -3,21 +3,23 @@ import { MdAdd, MdDeleteOutline } from 'react-icons/md';
 import { BiMinus } from 'react-icons/bi';
 import Link from 'next/link';
 import { Product } from '@/types/product';
+import { CartItem } from '@/types/cart';
 
 interface CartItemProps {
     product: Product;
-    index: number;
-    selectedItems: number[];
+    selectedCartItems: CartItem[];
     toggleSelectItem: (id: number) => void;
     updateItemQuantity: (id: number, isIncrement: boolean) => void;
     removeItemFromCart: (id: number) => void;
     itemQuantities: Record<number, number>;
 }
 
-const CartList = ({ product, index, selectedItems, toggleSelectItem, updateItemQuantity, removeItemFromCart, itemQuantities }: CartItemProps) => {
+const CartList = ({
+    product, selectedCartItems, toggleSelectItem,
+    updateItemQuantity, removeItemFromCart, itemQuantities
+}: CartItemProps) => {
     return (
         <Box
-            key={index}
             display="flex"
             alignItems="center"
             justifyContent="space-between"
@@ -26,7 +28,7 @@ const CartList = ({ product, index, selectedItems, toggleSelectItem, updateItemQ
         >
             <Box display="flex" alignItems="center" gap={{ xs: 0.5, md: 2 }} flex={2}>
                 <Checkbox
-                    checked={selectedItems.includes(product.id)}
+                    checked={selectedCartItems.some((item) => item.productId === product.id)}
                     onChange={() => toggleSelectItem(product.id)}
                 />
                 <Box
