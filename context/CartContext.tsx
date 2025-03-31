@@ -157,8 +157,6 @@ export const CartProvider = ({ children }: { children: React.ReactNode }) => {
                     delete updatedQuantities[productId];
                     return updatedQuantities;
                 });
-
-                toast.success('ลบสินค้าทั้งหมดเรียบร้อย!', { autoClose: 1200 });
             }
         } catch (err) {
             console.error("เกิดข้อผิดพลาดระหว่างลบสินค้า:", err);
