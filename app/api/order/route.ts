@@ -52,8 +52,6 @@ function generateOrderId(): string {
 export async function POST(request: Request) {
   const { userId, orderItems, totalAmount, addressId } = await request.json();
 
-  console.log({ userId, orderItems, totalAmount, addressId })
-
   if (!Array.isArray(orderItems) || orderItems.length === 0) {
     return NextResponse.json(
       { error: "Invalid or empty orderItems format" },

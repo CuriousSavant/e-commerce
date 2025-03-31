@@ -119,8 +119,6 @@ export const useProducts = () => {
             properties: productForm.properties,
         };
 
-        console.log(productData)
-
         try {
             if (slug) {
                 // edit product

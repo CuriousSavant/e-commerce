@@ -112,9 +112,6 @@ export const POST = async (req: Request) => {
       }
     });
 
-    console.log(properties)
-    console.log(create_product)
-
     return NextResponse.json(create_product);
   } catch (error) {
     return NextResponse.json({ msg: "Failed to create product", error: error, status: 500 });
