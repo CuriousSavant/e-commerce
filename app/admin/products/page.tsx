@@ -29,7 +29,7 @@ const Products = () => {
 
     const { brands } = useBrands();
 
-    const { handleChangePage, handleChangeRowsPerPage, page, pageSize } = usePagination();
+    const { handleChangePage, handleChangeRowsPerPage, page, pageSize, setPage } = usePagination();
 
     return (
         <Box sx={{ py: 2, px: { xs: 2, md: 6 } }}>
@@ -59,7 +59,7 @@ const Products = () => {
                         query, setCategoryFilter, setFormOpen,
                         setPriceFilter, setQuery, setStatusFilter,
                         sortOrder, statusFilter, toggleSortOrder,
-                        categories,
+                        categories, setPage,
                     }}
                 />
             ) : null}

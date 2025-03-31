@@ -43,13 +43,13 @@ export const SearchProvider: React.FC<{ children: React.ReactNode }> = ({ childr
         setLoading(true)
         // ถ้ากำลัง search
         if (query) {
-            axios.get(`/api/product?q=${query}&sortBy=all&price=${filterPrice}&categoryId=${categoryId}`)
+            axios.get(`/api/product?q=${query}&sortBy=all&price=${filterPrice}&categoryId=${categoryId}&pageSize=100`)
                 .then((res) => setProductsList(res.data.products))
                 .catch((err) => console.error(err))
                 .finally(() => setLoading(false))
         } else {
             // ถ้าไม่ search
-            axios.get(`/api/product?sortBy=all&price=${filterPrice}&categoryId=${categoryId}`)
+            axios.get(`/api/product?sortBy=all&price=${filterPrice}&categoryId=${categoryId}&pageSize=100`)
                 .then((res) => setProductsList(res.data.products))
                 .catch((err) => console.error(err))
                 .finally(() => setLoading(false))

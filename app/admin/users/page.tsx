@@ -9,23 +9,17 @@ import { usePagination } from '@/context/PaginationContext';
 
 export default function Users() {
   const {
-    userList, setUserList,
-    userForm, setUserForm,
-    formOpen, setFormOpen,
-    errors, setErrors,
-    searchQuery, setSearchQuery,
+    userList, userForm, setUserForm,
+    formOpen, setFormOpen, errors,
+    setErrors, searchQuery, setSearchQuery,
     sortOrder, setSortOrder,
-    role, setRole,
-    loading, setLoading,
-    editingId, setEditingId,
-    fetchUsers, handleChange,
-    validateForm, handleReset,
+    role, setRole, loading, editingId, 
+    setEditingId, handleChange,
     handleSignUp, handleDeleteUser,
-    startEditing, latestUser, setLatestUser,
-    userCount,
+    startEditing, userCount,
   } = useUser();
 
-  const { handleChangePage, handleChangeRowsPerPage, page, pageSize, } = usePagination();
+  const { handleChangePage, handleChangeRowsPerPage, page, pageSize, setPage } = usePagination();
 
   return (
     <Box sx={{ py: 2, px: { xs: 2, md: 6 } }}>
@@ -44,6 +38,7 @@ export default function Users() {
             role={role}
             formOpen={formOpen}
             setFormOpen={setFormOpen}
+            setPage={setPage}
           />
 
           {/* Table */}

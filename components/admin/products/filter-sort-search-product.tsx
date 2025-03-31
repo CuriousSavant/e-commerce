@@ -17,7 +17,8 @@ type FilterSortSearchProductProps = {
     setQuery: React.Dispatch<React.SetStateAction<string>>;
     setCategoryFilter: React.Dispatch<React.SetStateAction<string>>;
     setStatusFilter: React.Dispatch<React.SetStateAction<string>>;
-    setPriceFilter: React.Dispatch<React.SetStateAction<string>>
+    setPriceFilter: React.Dispatch<React.SetStateAction<string>>;
+    setPage: React.Dispatch<React.SetStateAction<number>>;
 }
 
 const FilterSortSearchProduct: React.FC<FilterSortSearchProductProps> = ({
@@ -25,6 +26,7 @@ const FilterSortSearchProduct: React.FC<FilterSortSearchProductProps> = ({
     statusFilter, priceFilter, categories,
     setQuery, setFormOpen, toggleSortOrder,
     setCategoryFilter, setStatusFilter, setPriceFilter,
+    setPage,
 }) => {
     return (
         <Stack direction={"column"} mt={{ xs: 4, md: 2 }}>
@@ -86,7 +88,7 @@ const FilterSortSearchProduct: React.FC<FilterSortSearchProductProps> = ({
                 <FormControl size="small" sx={{ width: { xs: "100%", md: "auto" } }}>
                     <Select
                         value={categoryFilter || "all"}
-                        onChange={(e: SelectChangeEvent) => setCategoryFilter(e.target.value)}
+                        onChange={(e: SelectChangeEvent) => { setCategoryFilter(e.target.value), setPage(1) }}
                         sx={{ bgcolor: "secondary.dark", color: "white", border: "1px solid #4f4f4f", borderRadius: 2, '& .MuiSelect-icon': { color: "white" } }}
                     >
                         <MenuItem value="all">หมวดหมู่ทั้งหมด</MenuItem>
@@ -104,7 +106,7 @@ const FilterSortSearchProduct: React.FC<FilterSortSearchProductProps> = ({
                 <FormControl size="small" sx={{ width: { xs: "100%", md: "auto" } }}>
                     <Select
                         value={statusFilter || ""}
-                        onChange={(e: SelectChangeEvent) => setStatusFilter(e.target.value as 'active' | 'inactive')}
+                        onChange={(e: SelectChangeEvent) => { setStatusFilter(e.target.value as 'active' | 'inactive'), setPage(1) }}
                         sx={{ bgcolor: "secondary.dark", color: "white", border: "1px solid #4f4f4f", borderRadius: 2, '& .MuiSelect-icon': { color: "white" } }}
                     >
                         <MenuItem value="all">สถานะทั้งหมด</MenuItem>
@@ -117,7 +119,7 @@ const FilterSortSearchProduct: React.FC<FilterSortSearchProductProps> = ({
                 <FormControl size="small" sx={{ width: { xs: "100%", md: "auto" } }}>
                     <Select
                         value={priceFilter || ""}
-                        onChange={(e: SelectChangeEvent) => setPriceFilter(e.target.value)}
+                        onChange={(e: SelectChangeEvent) => { setPriceFilter(e.target.value), setPage(1) }}
                         sx={{ bgcolor: "secondary.dark", color: "white", border: "1px solid #4f4f4f", borderRadius: 2, '& .MuiSelect-icon': { color: "white" } }}
                     >
                         <MenuItem value="all">กรองตามราคา(ค่าเริ่มต้น)</MenuItem>

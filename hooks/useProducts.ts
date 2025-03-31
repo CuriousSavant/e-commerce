@@ -29,7 +29,7 @@ export const useProducts = () => {
         setDeletedImages,
     } = useImageUpload();
 
-    const { page, pageSize } = usePagination();
+    const { page, pageSize, setPage } = usePagination();
 
     const [productForm, setProductForm] = useState<ProductFormStateProps>({ // state สำหรับ form create user
         productName: "",
@@ -74,6 +74,7 @@ export const useProducts = () => {
 
     const toggleSortOrder = () => {
         setSortOrder((prev) => (prev === 'asc' ? 'desc' : 'asc'));
+        setPage(1)
     };
 
     const startEditing = (product: Product) => {

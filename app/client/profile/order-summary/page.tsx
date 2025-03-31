@@ -148,7 +148,6 @@ const OrderSummary = () => {
         backIconButtonProps={{ disabled: page <= 1 }}
         sx={{ overflowX: "hidden" }}
       />
-
     </Box>
   );
 };

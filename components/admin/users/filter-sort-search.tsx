@@ -20,6 +20,7 @@ interface ITrinity {
     setSearchQuery: React.Dispatch<React.SetStateAction<string>>;
     setRole: React.Dispatch<React.SetStateAction<Role>>
     setFormOpen: React.Dispatch<React.SetStateAction<boolean>>;
+    setPage: React.Dispatch<React.SetStateAction<number>>
 }
 
 const FilterSortSearch: React.FC<ITrinity> = ({
@@ -31,6 +32,7 @@ const FilterSortSearch: React.FC<ITrinity> = ({
     role,
     setFormOpen,
     formOpen,
+    setPage,
 }) => {
     return (
         <Box display={"flex"} justifyContent="space-between" flexDirection={{ xs: "column", md: "row" }} alignItems="center" mb={6}>
@@ -62,7 +64,7 @@ const FilterSortSearch: React.FC<ITrinity> = ({
                 {/* Filters By Role */}
                 <Select
                     size='small'
-                    onChange={(e) => setRole(e.target.value as Role)}
+                    onChange={(e) => { setRole(e.target.value as Role), setPage(1) }}
                     value={role}
                     sx={{
                         bgcolor: "secondary.dark",
@@ -77,7 +79,7 @@ const FilterSortSearch: React.FC<ITrinity> = ({
 
                 <Select
                     size='small'
-                    onChange={(e) => setSortOrder(e.target.value as SortType)}
+                    onChange={(e) => { setSortOrder(e.target.value as SortType), setPage(1) }}
                     value={sortOrder}
                     sx={{
                         bgcolor: "secondary.dark",
