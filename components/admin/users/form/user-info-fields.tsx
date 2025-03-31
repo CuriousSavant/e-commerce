@@ -1,7 +1,7 @@
 import { Grid, TextField, InputAdornment, IconButton } from "@mui/material";
 import { FiEye, FiEyeOff } from "react-icons/fi";
 import React from "react";
-import { UserFormStateProps } from "@/types/components/create-user-form";
+import { UserFormStateProps } from "../types/user-form-state-props";
 
 type UserInfoFieldsProps = {
   userForm: UserFormStateProps;
