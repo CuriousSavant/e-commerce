@@ -25,7 +25,6 @@ export async function GET(req: Request) {
     let orderByClause: any = { createdAt: sortOrder }
 
     let products;
-    const totalProducts = await prisma.product.count({ where: whereClause }); // ใช้ .count() เพื่อนับจำนวนสินค้าทั้งหมด
 
     if (query) whereClause.title = { contains: query, mode: "insensitive" };
     if (categoryId && categoryId !== "all") whereClause.categoryId = Number(categoryId);
@@ -36,6 +35,8 @@ export async function GET(req: Request) {
     }
 
     if (status && status !== 'all') whereClause.status = status.toLowerCase() === "active" ? "ACTIVE" : "INACTIVE";
+
+    const totalProducts = await prisma.product.count({ where: whereClause }); // ใช้ .count() เพื่อนับจำนวนสินค้าทั้งหมด
 
     if (!query && !categoryId && !status) {
       products = await prisma.product.findMany({
