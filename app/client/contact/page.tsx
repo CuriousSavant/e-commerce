@@ -10,13 +10,13 @@ const contactInfo = {
     address: "123/45 ถนนสุขสันต์ แขวงบางรัก เขตบางรัก กรุงเทพมหานคร 10500",
     phone: "+66 2 123 4567",
     email: "info@example.com",
-    website: "https://next-portfolio-bay.vercel.app",
+    // website: "https://next-portfolio-bay.vercel.app",
+    website: "กำลังรอเพิ่มหน้า experience ใน portfolio website",
     instagram: "https://www.instagram.com/junior_dev175/",
 };
 
 const ContactPage = () => {
-    const [firstName, setFirstName] = useState<string>('')
-    const [lastName, setLastName] = useState<string>('')
+    const [fullName, setFullName] = useState<string>('')
     const [email, setEmail] = useState<string>('')
     const [message, setMessage] = useState<string>('')
 
@@ -27,8 +27,7 @@ const ContactPage = () => {
         const data = [
             {
                 id: session?.user.id,
-                firstName: firstName,
-                lastName: lastName,
+                fullName: fullName,
                 email: email,
                 message: message,
                 statusUser: status,
@@ -41,8 +40,7 @@ const ContactPage = () => {
                 title: "ส่งข้อความแล้ว🥳",
                 text: "ขอบคุณสำหรับข้อความนะครับ ปัจจุบันผมยังไม่รับงานนะครับ ไว้มีโอกาสค่อยมาร่วมงานกันนะ🥰"
             })
-            setFirstName("");
-            setLastName("");
+            setFullName("");
             setEmail("");
             setMessage("");
         } catch (err) {
@@ -88,13 +86,14 @@ const ContactPage = () => {
                         <h1 className='text-2xl'>
                             <CiGlobe />
                         </h1>
-                        <Link href={contactInfo.website} className='hover:underline'>{contactInfo.website}</Link>
+                        {/* <Link href={contactInfo.website} className='hover:underline'>{contactInfo.website}</Link> */}
+                        <h6 className='hover:underline line-clamp-1'>{contactInfo.website}</h6>
                     </div>
                     <div className='flex gap-2'>
                         <h1 className='text-2xl'>
                             <CiInstagram />
                         </h1>
-                        <Link href={contactInfo.instagram} className='hover:underline'>{contactInfo.instagram}</Link>
+                        <Link href={contactInfo.instagram} className='hover:underline line-clamp-1'>{contactInfo.instagram}</Link>
                     </div>
                 </div>
             </div>
@@ -104,24 +103,16 @@ const ContactPage = () => {
                 <form className='flex flex-col gap-4' onSubmit={handleSubmitForm}>
                     <TextField
                         size='small'
-                        label='first name'
-                        onChange={(e) => setFirstName(e.target.value)}
-                        value={firstName}
+                        label='ชื่อจริง นามสกุลจริง'
+                        onChange={(e) => setFullName(e.target.value)}
+                        value={fullName}
                         fullWidth
                         required
                     />
 
                     <TextField
                         size='small'
-                        label='last name'
-                        onChange={(e) => setLastName(e.target.value)}
-                        value={lastName}
-                        fullWidth
-                    />
-
-                    <TextField
-                        size='small'
-                        label='email'
+                        label='อีเมล'
                         onChange={(e) => setEmail(e.target.value)}
                         fullWidth
                         value={email}
@@ -130,7 +121,7 @@ const ContactPage = () => {
 
                     <TextField
                         size='small'
-                        label='type your message...'
+                        label='ส่งข้อความ...'
                         rows={6} onChange={(e) => setMessage(e.target.value)}
                         multiline
                         value={message}
