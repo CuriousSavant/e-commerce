@@ -18,17 +18,20 @@ const TabsOrder: React.FC<TabsOrderProps> = ({
 }) => {
     return (
         <Box display="flex" justifyContent={"space-between"} flexDirection={{ xs: "column", md: "row" }} alignItems="center" gap={2} mb={3}>
-            <Tabs
-                value={activeTabs}
-                onChange={(_, value) => handleChangeTab(value)}
-                textColor="primary"
-                indicatorColor="primary"
-                sx={{ mb: 1 }}
-            >
-                {["all", "completed", "pending", "canceled"].map((status, index) => (
-                    <Tab key={index} label={status} value={status} sx={{ color: "white" }} />
-                ))}
-            </Tabs>
+            <Box width={"100%"} maxWidth={"100%"}>
+                <Tabs
+                    value={activeTabs}
+                    onChange={(_, value) => handleChangeTab(value)}
+                    textColor="primary"
+                    indicatorColor="primary"
+                    variant="scrollable"
+                    sx={{ mb: 1 }}
+                >
+                    {["all", "completed", "pending", "canceled"].map((status, index) => (
+                        <Tab key={index} label={status} value={status} sx={{ color: "white" }} />
+                    ))}
+                </Tabs>
+            </Box>
             <Box display={'flex'} gap={2} width={{ xs: "100%", md: "auto" }} my={{ xs: 2, md: 0 }}>
                 <TextField
                     size="small"

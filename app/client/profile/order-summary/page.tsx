@@ -146,7 +146,6 @@ const OrderSummary = () => {
         onRowsPerPageChange={(e: React.ChangeEvent<HTMLInputElement>) => { setPageSize(Number(e.target.value)), setPage(1) }}
         nextIconButtonProps={{ disabled: (page * pageSize) >= countOrders }}
         backIconButtonProps={{ disabled: page <= 1 }}
-        sx={{ overflowX: "hidden" }}
       />
     </Box>
   );

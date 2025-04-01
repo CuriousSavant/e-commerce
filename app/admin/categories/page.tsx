@@ -148,7 +148,6 @@ const Categories = () => {
           "& .MuiSvgIcon-root": { color: "white" },
           "& .MuiSelect-icon": { color: "white" },
           "& .Mui-disabled": { color: "gray" },
-          overflowX: "hidden",
         }}
       />
     </Box>

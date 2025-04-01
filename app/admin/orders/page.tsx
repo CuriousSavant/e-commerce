@@ -83,7 +83,7 @@ export default function OrdersPage() {
   };
 
   return (
-    <Box sx={{ bgcolor: "primary.dark", color: "white", minHeight: "100vh", py: 2, px: { xs: 2, md: 6 } }}>
+    <Box sx={{ bgcolor: "primary.dark", color: "white", minHeight: "100vh", overflowX: "auto", py: 2, px: { xs: 2, md: 6 } }}>
       {editOrderDetailId ?
         <OrderEdit
           order={orders.find(order => order.id === editOrderDetailId)}
@@ -146,7 +146,7 @@ export default function OrdersPage() {
                   page={page - 1}
                   onPageChange={handleChangePage}
                   onRowsPerPageChange={handleChangeRowsPerPage}
-                  sx={{ color: "white", "& .MuiSvgIcon-root": { color: "white" }, "& .MuiSelect-icon": { color: "white" }, "& .Mui-disabled": { color: "gray" }, overflowX: "hidden" }}
+                  sx={{ color: "white", "& .MuiSvgIcon-root": { color: "white" }, "& .MuiSelect-icon": { color: "white" }, "& .Mui-disabled": { color: "gray" } }}
                 />
               </>
             ) : (
