@@ -262,6 +262,12 @@ export const CartProvider = ({ children }: { children: React.ReactNode }) => {
 
     const handleProductOrder = async (product: Product) => {
         try {
+
+            if (status === "unauthenticated") {
+                handleDialogToggle();
+                return;
+            }
+
             const newOrderItem: CartItem = {
                 id: 1,
                 cartId: 1,
