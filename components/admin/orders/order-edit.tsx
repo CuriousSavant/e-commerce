@@ -79,14 +79,14 @@ const OrderEdit: React.FC<OrderEditProps> = ({
                 addressInfo.id ?
                     // หากมี id ของที่อยู่
                     axios.put(`/api/address/${addressInfo.id}`, addressInfo) // อัพเดทข้อมูลที่อยู่
-                        .then(() => axios.put(`/api/order/${order?.id}`, { status: order?.status, addressId: addressInfo.id, items: updatedItems })) // หลังจากอัปเดตที่อยู่แล้ว ให้เพิ่มที่อยู่ลงในคำสั่งซื้อ 
+                        .then(() => axios.put(`/api/order/${order?.id}`, { status: order?.status, totalAmount: updatedItems.reduce((sum, item) => sum + item.price * item.quantity, 0), addressId: addressInfo.id, items: updatedItems })) // หลังจากอัปเดตที่อยู่แล้ว ให้เพิ่มที่อยู่ลงในคำสั่งซื้อ 
                     :
                     // ในกรณีที่ผู้ใช้ไม่ได้ส่งที่อยู่มาด้วย(สร้างที่อยู่ใหม่)
                     axios.post('/api/address', { ...addressInfo, userId: user?.id })
-                        .then((res) => axios.put(`/api/order/${order?.id}`, { status: order?.status, addressId: res.data.id, items: updatedItems })),
+                        .then((res) => axios.put(`/api/order/${order?.id}`, { status: order?.status, totalAmount: updatedItems.reduce((sum, item) => sum + item.price * item.quantity, 0), addressId: res.data.id, items: updatedItems })),
 
                 // เพิ่มสินค้า
-                axios.put(`/api/order/${order?.id}`, { status: order?.status, addressId: addressInfo.id, items: updatedItems }),
+                axios.put(`/api/order/${order?.id}`, { status: order?.status, addressId: addressInfo.id, totalAmount: updatedItems.reduce((sum, item) => sum + item.price * item.quantity, 0), items: updatedItems }),
             ])
 
             // รีเฟรชข้อมูลหลังอัปเดต

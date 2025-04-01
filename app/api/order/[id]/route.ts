@@ -39,7 +39,7 @@ export async function PUT(
   { params }: { params: { id: string } }
 ) {
   const orderId = Number(params.id);
-  const { status, addressId, items } = await request.json();
+  const { status, addressId, totalAmount, items } = await request.json();
 
   try {
     if (!Object.values(STATUS_ORDER).includes(status)) {
@@ -51,11 +51,14 @@ export async function PUT(
       return NextResponse.json({ error: "Invalid items format" }, { status: 400 });
     }
 
+    console.log(totalAmount)
+
     // อัพเดทสถานะ และ ที่หมายเลขที่อยู่
     await prisma.order.update({
       where: { id: orderId },
       data: {
         status,
+        total: totalAmount,
         addressId,
       },
     });
