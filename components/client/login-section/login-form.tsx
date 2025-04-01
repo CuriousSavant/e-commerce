@@ -86,6 +86,7 @@ const LoginForm: React.FC<LoginFormProps> = ({ formData, handleChange, handleDia
                 error={formError.email}
                 helperText={formError.email && "กรุณากรอกอีเมล"}
                 autoComplete='email'
+                autoFocus
             />
             <TextField
                 label="รหัสผ่าน"

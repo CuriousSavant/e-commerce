@@ -44,6 +44,7 @@ const SignUpForm: React.FC<SignUpFormProps> = ({
                 error={!!formError.lastname}
                 helperText={formError.firstname && "กรุณากรอกชื่อ"}
                 fullWidth
+                autoFocus
             />
             <TextField
                 label="นามสกุล"
