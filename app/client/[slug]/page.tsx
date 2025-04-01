@@ -42,12 +42,13 @@ const ProductDetailPage = () => {
   }, [slug]);
 
   useEffect(() => {
-    if (!slug) return;
+    if (!slug || !session?.user.id) return;
 
     axios.get(`/api/wishlist?userId=${session?.user?.id}`)
       .then((res) => {
         const isFavorite = res.data.some((item: Wishlist) => item.product.slug === slug);
         setIsFavorite(isFavorite);
+        console.log("in", session?.user.id)
       })
       .catch((err) => {
         console.error("Error fetching wishlist:", err);
